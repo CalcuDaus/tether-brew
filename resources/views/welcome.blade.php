@@ -3,9 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tether Brew - Temukan gerobak kopi terdekat di sekitarmu. Lihat lokasi, menu, dan stok secara realtime.">
-    <title>Tether Brew - Temukan Kopi Terdekat</title>
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v={{ time() }}">
+
+    {{-- ===== SEO META TAGS ===== --}}
+    <title>Tether Brew – Kopi Keliling Segar & Murah di Medan | Mulai Rp 8.000</title>
+    <meta name="description" content="Tether Brew adalah kopi keliling terbaik di Medan. Kopi segar, murah mulai Rp 8.000, langsung diantar ke lokasimu. Temukan gerobak terdekat via peta realtime. Cold Brew, Americano, Matcha & 13+ varian lainnya!">
+    <meta name="keywords" content="kopi Medan, kopi keliling Medan, kopi murah Medan, kopi segar Medan, gerobak kopi Medan, kopi terdekat Medan, Tether Brew, cold brew Medan, es kopi susu Medan, kopi online Medan, jual kopi Medan, kopi delivery Medan, kopi Sumatera Utara">
+    <meta name="author" content="Tether Brew">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="{{ url('/') }}">
+
+    {{-- ===== GEO META (Medan, Sumatera Utara) ===== --}}
+    <meta name="geo.region" content="ID-SU">
+    <meta name="geo.placename" content="Medan">
+    <meta name="geo.position" content="3.5952;98.6722">
+    <meta name="ICBM" content="3.5952, 98.6722">
+
+    {{-- ===== OPEN GRAPH (Facebook, WhatsApp, etc.) ===== --}}
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:site_name" content="Tether Brew">
+    <meta property="og:title" content="Tether Brew – Kopi Keliling Segar & Murah di Medan">
+    <meta property="og:description" content="Kopi segar keliling di Medan mulai Rp 8.000! Temukan gerobak Tether Brew terdekat, lihat menu & stok realtime, pesan langsung via WhatsApp.">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:image" content="{{ asset('favicon.webp') }}">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Tether Brew - Kopi Keliling Medan">
+
+    {{-- ===== TWITTER CARD ===== --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tether Brew – Kopi Keliling Segar & Murah di Medan">
+    <meta name="twitter:description" content="Kopi segar keliling di Medan mulai Rp 8.000! 13+ varian menu. Temukan gerobak terdekat via peta realtime.">
+    <meta name="twitter:image" content="{{ asset('favicon.webp') }}">
+
+    {{-- ===== JSON-LD STRUCTURED DATA ===== --}}
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'FoodEstablishment',
+        'name' => 'Tether Brew',
+        'alternateName' => 'Tether Brew Kopi Keliling Medan',
+        'description' => 'Tether Brew adalah layanan kopi keliling di Medan yang menyajikan kopi segar berkualitas dengan harga terjangkau mulai dari Rp 8.000. Tersedia 13+ varian menu termasuk Cold Brew, Honey Brew, Americano, Matcha, dan lainnya.',
+        'url' => url('/'),
+        'logo' => asset('favicon.webp'),
+        'image' => asset('favicon.webp'),
+        'telephone' => '',
+        'servesCuisine' => ['Kopi', 'Minuman', 'Coffee'],
+        'priceRange' => 'Rp 8.000 - Rp 15.000',
+        'currenciesAccepted' => 'IDR',
+        'paymentAccepted' => 'Cash, Transfer',
+        'address' => [
+            '@type' => 'PostalAddress',
+            'addressLocality' => 'Medan',
+            'addressRegion' => 'Sumatera Utara',
+            'addressCountry' => 'ID',
+        ],
+        'geo' => [
+            '@type' => 'GeoCoordinates',
+            'latitude' => 3.5952,
+            'longitude' => 98.6722,
+        ],
+        'areaServed' => [
+            '@type' => 'City',
+            'name' => 'Medan',
+        ],
+        'hasMenu' => [
+            '@type' => 'Menu',
+            'hasMenuSection' => [
+                [
+                    '@type' => 'MenuSection',
+                    'name' => 'Kopi',
+                    'hasMenuItem' => [
+                        ['@type' => 'MenuItem', 'name' => 'Cold Brew', 'offers' => ['@type' => 'Offer', 'price' => '15000', 'priceCurrency' => 'IDR']],
+                        ['@type' => 'MenuItem', 'name' => 'Honey Brew', 'offers' => ['@type' => 'Offer', 'price' => '15000', 'priceCurrency' => 'IDR']],
+                        ['@type' => 'MenuItem', 'name' => 'Americano', 'offers' => ['@type' => 'Offer', 'price' => '8000', 'priceCurrency' => 'IDR']],
+                        ['@type' => 'MenuItem', 'name' => 'Caramel Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                        ['@type' => 'MenuItem', 'name' => 'Vanilla Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                    ],
+                ],
+                [
+                    '@type' => 'MenuSection',
+                    'name' => 'Non-Kopi',
+                    'hasMenuItem' => [
+                        ['@type' => 'MenuItem', 'name' => 'Matcha Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                        ['@type' => 'MenuItem', 'name' => 'Cokelat Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                    ],
+                ],
+            ],
+        ],
+        'sameAs' => ['https://www.instagram.com/tetherbrew/'],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+
+    {{-- ===== FAVICON ===== --}}
+    <link rel="icon" type="image/webp" href="{{ asset('favicon.webp') }}?v={{ time() }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.webp') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -91,15 +183,15 @@
     {{-- ===== HOME / HERO ===== --}}
     <section class="hero" id="home">
         <div class="hero-bg">
-            <img src="/storage/image/kopi-tether-new.png" alt="Tether Brew Coffee Background">
+            <img src="/storage/image/kopi-tether-new.webp" alt="Tether Brew Coffee Background">
         </div>
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                Tether Brew · Kopi Keliling
+                Tether Brew · Kopi Keliling Medan
             </div>
-            <h1>Kopi Segar dari<br><span class="highlight">Tether Brew</span> Terdekat</h1>
-            <p>Temukan gerobak Tether Brew di sekitarmu. Cek lokasi, menu, dan stok secara realtime langsung dari sini.</p>
+            <h1>Kopi Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
+            <p>Temukan gerobak kopi keliling Tether Brew terdekat di Medan. Kopi segar berkualitas mulai Rp 8.000, cek lokasi, menu, dan stok secara realtime.</p>
             <div class="hero-cta">
                 <a href="#maps" class="btn-hero btn-hero-primary">
                     <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -134,7 +226,7 @@
     {{-- ===== MAPS ===== --}}
     <section class="map-section section-relative" id="maps">
         <div class="deco-bg-wrapper">
-            <img src="/storage/image/kopi-tether-new.png" class="deco-cup deco-cup-1" alt="">
+            <img src="/storage/image/kopi-tether-new.webp" class="deco-cup deco-cup-1" alt="">
         </div>
         <div class="section-header">
             <div class="section-tag">LOKASI</div>
@@ -153,7 +245,7 @@
     {{-- ===== MENU ===== --}}
     <section class="menu-section section-relative" id="menu" x-data="{ activeTab: 'semua' }">
         <div class="deco-bg-wrapper">
-            <img src="/storage/image/kopi-tether-new.png" class="deco-cup deco-cup-2" alt="">
+            <img src="/storage/image/kopi-tether-new.webp" class="deco-cup deco-cup-2" alt="">
         </div>
         <div class="section-header">
             <div class="section-tag"> MENU</div>
@@ -189,12 +281,12 @@
     {{-- ===== ABOUT ===== --}}
     <section class="about-section section-relative" id="about">
         <div class="deco-bg-wrapper">
-            <img src="/storage/image/kopi-tether-new.png" class="deco-cup deco-cup-3" alt="">
+            <img src="/storage/image/kopi-tether-new.webp" class="deco-cup deco-cup-3" alt="">
         </div>
         <div class="section-header">
             <div class="section-tag">TENTANG</div>
             <h2 class="section-title">Kenapa Tether Brew?</h2>
-            <p class="section-subtitle">Kami menghadirkan kopi berkualitas dengan harga terjangkau langsung ke tempatmu</p>
+            <p class="section-subtitle">Kopi keliling terbaik di Medan — segar, murah, dan selalu dekat dengan lokasimu</p>
         </div>
         <div class="about-grid">
             <div class="about-card">
@@ -203,8 +295,8 @@
                         <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/>
                     </svg>
                 </div>
-                <h3>Kopi Berkualitas</h3>
-                <p>Biji kopi pilihan dari petani lokal, diolah dengan standar tinggi untuk menghasilkan rasa terbaik.</p>
+                <h3>Kopi Segar Berkualitas</h3>
+                <p>Biji kopi pilihan dari petani lokal Sumatera Utara, diolah fresh setiap hari untuk menghasilkan kopi terbaik di Medan.</p>
             </div>
             <div class="about-card">
                 <div class="about-icon">
@@ -212,8 +304,8 @@
                         <path d="M20 12V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V15"/><rect x="16" y="12" width="6" height="3" rx="1"/>
                     </svg>
                 </div>
-                <h3>Harga Terjangkau</h3>
-                <p>Mulai dari Rp 8.000 saja! Kopi premium yang bisa dinikmati semua kalangan tanpa menguras dompet.</p>
+                <h3>Harga Murah Meriah</h3>
+                <p>Mulai dari Rp 8.000 saja! Kopi premium khas Medan yang bisa dinikmati semua kalangan tanpa menguras dompet.</p>
             </div>
             <div class="about-card">
                 <div class="about-icon">
@@ -221,8 +313,8 @@
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
                     </svg>
                 </div>
-                <h3>Selalu Dekat</h3>
-                <p>Gerobak kami tersebar di berbagai lokasi strategis. Cek peta untuk menemukan yang terdekat.</p>
+                <h3>Keliling & Selalu Dekat</h3>
+                <p>Gerobak kopi kami keliling di berbagai lokasi strategis di Medan. Cek peta realtime untuk menemukan yang terdekat!</p>
             </div>
         </div>
     </section>
@@ -339,7 +431,7 @@
 
     {{-- ===== FOOTER ===== --}}
     <footer class="footer">
-        <p>© {{ date('Y') }} Tether Brew. Platform manajemen gerobak kopi keliling.</p>
+        <p>© {{ date('Y') }} Tether Brew.</p>
     </footer>
 
     <script>
@@ -614,7 +706,7 @@
                 const markers = {};
                 const brewIcon = L.divIcon({
                     className: 'custom-marker',
-                    html: '<div class="custom-marker-icon" style="padding:0; overflow:hidden;"><img src="{{ asset("favicon.png") }}?v={{ time() }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Marker" /></div>',
+                    html: '<div class="custom-marker-icon" style="padding:0; overflow:hidden;"><img src="{{ asset("favicon.webp") }}?v={{ time() }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Marker" /></div>',
                     iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -24]
                 });
 
@@ -715,7 +807,7 @@
                     <div class="menu-card-top">
                         <div class="menu-card-bg-circle"></div>
                         <div class="menu-card-hero">
-                            ${m.category === 'kopi' ? '<img src="/storage/image/kopi-tether-new.png" alt="Cup">' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l1.5 11.5A2 2 0 0 0 9.5 22h5a2 2 0 0 0 2-1.5L18 9" /><line x1="4" y1="9" x2="20" y2="9" /><path d="M5 9 A 7 5 0 0 1 19 9" /><line x1="12" y1="4" x2="14" y2="0" /></svg>'}
+                            ${m.image ? '<img src="/storage/image/' + m.image + '" alt="' + m.name + '">' : '<img src="/storage/image/kopi-tether-new.webp" alt="' + m.name + '">'}
                         </div>
                         <svg class="menu-card-wave" viewBox="0 0 1000 100" preserveAspectRatio="none"><path  d="M0,50 C300,120 700,-20 1000,50 L1000,105 L0,105 Z"></path></svg>
                     </div>
@@ -724,7 +816,7 @@
                         <div class="menu-card-desc">${m.category === 'kopi' ? 'Minuman kopi spesial dengan racikan khas Tether Brew' : 'Minuman segar pilihan non-kopi yang cocok untuk bersantai'}</div>
                         <div class="menu-card-bottom">
                             <span class="menu-card-price">${formatRupiah(m.price)}</span>
-                            <a href="#maps" class="relative inline-flex active:translate-y-0.5 items-center justify-center overflow-hidden text-white bg-orange-900 rounded-xl group transition-all duration-1000" style="padding: 5px 25px;">
+                            <a href="#maps" class="menu-card-btn relative inline-flex active:translate-y-0.5 items-center justify-center overflow-hidden text-white bg-orange-900 rounded-xl group transition-all duration-1000">
                                 <span class="absolute w-0 h-0 transition-all duration-1000 ease-out bg-green-600 rounded-full group-hover:w-36 group-hover:h-36"></span>
                                 <span class="absolute bottom-0 left-0 h-full -ml-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-full opacity-100 object-stretch" viewBox="0 0 487 487">

@@ -38,6 +38,7 @@ class LandingController extends Controller
                             'price' => (float) $inv->product->price,
                             'stock' => $inv->stock,
                             'category' => $inv->product->category,
+                            'image' => $inv->product->image,
                         ])
                         ->values(),
                 ];
