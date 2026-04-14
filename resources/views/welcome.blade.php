@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Tether Brew - Temukan gerobak kopi terdekat di sekitarmu. Lihat lokasi, menu, dan stok secara realtime.">
     <title>Tether Brew - Temukan Kopi Terdekat</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v={{ time() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -90,7 +91,7 @@
     {{-- ===== HOME / HERO ===== --}}
     <section class="hero" id="home">
         <div class="hero-bg">
-            <img src="/storage/image/cup-png.png" alt="Tether Brew Coffee Background">
+            <img src="/storage/image/kopi-tether-new.png" alt="Tether Brew Coffee Background">
         </div>
         <div class="hero-content">
             <div class="hero-badge">
@@ -133,7 +134,7 @@
     {{-- ===== MAPS ===== --}}
     <section class="map-section section-relative" id="maps">
         <div class="deco-bg-wrapper">
-            <img src="/storage/image/cup-png.png" class="deco-cup deco-cup-1" alt="">
+            <img src="/storage/image/kopi-tether-new.png" class="deco-cup deco-cup-1" alt="">
         </div>
         <div class="section-header">
             <div class="section-tag">LOKASI</div>
@@ -152,7 +153,7 @@
     {{-- ===== MENU ===== --}}
     <section class="menu-section section-relative" id="menu" x-data="{ activeTab: 'semua' }">
         <div class="deco-bg-wrapper">
-            <img src="/storage/image/cup-png.png" class="deco-cup deco-cup-2" alt="">
+            <img src="/storage/image/kopi-tether-new.png" class="deco-cup deco-cup-2" alt="">
         </div>
         <div class="section-header">
             <div class="section-tag"> MENU</div>
@@ -188,7 +189,7 @@
     {{-- ===== ABOUT ===== --}}
     <section class="about-section section-relative" id="about">
         <div class="deco-bg-wrapper">
-            <img src="/storage/image/cup-png.png" class="deco-cup deco-cup-3" alt="">
+            <img src="/storage/image/kopi-tether-new.png" class="deco-cup deco-cup-3" alt="">
         </div>
         <div class="section-header">
             <div class="section-tag">TENTANG</div>
@@ -292,8 +293,21 @@
                 {{-- Menu items rendered by JS --}}
             </div>
             <div class="order-notes-wrapper">
-                <label for="order-notes">📝 Catatan Pesanan</label>
+                <label for="order-notes">Catatan Pesanan</label>
                 <textarea id="order-notes" class="order-notes" placeholder="Contoh: Gula sedikit, Es banyak, Pisah cup..." rows="2"></textarea>
+            </div>
+            <div class="order-eta-wrapper">
+                <label for="order-eta">Estimasi Saya Sampai</label>
+                <select id="order-eta" class="order-eta-select">
+                    <option value="">— Pilih estimasi —</option>
+                    <option value="Saya sudah di lokasi">📍 Saya sudah di lokasi</option>
+                    <option value="± 5 menit">🚶 ± 5 menit</option>
+                    <option value="± 10 menit">🚶 ± 10 menit</option>
+                    <option value="± 15 menit">🏍️ ± 15 menit</option>
+                    <option value="± 30 menit">🏍️ ± 30 menit</option>
+                    <option value="Lebih dari 30 menit">🚗 Lebih dari 30 menit</option>
+                </select>
+                <div id="order-eta-hint" class="order-eta-hint"></div>
             </div>
             <div class="order-panel-footer">
                 <div class="order-summary">
@@ -305,11 +319,17 @@
                 </div>
                 <div class="order-action-buttons">
                     <a id="order-nav-btn" href="#" target="_blank" class="order-nav-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                        <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                         Arahkan
                     </a>
+                    <a id="order-loc-btn" href="#" target="_blank" class="order-loc-btn disabled">
+                        <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        Kirim Lokasi
+                    </a>
+                </div>
+                <div class="order-action-buttons" style="margin-top: 8px;">
                     <a id="order-wa-btn" href="#" target="_blank" class="order-wa-btn disabled">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                         Pesan via WhatsApp
                     </a>
                 </div>
@@ -369,6 +389,22 @@
             return (meters / 1000).toFixed(1) + ' km';
         }
 
+        function getDistanceMeters(cartLat, cartLng) {
+            if (!userLatLng) return null;
+            const cartPos = L.latLng(cartLat, cartLng);
+            return userLatLng.distanceTo(cartPos);
+        }
+
+        function estimateETA(meters) {
+            if (meters === null) return '';
+            if (meters < 500) return 'Saya sudah di lokasi';
+            if (meters < 1000) return '± 5 menit';
+            if (meters < 2000) return '± 10 menit';
+            if (meters < 5000) return '± 15 menit';
+            if (meters < 10000) return '± 30 menit';
+            return 'Lebih dari 30 menit';
+        }
+
         // =============================================
         // ORDER PANEL LOGIC
         // =============================================
@@ -387,6 +423,9 @@
         const orderItemCount = document.getElementById('order-item-count');
         const orderWaBtn = document.getElementById('order-wa-btn');
         const orderNavBtn = document.getElementById('order-nav-btn');
+        const orderLocBtn = document.getElementById('order-loc-btn');
+        const orderEta = document.getElementById('order-eta');
+        const orderEtaHint = document.getElementById('order-eta-hint');
         const orderCloseBtn = document.getElementById('order-close-btn');
 
         function openOrderPanel(cart) {
@@ -408,6 +447,28 @@
 
             // Navigation button
             orderNavBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${cart.latitude},${cart.longitude}`;
+
+            // ETA auto-fill based on distance
+            const meters = getDistanceMeters(cart.latitude, cart.longitude);
+            const autoEta = estimateETA(meters);
+            if (autoEta) {
+                orderEta.value = autoEta;
+                orderEtaHint.textContent = `Otomatis berdasarkan jarak ± ${dist}`;
+                orderEtaHint.style.display = 'block';
+            } else {
+                orderEta.value = '';
+                orderEtaHint.textContent = 'Aktifkan lokasi untuk estimasi otomatis';
+                orderEtaHint.style.display = 'block';
+            }
+
+            // Location share button
+            if (userLatLng && currentOrderCart?.whatsapp) {
+                orderLocBtn.classList.remove('disabled');
+                orderLocBtn.href = generateLocationShareLink();
+            } else {
+                orderLocBtn.classList.add('disabled');
+                orderLocBtn.href = '#';
+            }
 
             renderOrderMenu();
             updateOrderTotal();
@@ -478,6 +539,7 @@
             const selected = orderItems.filter(i => i.qty > 0);
             const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
             const notes = orderNotes.value.trim();
+            const eta = orderEta.value;
 
             let msg = `Halo Tether Brew *${currentOrderCart.name}*,\nSaya mau pesan:\n\n`;
             selected.forEach(item => {
@@ -485,14 +547,38 @@
                 msg += `☕ ${item.name} x${item.qty} = ${formatRupiah(sub)}\n`;
             });
             msg += `\n💰 *Total: ${formatRupiah(total)}*`;
+            if (eta) msg += `\n⏰ *Estimasi saya sampai: ${eta}*`;
             if (notes) msg += `\n\n📝 Catatan: ${notes}`;
-            msg += `\n\nMohon konfirmasi ketersediaannya. Terima kasih! 🙏`;
+            if (userLatLng) {
+                msg += `\n\n📍 Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
+            }
+            msg += `\n\nMohon konfirmasi ketersediaannya dan jangan kemana-mana dulu ya! 🙏`;
 
             return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
         }
 
-        // Update WA link on notes change
+        function generateLocationShareLink() {
+            if (!currentOrderCart || !userLatLng) return '#';
+            const phone = currentOrderCart.whatsapp;
+            const dist = getDistanceText(currentOrderCart.latitude, currentOrderCart.longitude);
+            const mapsLink = `https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
+
+            let msg = `Halo Tether Brew *${currentOrderCart.name}*! 👋\n\n`;
+            msg += `Saya tertarik untuk pesan kopi. Ini lokasi saya:\n`;
+            msg += `📍 ${mapsLink}\n\n`;
+            if (dist) msg += `Jarak saya ke gerobak Anda: ± ${dist}\n\n`;
+            msg += `Apakah memungkinkan untuk mendekat ke lokasi saya? Terima kasih! 🙏`;
+
+            return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+        }
+
+        // Update WA link on notes/eta change
         orderNotes.addEventListener('input', updateOrderTotal);
+        orderEta.addEventListener('change', function() {
+            orderEtaHint.textContent = '';
+            orderEtaHint.style.display = 'none';
+            updateOrderTotal();
+        });
 
         // =============================================
         // MENU & MAP DATA
@@ -528,7 +614,7 @@
                 const markers = {};
                 const brewIcon = L.divIcon({
                     className: 'custom-marker',
-                    html: '<div class="custom-marker-icon"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em; margin-right:4px;"><path d="M6 9l1.5 11.5A2 2 0 0 0 9.5 22h5a2 2 0 0 0 2-1.5L18 9" /><line x1="4" y1="9" x2="20" y2="9" /><path d="M5 9 A 7 5 0 0 1 19 9" /><line x1="12" y1="4" x2="14" y2="0" /></svg></div>',
+                    html: '<div class="custom-marker-icon" style="padding:0; overflow:hidden;"><img src="{{ asset("favicon.png") }}?v={{ time() }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Marker" /></div>',
                     iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -24]
                 });
 
@@ -546,7 +632,7 @@
                             <div class="popup-menu-title">${cart.menu.length} menu tersedia</div>
                             <div class="popup-updated">Update: ${cart.updated_at}</div>
                             <div class="popup-contact-wrapper">
-                                <button class="popup-order-btn" onclick="openOrderPanel(window.__cartsData.find(c=>c.id===${cart.id}))">🛒 Pesan dari Gerobak Ini</button>
+                                <button class="popup-order-btn" onclick="openOrderPanel(window.__cartsData.find(c=>c.id===${cart.id}))"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.2em;margin-right:4px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Pesan dari Gerobak Ini</button>
                             </div>
                         `;
 
@@ -629,7 +715,7 @@
                     <div class="menu-card-top">
                         <div class="menu-card-bg-circle"></div>
                         <div class="menu-card-hero">
-                            ${m.category === 'kopi' ? '<img src="/storage/image/cup-png.png" alt="Cup">' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l1.5 11.5A2 2 0 0 0 9.5 22h5a2 2 0 0 0 2-1.5L18 9" /><line x1="4" y1="9" x2="20" y2="9" /><path d="M5 9 A 7 5 0 0 1 19 9" /><line x1="12" y1="4" x2="14" y2="0" /></svg>'}
+                            ${m.category === 'kopi' ? '<img src="/storage/image/kopi-tether-new.png" alt="Cup">' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l1.5 11.5A2 2 0 0 0 9.5 22h5a2 2 0 0 0 2-1.5L18 9" /><line x1="4" y1="9" x2="20" y2="9" /><path d="M5 9 A 7 5 0 0 1 19 9" /><line x1="12" y1="4" x2="14" y2="0" /></svg>'}
                         </div>
                         <svg class="menu-card-wave" viewBox="0 0 1000 100" preserveAspectRatio="none"><path  d="M0,50 C300,120 700,-20 1000,50 L1000,105 L0,105 Z"></path></svg>
                     </div>
