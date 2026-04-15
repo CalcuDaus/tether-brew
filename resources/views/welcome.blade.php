@@ -96,7 +96,7 @@
     </script>
 
     {{-- ===== FAVICON ===== --}}
-    <link rel="icon" type="image/webp" href="{{ asset('favicon.webp') }}?v={{ time() }}">
+    <link rel="icon" type="image/webp" href="{{ asset('favicon.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('favicon.webp') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

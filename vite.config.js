@@ -5,14 +5,22 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/css/landing.css', 'resources/js/app.js'],
+            input: [
+                "resources/css/app.css",
+                "resources/css/landing.css",
+                "resources/js/app.js",
+            ],
             refresh: true,
         }),
         tailwindcss(),
     ],
+    build: {
+        target: "esnext", // Target browser paling modern
+        cssTarget: "chrome110", // Memastikan CSS tidak di-prefix berlebihan
+    },
     server: {
         watch: {
-            ignored: ['**/storage/framework/views/**'],
+            ignored: ["**/storage/framework/views/**"],
         },
     },
 });
