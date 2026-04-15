@@ -39,60 +39,60 @@
     {{-- ===== JSON-LD STRUCTURED DATA ===== --}}
     <script type="application/ld+json">
     {!! json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'FoodEstablishment',
-        'name' => 'Tether Brew',
-        'alternateName' => 'Tether Brew Kopi Keliling Medan',
-        'description' => 'Tether Brew adalah layanan kopi keliling di Medan yang menyajikan kopi segar berkualitas dengan harga terjangkau mulai dari Rp 8.000. Tersedia 13+ varian menu termasuk Cold Brew, Honey Brew, Americano, Matcha, dan lainnya.',
-        'url' => url('/'),
-        'logo' => asset('favicon.webp'),
-        'image' => asset('favicon.webp'),
-        'telephone' => '',
-        'servesCuisine' => ['Kopi', 'Minuman', 'Coffee'],
-        'priceRange' => 'Rp 8.000 - Rp 15.000',
-        'currenciesAccepted' => 'IDR',
-        'paymentAccepted' => 'Cash, Transfer',
-        'address' => [
-            '@type' => 'PostalAddress',
-            'addressLocality' => 'Medan',
-            'addressRegion' => 'Sumatera Utara',
-            'addressCountry' => 'ID',
-        ],
-        'geo' => [
-            '@type' => 'GeoCoordinates',
-            'latitude' => 3.5952,
-            'longitude' => 98.6722,
-        ],
-        'areaServed' => [
-            '@type' => 'City',
-            'name' => 'Medan',
-        ],
-        'hasMenu' => [
-            '@type' => 'Menu',
-            'hasMenuSection' => [
-                [
-                    '@type' => 'MenuSection',
-                    'name' => 'Kopi',
-                    'hasMenuItem' => [
-                        ['@type' => 'MenuItem', 'name' => 'Cold Brew', 'offers' => ['@type' => 'Offer', 'price' => '15000', 'priceCurrency' => 'IDR']],
-                        ['@type' => 'MenuItem', 'name' => 'Honey Brew', 'offers' => ['@type' => 'Offer', 'price' => '15000', 'priceCurrency' => 'IDR']],
-                        ['@type' => 'MenuItem', 'name' => 'Americano', 'offers' => ['@type' => 'Offer', 'price' => '8000', 'priceCurrency' => 'IDR']],
-                        ['@type' => 'MenuItem', 'name' => 'Caramel Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
-                        ['@type' => 'MenuItem', 'name' => 'Vanilla Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
-                    ],
+    '@context' => 'https://schema.org',
+    '@type' => 'FoodEstablishment',
+    'name' => 'Tether Brew',
+    'alternateName' => 'Tether Brew Kopi Keliling Medan',
+    'description' => 'Tether Brew adalah layanan kopi keliling di Medan yang menyajikan kopi segar berkualitas dengan harga terjangkau mulai dari Rp 8.000. Tersedia 13+ varian menu termasuk Cold Brew, Honey Brew, Americano, Matcha, dan lainnya.',
+    'url' => url('/'),
+    'logo' => asset('favicon.webp'),
+    'image' => asset('favicon.webp'),
+    'telephone' => '',
+    'servesCuisine' => ['Kopi', 'Minuman', 'Coffee'],
+    'priceRange' => 'Rp 8.000 - Rp 15.000',
+    'currenciesAccepted' => 'IDR',
+    'paymentAccepted' => 'Cash, Transfer',
+    'address' => [
+        '@type' => 'PostalAddress',
+        'addressLocality' => 'Medan',
+        'addressRegion' => 'Sumatera Utara',
+        'addressCountry' => 'ID',
+    ],
+    'geo' => [
+        '@type' => 'GeoCoordinates',
+        'latitude' => 3.5952,
+        'longitude' => 98.6722,
+    ],
+    'areaServed' => [
+        '@type' => 'City',
+        'name' => 'Medan',
+    ],
+    'hasMenu' => [
+        '@type' => 'Menu',
+        'hasMenuSection' => [
+            [
+                '@type' => 'MenuSection',
+                'name' => 'Kopi',
+                'hasMenuItem' => [
+                    ['@type' => 'MenuItem', 'name' => 'Cold Brew', 'offers' => ['@type' => 'Offer', 'price' => '15000', 'priceCurrency' => 'IDR']],
+                    ['@type' => 'MenuItem', 'name' => 'Honey Brew', 'offers' => ['@type' => 'Offer', 'price' => '15000', 'priceCurrency' => 'IDR']],
+                    ['@type' => 'MenuItem', 'name' => 'Americano', 'offers' => ['@type' => 'Offer', 'price' => '8000', 'priceCurrency' => 'IDR']],
+                    ['@type' => 'MenuItem', 'name' => 'Caramel Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                    ['@type' => 'MenuItem', 'name' => 'Vanilla Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
                 ],
-                [
-                    '@type' => 'MenuSection',
-                    'name' => 'Non-Kopi',
-                    'hasMenuItem' => [
-                        ['@type' => 'MenuItem', 'name' => 'Matcha Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
-                        ['@type' => 'MenuItem', 'name' => 'Cokelat Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
-                    ],
+            ],
+            [
+                '@type' => 'MenuSection',
+                'name' => 'Non-Kopi',
+                'hasMenuItem' => [
+                    ['@type' => 'MenuItem', 'name' => 'Matcha Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                    ['@type' => 'MenuItem', 'name' => 'Cokelat Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
                 ],
             ],
         ],
-        'sameAs' => ['https://www.instagram.com/tetherbrew/'],
-    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    ],
+    'sameAs' => ['https://www.instagram.com/tetherbrew/'],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 
     {{-- ===== FAVICON ===== --}}
@@ -392,259 +392,273 @@
                 <label for="order-eta">Estimasi Saya Sampai</label>
                 <select id="order-eta" class="order-eta-select">
                     <option value="">— Pilih estimasi —</option>
-                    <option value="Saya sudah di lokasi">📍 Saya sudah di lokasi</option>
-                    <option value="± 5 menit">🚶 ± 5 menit</option>
-                    <option value="± 10 menit">🚶 ± 10 menit</option>
-                    <option value="± 15 menit">🏍️ ± 15 menit</option>
-                    <option value="± 30 menit">🏍️ ± 30 menit</option>
-                    <option value="Lebih dari 30 menit">🚗 Lebih dari 30 menit</option>
-                </select>
-                <div id="order-eta-hint" class="order-eta-hint"></div>
-            </div>
-            <div class="order-panel-footer">
-                <div class="order-summary">
-                    <div class="order-total-row">
-                        <span>Total</span>
-                        <span id="order-total-price" class="order-total-price">Rp 0</span>
+                    <option value="Saya sudah di lokasi">Saya sudah di lokasi</option>
+                    <option value="± 5 menit"> ± 5 menit</option>
+                    <option value="± 10 menit"> ± 10 menit</option>
+                    <option value="± 15 menit"> ± 15 menit</option>
+                    <option value="± 30 menit"> ± 30 menit</option>
+                    <option value="Lebih dari 30 menit"> Lebih dari 30 menit</option>
+                    </select>
+                    <div id="order-eta-hint" class="order-eta-hint"></div>
                     </div>
-                    <div id="order-item-count" class="order-item-count">0 item dipilih</div>
-                </div>
-                <div class="order-action-buttons">
-                    <a id="order-nav-btn" href="#" target="_blank" class="order-nav-btn">
-                        <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
-                        Arahkan
-                    </a>
-                    <a id="order-loc-btn" href="#" target="_blank" class="order-loc-btn disabled">
-                        <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        Kirim Lokasi
-                    </a>
-                </div>
-                <div class="order-action-buttons" style="margin-top: 8px;">
-                    <a id="order-wa-btn" href="#" target="_blank" class="order-wa-btn disabled">
-                        <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                        Pesan via WhatsApp
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- ===== FOOTER ===== --}}
-    <footer class="footer">
-        <p>© {{ date('Y') }} Tether Brew.</p>
-    </footer>
-
-    <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
-        });
-
-        // Initialize map
-        const map = L.map('map', { attributionControl: false }).setView([-6.2088, 106.8456], 13);
-
-        const darkTiles = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-        const lightTiles = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-
-        let activeTileLayer = L.tileLayer(localStorage.getItem('theme') === 'light' ? lightTiles : darkTiles, {
-            maxZoom: 19
-        }).addTo(map);
-
-        window.addEventListener('theme-changed', (e) => {
-            map.removeLayer(activeTileLayer);
-            activeTileLayer = L.tileLayer(e.detail.theme === 'light' ? lightTiles : darkTiles, {
-                maxZoom: 19
-            }).addTo(map);
-        });
-
-        function formatRupiah(num) {
-            return 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
-        }
-
-        // =============================================
-        // USER LOCATION (for distance estimation)
-        // =============================================
-        let userLatLng = null;
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                pos => { userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude); },
-                () => { console.log('Geolocation denied or unavailable'); },
-                { enableHighAccuracy: false, timeout: 8000 }
-            );
-        }
-
-        function getDistanceText(cartLat, cartLng) {
-            if (!userLatLng) return null;
-            const cartPos = L.latLng(cartLat, cartLng);
-            const meters = userLatLng.distanceTo(cartPos);
-            if (meters < 1000) return Math.round(meters) + ' m';
-            return (meters / 1000).toFixed(1) + ' km';
-        }
-
-        function getDistanceMeters(cartLat, cartLng) {
-            if (!userLatLng) return null;
-            const cartPos = L.latLng(cartLat, cartLng);
-            return userLatLng.distanceTo(cartPos);
-        }
-
-        function estimateETA(meters) {
-            if (meters === null) return '';
-            if (meters < 500) return 'Saya sudah di lokasi';
-            if (meters < 1000) return '± 5 menit';
-            if (meters < 2000) return '± 10 menit';
-            if (meters < 5000) return '± 15 menit';
-            if (meters < 10000) return '± 30 menit';
-            return 'Lebih dari 30 menit';
-        }
-
-        // =============================================
-        // ORDER PANEL LOGIC
-        // =============================================
-        let currentOrderCart = null;
-        let orderItems = []; // { name, price, stock, qty }
-
-        const orderPanel = document.getElementById('order-panel');
-        const orderBackdrop = document.getElementById('order-backdrop');
-        const orderSheet = document.getElementById('order-sheet');
-        const orderCartName = document.getElementById('order-cart-name');
-        const orderRiderName = document.getElementById('order-rider-name');
-        const orderDistance = document.getElementById('order-distance');
-        const orderMenuList = document.getElementById('order-menu-list');
-        const orderNotes = document.getElementById('order-notes');
-        const orderTotalPrice = document.getElementById('order-total-price');
-        const orderItemCount = document.getElementById('order-item-count');
-        const orderWaBtn = document.getElementById('order-wa-btn');
-        const orderNavBtn = document.getElementById('order-nav-btn');
-        const orderLocBtn = document.getElementById('order-loc-btn');
-        const orderEta = document.getElementById('order-eta');
-        const orderEtaHint = document.getElementById('order-eta-hint');
-        const orderCloseBtn = document.getElementById('order-close-btn');
-
-        function openOrderPanel(cart) {
-            currentOrderCart = cart;
-            orderItems = cart.menu.map(m => ({ ...m, qty: 0 }));
-
-            orderCartName.textContent = cart.name;
-            orderRiderName.textContent = 'Rider: ' + cart.rider;
-            orderNotes.value = '';
-
-            // Distance estimation
-            const dist = getDistanceText(cart.latitude, cart.longitude);
-            if (dist) {
-                orderDistance.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ± ${dist} dari lokasi Anda`;
-                orderDistance.style.display = 'flex';
-            } else {
-                orderDistance.style.display = 'none';
-            }
-
-            // Navigation button
-            orderNavBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${cart.latitude},${cart.longitude}`;
-
-            // ETA auto-fill based on distance
-            const meters = getDistanceMeters(cart.latitude, cart.longitude);
-            const autoEta = estimateETA(meters);
-            if (autoEta) {
-                orderEta.value = autoEta;
-                orderEtaHint.textContent = `Otomatis berdasarkan jarak ± ${dist}`;
-                orderEtaHint.style.display = 'block';
-            } else {
-                orderEta.value = '';
-                orderEtaHint.textContent = 'Aktifkan lokasi untuk estimasi otomatis';
-                orderEtaHint.style.display = 'block';
-            }
-
-            // Location share button
-            if (userLatLng && currentOrderCart?.whatsapp) {
-                orderLocBtn.classList.remove('disabled');
-                orderLocBtn.href = generateLocationShareLink();
-            } else {
-                orderLocBtn.classList.add('disabled');
-                orderLocBtn.href = '#';
-            }
-
-            renderOrderMenu();
-            updateOrderTotal();
-
-            orderPanel.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeOrderPanel() {
-            orderPanel.classList.remove('open');
-            document.body.style.overflow = '';
-            currentOrderCart = null;
-        }
-
-        orderCloseBtn.addEventListener('click', closeOrderPanel);
-        orderBackdrop.addEventListener('click', closeOrderPanel);
-
-        function renderOrderMenu() {
-            if (orderItems.length === 0) {
-                orderMenuList.innerHTML = '<div class="order-empty">Belum ada menu tersedia di gerobak ini.</div>';
-                return;
-            }
-            orderMenuList.innerHTML = orderItems.map((item, i) => `
-                <div class="order-menu-row">
-                    <div class="order-menu-info">
-                        <span class="order-menu-name">${item.name}</span>
-                        <span class="order-menu-price">${formatRupiah(item.price)}</span>
-                        <span class="order-menu-stock">Stok: ${item.stock}</span>
+                    <div class="order-panel-footer">
+                        <div class="order-summary">
+                            <div class="order-total-row">
+                                <span>Total</span>
+                                <span id="order-total-price" class="order-total-price">Rp 0</span>
+                            </div>
+                            <div id="order-item-count" class="order-item-count">0 item dipilih</div>
+                        </div>
+                        <div class="order-action-buttons">
+                            <a id="order-nav-btn" href="#" target="_blank" class="order-nav-btn">
+                                <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                                    fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                </svg>
+                                Arahkan
+                            </a>
+                            <a id="order-loc-btn" href="#" target="_blank" class="order-loc-btn disabled">
+                                <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                                    fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                Kirim Lokasi
+                            </a>
+                        </div>
+                        <div class="order-action-buttons" style="margin-top: 8px;">
+                            <a id="order-wa-btn" href="#" target="_blank" class="order-wa-btn disabled">
+                                <svg class="icon-two-tone" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                                    fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+                                </svg>
+                                Pesan via WhatsApp
+                            </a>
+                        </div>
                     </div>
-                    <div class="order-qty-controls">
-                        <button class="order-qty-btn" onclick="changeQty(${i}, -1)" ${item.qty <= 0 ? 'disabled' : ''}>−</button>
-                        <span class="order-qty-value">${item.qty}</span>
-                        <button class="order-qty-btn" onclick="changeQty(${i}, 1)" ${item.qty >= item.stock ? 'disabled' : ''}>+</button>
                     </div>
-                </div>
-            `).join('');
-        }
+                    </div>
+                    
+                    {{-- ===== FOOTER ===== --}}
+                    <footer class="footer">
+                        <p>© {{ date('Y') }} Tether Brew.</p>
+                    </footer>
+                    
+                    <script>
+                        // Navbar scroll effect
+                        window.addEventListener('scroll', () => {
+                            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+                        });
 
-        function changeQty(index, delta) {
-            const item = orderItems[index];
-            const newQty = item.qty + delta;
-            if (newQty < 0 || newQty > item.stock) return;
-            item.qty = newQty;
-            renderOrderMenu();
-            updateOrderTotal();
-        }
+                        // Initialize map
+                        const map = L.map('map', { attributionControl: false }).setView([-6.2088, 106.8456], 13);
 
-        function updateOrderTotal() {
-            const selected = orderItems.filter(i => i.qty > 0);
-            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            const count = selected.reduce((sum, i) => sum + i.qty, 0);
+                        const darkTiles = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+                        const lightTiles = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
-            orderTotalPrice.textContent = formatRupiah(total);
-            orderItemCount.textContent = count + ' item dipilih';
+                        let activeTileLayer = L.tileLayer(localStorage.getItem('theme') === 'light' ? lightTiles : darkTiles, {
+                            maxZoom: 19
+                        }).addTo(map);
 
-            if (count > 0 && currentOrderCart?.whatsapp) {
-                orderWaBtn.classList.remove('disabled');
-                orderWaBtn.href = generateWhatsAppLink();
-            } else {
-                orderWaBtn.classList.add('disabled');
-                orderWaBtn.href = '#';
-            }
-        }
+                        window.addEventListener('theme-changed', (e) => {
+                            map.removeLayer(activeTileLayer);
+                            activeTileLayer = L.tileLayer(e.detail.theme === 'light' ? lightTiles : darkTiles, {
+                                maxZoom: 19
+                            }).addTo(map);
+                        });
 
-        function generateWhatsAppLink() {
-            if (!currentOrderCart) return '#';
-            const phone = currentOrderCart.whatsapp;
-            const selected = orderItems.filter(i => i.qty > 0);
-            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            const notes = orderNotes.value.trim();
-            const eta = orderEta.value;
+                        function formatRupiah(num) {
+                            return 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
+                        }
 
-            let msg = `Halo Tether Brew *${currentOrderCart.name}*,\nSaya mau pesan:\n\n`;
-            selected.forEach(item => {
-                const sub = item.price * item.qty;
-                msg += `☕ ${item.name} x${item.qty} = ${formatRupiah(sub)}\n`;
-            });
-            msg += `\n💰 *Total: ${formatRupiah(total)}*`;
-            if (eta) msg += `\n⏰ *Estimasi saya sampai: ${eta}*`;
-            if (notes) msg += `\n\n📝 Catatan: ${notes}`;
-            if (userLatLng) {
-                msg += `\n\n📍 Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
-            }
-            msg += `\n\nMohon konfirmasi ketersediaannya dan jangan kemana-mana dulu ya! 🙏`;
+                        // =============================================
+                        // USER LOCATION (for distance estimation)
+                        // =============================================
+                        let userLatLng = null;
+                        if ('geolocation' in navigator) {
+                            navigator.geolocation.getCurrentPosition(
+                                pos => { userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude); },
+                                () => { console.log('Geolocation denied or unavailable'); },
+                                { enableHighAccuracy: false, timeout: 8000 }
+                            );
+                        }
+
+                        function getDistanceText(cartLat, cartLng) {
+                            if (!userLatLng) return null;
+                            const cartPos = L.latLng(cartLat, cartLng);
+                            const meters = userLatLng.distanceTo(cartPos);
+                            if (meters < 1000) return Math.round(meters) + ' m';
+                            return (meters / 1000).toFixed(1) + ' km';
+                        }
+
+                        function getDistanceMeters(cartLat, cartLng) {
+                            if (!userLatLng) return null;
+                            const cartPos = L.latLng(cartLat, cartLng);
+                            return userLatLng.distanceTo(cartPos);
+                        }
+
+                        function estimateETA(meters) {
+                            if (meters === null) return '';
+                            if (meters < 500) return 'Saya sudah di lokasi';
+                            if (meters < 1000) return '± 5 menit';
+                            if (meters < 2000) return '± 10 menit';
+                            if (meters < 5000) return '± 15 menit';
+                            if (meters < 10000) return '± 30 menit';
+                            return 'Lebih dari 30 menit';
+                        }
+
+                        // =============================================
+                        // ORDER PANEL LOGIC
+                        // =============================================
+                        let currentOrderCart = null;
+                        let orderItems = []; // { name, price, stock, qty }
+
+                        const orderPanel = document.getElementById('order-panel');
+                        const orderBackdrop = document.getElementById('order-backdrop');
+                        const orderSheet = document.getElementById('order-sheet');
+                        const orderCartName = document.getElementById('order-cart-name');
+                        const orderRiderName = document.getElementById('order-rider-name');
+                        const orderDistance = document.getElementById('order-distance');
+                        const orderMenuList = document.getElementById('order-menu-list');
+                        const orderNotes = document.getElementById('order-notes');
+                        const orderTotalPrice = document.getElementById('order-total-price');
+                        const orderItemCount = document.getElementById('order-item-count');
+                        const orderWaBtn = document.getElementById('order-wa-btn');
+                        const orderNavBtn = document.getElementById('order-nav-btn');
+                        const orderLocBtn = document.getElementById('order-loc-btn');
+                        const orderEta = document.getElementById('order-eta');
+                        const orderEtaHint = document.getElementById('order-eta-hint');
+                        const orderCloseBtn = document.getElementById('order-close-btn');
+
+                        function openOrderPanel(cart) {
+                            currentOrderCart = cart;
+                            orderItems = cart.menu.map(m => ({ ...m, qty: 0 }));
+
+                            orderCartName.textContent = cart.name;
+                            orderRiderName.textContent = 'Rider: ' + cart.rider;
+                            orderNotes.value = '';
+
+                            // Distance estimation
+                            const dist = getDistanceText(cart.latitude, cart.longitude);
+                            if (dist) {
+                                orderDistance.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ± ${dist} dari lokasi Anda`;
+                                orderDistance.style.display = 'flex';
+                            } else {
+                                orderDistance.style.display = 'none';
+                            }
+
+                            // Navigation button
+                            orderNavBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${cart.latitude},${cart.longitude}`;
+
+                            // ETA auto-fill based on distance
+                            const meters = getDistanceMeters(cart.latitude, cart.longitude);
+                            const autoEta = estimateETA(meters);
+                            if (autoEta) {
+                                orderEta.value = autoEta;
+                                orderEtaHint.textContent = `Otomatis berdasarkan jarak ± ${dist}`;
+                                orderEtaHint.style.display = 'block';
+                            } else {
+                                orderEta.value = '';
+                                orderEtaHint.textContent = 'Aktifkan lokasi untuk estimasi otomatis';
+                                orderEtaHint.style.display = 'block';
+                            }
+
+                            // Location share button
+                            if (userLatLng && currentOrderCart?.whatsapp) {
+                                orderLocBtn.classList.remove('disabled');
+                                orderLocBtn.href = generateLocationShareLink();
+                            } else {
+                                orderLocBtn.classList.add('disabled');
+                                orderLocBtn.href = '#';
+                            }
+
+                            renderOrderMenu();
+                            updateOrderTotal();
+
+                            orderPanel.classList.add('open');
+                            document.body.style.overflow = 'hidden';
+                        }
+
+                        function closeOrderPanel() {
+                            orderPanel.classList.remove('open');
+                            document.body.style.overflow = '';
+                            currentOrderCart = null;
+                        }
+
+                        orderCloseBtn.addEventListener('click', closeOrderPanel);
+                        orderBackdrop.addEventListener('click', closeOrderPanel);
+
+                        function renderOrderMenu() {
+                            if (orderItems.length === 0) {
+                                orderMenuList.innerHTML = '<div class="order-empty">Belum ada menu tersedia di gerobak ini.</div>';
+                                return;
+                            }
+                            orderMenuList.innerHTML = orderItems.map((item, i) => `
+                                    <div class="order-menu-row">
+                                        <div class="order-menu-info">
+                                            <span class="order-menu-name">${item.name}</span>
+                                            <span class="order-menu-price">${formatRupiah(item.price)}</span>
+                                            <span class="order-menu-stock">Stok: ${item.stock}</span>
+                                        </div>
+                                        <div class="order-qty-controls">
+                                            <button class="order-qty-btn" onclick="changeQty(${i}, -1)" ${item.qty <= 0 ? 'disabled' : ''}>−</button>
+                                            <span class="order-qty-value">${item.qty}</span>
+                                            <button class="order-qty-btn" onclick="changeQty(${i}, 1)" ${item.qty >= item.stock ? 'disabled' : ''}>+</button>
+                                        </div>
+                                    </div>
+                                `).join('');
+                        }
+
+                        function changeQty(index, delta) {
+                            const item = orderItems[index];
+                            const newQty = item.qty + delta;
+                            if (newQty < 0 || newQty > item.stock) return;
+                            item.qty = newQty;
+                            renderOrderMenu();
+                            updateOrderTotal();
+                        }
+
+                        function updateOrderTotal() {
+                            const selected = orderItems.filter(i => i.qty > 0);
+                            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
+                            const count = selected.reduce((sum, i) => sum + i.qty, 0);
+
+                            orderTotalPrice.textContent = formatRupiah(total);
+                            orderItemCount.textContent = count + ' item dipilih';
+
+                            if (count > 0 && currentOrderCart?.whatsapp) {
+                                orderWaBtn.classList.remove('disabled');
+                                orderWaBtn.href = generateWhatsAppLink();
+                            } else {
+                                orderWaBtn.classList.add('disabled');
+                                orderWaBtn.href = '#';
+                            }
+                        }
+
+                        function generateWhatsAppLink() {
+                            if (!currentOrderCart) return '#';
+                            const phone = currentOrderCart.whatsapp;
+                            const selected = orderItems.filter(i => i.qty > 0);
+                            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
+                            const notes = orderNotes.value.trim();
+                            const eta = orderEta.value;
+
+                            let msg = `Halo Tether Brew *${currentOrderCart.name}*,\nSaya mau pesan:\n\n`;
+                            selected.forEach(item => {
+                                const sub = item.price * item.qty;
+                                msg += ` ${item.name} x${item.qty} = ${formatRupiah(sub)}\n`;
+                            });
+                            msg += `\n *Total: ${formatRupiah(total)}*`;
+                            if (eta) msg += `\n *Estimasi saya sampai: ${eta}*`;
+                            if (notes) msg += `\n\n Catatan: ${notes}`;
+                            if (userLatLng) {
+                                msg += `\n\n Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
+                            }
+                            msg += `\n\nMohon konfirmasi ketersediaannya dan jangan kemana-mana dulu ya! `;
 
             return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
         }
