@@ -36,7 +36,14 @@
                                 <td class="text-primary-semi"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> {{ $cart->name }}</td>
                                 <td>{{ $cart->user?->name ?? '-' }}</td>
                                 <td>
-                                    <span class="badge badge-{{ $cart->status }}">{{ ucfirst($cart->status) }}</span>
+                                    <button
+                                        class="badge badge-{{ $cart->status }} status-toggle"
+                                        data-cart-id="{{ $cart->id }}"
+                                        data-url="{{ route('carts.toggle_status', $cart) }}"
+                                        onclick="toggleCartStatus(this)"
+                                        style="cursor: pointer; border: none; font-family: inherit; transition: all 0.3s;"
+                                        title="Klik untuk ubah status"
+                                    >{{ ucfirst($cart->status) }}</button>
                                 </td>
                                 <td>
                                     @if($cart->location)
@@ -86,19 +93,13 @@
         }).addTo(map);
 
         const markers = {};
-        const iconHtml = `
-            <div class="marker-icon-sm" style="background: white; border: 2px solid var(--accent-green);">
-                <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="var(--accent-green)" fill-opacity="0.2" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-                </svg>
-            </div>
-        `;
 
         const cartIcon = L.divIcon({
-            html: iconHtml,
             className: 'custom-marker',
-            iconSize: [36, 36],
-            iconAnchor: [18, 18]
+            html: '<div style="width:40px; height:40px; background:linear-gradient(135deg, #22c55e, #16a34a); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(34,197,94,0.4); border:2px solid rgba(255,255,255,0.2); overflow:hidden; padding:0;"><img src="{{ asset("favicon.webp") }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Marker" /></div>',
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+            popupAnchor: [0, -24]
         });
 
         async function updateMap() {
@@ -151,6 +152,37 @@
         // Polling every 15 seconds
         setInterval(updateMap, 15000);
     });
+
+    async function toggleCartStatus(btn) {
+        const url = btn.dataset.url;
+        const originalText = btn.textContent;
+        btn.textContent = '...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                btn.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+                btn.className = `badge badge-${data.status} status-toggle`;
+            } else {
+                btn.textContent = originalText;
+            }
+        } catch (error) {
+            console.error('Toggle failed:', error);
+            btn.textContent = originalText;
+        }
+
+        btn.disabled = false;
+    }
 </script>
 @endpush
 

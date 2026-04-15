@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RiderController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,9 +43,13 @@ Route::middleware('auth')->group(function () {
         // Carts CRUD & Map Data
         Route::get('/carts/map-data', [CartController::class, 'mapData'])->name('carts.map_data');
         Route::resource('carts', CartController::class);
+        Route::patch('/carts/{cart}/toggle-status', [CartController::class, 'toggleStatus'])->name('carts.toggle_status');
 
         // Products CRUD
         Route::resource('products', ProductController::class);
+
+        // Riders CRUD
+        Route::resource('riders', RiderController::class);
 
         // Inventories
         Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');

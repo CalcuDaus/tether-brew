@@ -775,10 +775,6 @@
                                 <div class="gerobak-badge">Aktif</div>
                             </div>
                             <div class="gerobak-card-rider"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px; margin-top:-2px;"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>${cart.rider} · <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${cart.updated_at}${distText ? ' · 📍 ' + distText : ''}</div>
-                            <div class="gerobak-card-tags">
-                                ${cart.menu.slice(0, 4).map(m => `<span class="gerobak-card-tag">${m.name}</span>`).join('')}
-                                ${cart.menu.length > 4 ? `<span class="gerobak-card-tag">+${cart.menu.length - 4}</span>` : ''}
-                            </div>
                             <div class="gerobak-card-actions" onclick="event.stopPropagation()">
                                 <button class="btn-cart-wa" onclick="openOrderPanel(window.__cartsData.find(c=>c.id===${cart.id}))"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.2em; margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> Pesan</button>
                             </div>

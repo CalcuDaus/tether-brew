@@ -91,6 +91,18 @@ class CartController extends Controller
         return redirect()->route('carts.index')->with('success', 'Gerobak berhasil dihapus!');
     }
 
+    public function toggleStatus(Cart $cart)
+    {
+        $newStatus = $cart->status === 'active' ? 'inactive' : 'active';
+        $cart->update(['status' => $newStatus]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $newStatus,
+            'message' => 'Status gerobak berhasil diubah ke ' . ucfirst($newStatus),
+        ]);
+    }
+
     // Rider: Update location (form submit)
     public function updateLocation(Request $request)
     {
@@ -113,6 +125,7 @@ class CartController extends Controller
     public function mapData()
     {
         $carts = Cart::with(['location', 'user'])
+            ->where('status', 'active')
             ->get()
             ->filter(fn($cart) => $cart->location !== null)
             ->map(function ($cart) {
