@@ -94,12 +94,11 @@
 
         const markers = {};
 
-        const cartIcon = L.divIcon({
-            className: 'custom-marker',
-            html: '<div style="width:40px; height:40px; background:linear-gradient(135deg, #22c55e, #16a34a); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(34,197,94,0.4); border:2px solid rgba(255,255,255,0.2); overflow:hidden; padding:0;"><img src="{{ asset("favicon.webp") }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Marker" /></div>',
+        const cartIcon = L.icon({
+            iconUrl: '{{ asset("custom_icon_maps.png") }}',
             iconSize: [40, 40],
-            iconAnchor: [20, 20],
-            popupAnchor: [0, -24]
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40]
         });
 
         async function updateMap() {

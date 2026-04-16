@@ -87,6 +87,7 @@
                 'hasMenuItem' => [
                     ['@type' => 'MenuItem', 'name' => 'Matcha Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
                     ['@type' => 'MenuItem', 'name' => 'Cokelat Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
+                    ['@type' => 'MenuItem', 'name' => 'Taro Brew', 'offers' => ['@type' => 'Offer', 'price' => '12000', 'priceCurrency' => 'IDR']],
                 ],
             ],
         ],
@@ -402,7 +403,7 @@
             </div>
             <div class="order-notes-wrapper">
                 <label for="order-notes">Catatan Pesanan</label>
-                <textarea id="order-notes" class="order-notes" placeholder="Contoh: Gula sedikit, Es banyak, Pisah cup..." rows="2"></textarea>
+                <textarea id="order-notes" class="order-notes" placeholder="Cth: Less ice.." rows="2"></textarea>
             </div>
             <div class="order-eta-wrapper">
                 <label for="order-eta">Estimasi Saya Sampai</label>
@@ -734,10 +735,11 @@
                 });
 
                 const markers = {};
-                const brewIcon = L.divIcon({
-                    className: 'custom-marker',
-                    html: '<div class="custom-marker-icon" style="padding:0; overflow:hidden;"><img src="{{ asset("favicon.webp") }}?v={{ time() }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="Marker" /></div>',
-                    iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -24]
+                const brewIcon = L.icon({
+                    iconUrl: '{{ asset("custom_icon_maps.png") }}',
+                    iconSize: [40, 40], 
+                    iconAnchor: [20, 40], 
+                    popupAnchor: [0, -40]
                 });
 
                 function renderCartsOnMap(carts, initial = false) {
@@ -760,10 +762,25 @@
 
                         if (markers[cart.id]) {
                             markers[cart.id].setLatLng(latlng).setPopupContent(popupContent);
+                            // Update distance tooltip
+                            if (distText) {
+                                markers[cart.id].unbindTooltip();
+                                markers[cart.id].bindTooltip(distText, {
+                                    permanent: true, direction: 'bottom', offset: [0, 4],
+                                    className: 'distance-tooltip'
+                                });
+                            }
                         } else {
-                            markers[cart.id] = L.marker(latlng, { icon: brewIcon })
+                            const m = L.marker(latlng, { icon: brewIcon })
                                 .addTo(map)
                                 .bindPopup(popupContent, { maxWidth: 280 });
+                            if (distText) {
+                                m.bindTooltip(distText, {
+                                    permanent: true, direction: 'bottom', offset: [0, 4],
+                                    className: 'distance-tooltip'
+                                });
+                            }
+                            markers[cart.id] = m;
                         }
                     });
 
@@ -782,7 +799,16 @@
                         return;
                     }
 
-                    grid.innerHTML = carts.map(cart => {
+                    let sortedCarts = [...carts];
+                    if (typeof userLatLng !== 'undefined' && userLatLng) {
+                        sortedCarts.sort((a, b) => {
+                            const distA = getDistanceMeters(a.latitude, a.longitude);
+                            const distB = getDistanceMeters(b.latitude, b.longitude);
+                            return (distA === null ? Infinity : distA) - (distB === null ? Infinity : distB);
+                        });
+                    }
+
+                    grid.innerHTML = sortedCarts.map(cart => {
                         const distText = getDistanceText(cart.latitude, cart.longitude);
                         return `
                         <div class="gerobak-card" onclick="map.setView([${cart.latitude},${cart.longitude}],16); document.getElementById('maps').scrollIntoView({behavior:'smooth'});">
@@ -790,7 +816,7 @@
                                 <div class="gerobak-card-name"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em; margin-right:4px;"><path d="M6 9l1.5 11.5A2 2 0 0 0 9.5 22h5a2 2 0 0 0 2-1.5L18 9" /><line x1="4" y1="9" x2="20" y2="9" /><path d="M5 9 A 7 5 0 0 1 19 9" /><line x1="12" y1="4" x2="14" y2="0" /></svg> ${cart.name}</div>
                                 <div class="gerobak-badge">Aktif</div>
                             </div>
-                            <div class="gerobak-card-rider"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px; margin-top:-2px;"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>${cart.rider} · <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${cart.updated_at}${distText ? ' · 📍 ' + distText : ''}</div>
+                            <div class="gerobak-card-rider"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px; margin-top:-2px;"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>${cart.rider} · <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${cart.updated_at}${distText ? ' · <svg class="icon-two-tone" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ' + distText : ''}</div>
                             <div class="gerobak-card-actions" onclick="event.stopPropagation()">
                                 <button class="btn-cart-wa" onclick="openOrderPanel(window.__cartsData.find(c=>c.id===${cart.id}))"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.2em; margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> Pesan</button>
                             </div>

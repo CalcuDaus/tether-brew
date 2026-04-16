@@ -101,6 +101,7 @@ class DatabaseSeeder extends Seeder
             // Non-Coffee
             Product::create(['name' => 'Matcha Brew', 'description' => 'Green tea matcha premium yang creamy', 'price' => 12000, 'category' => 'non-kopi']),
             Product::create(['name' => 'Cokelat Brew', 'description' => 'Cokelat premium yang rich dan lembut', 'price' => 12000, 'category' => 'non-kopi']),
+            Product::create(['name' => 'Taro Brew', 'description' => 'Minuman taro premium yang manis dan creamy', 'price' => 12000, 'category' => 'non-kopi']),
         ]);
 
         // ==========================================

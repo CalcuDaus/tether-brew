@@ -257,10 +257,10 @@
     });
 
     // Custom rider marker icon
-    const riderIcon = L.divIcon({
-        className: 'rider-marker',
-        html: '<div class="marker-icon-sm"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div>',
-        iconSize: [36, 36], iconAnchor: [18, 18]
+    const riderIcon = L.icon({
+        iconUrl: '{{ asset("custom_icon_maps.png") }}',
+        iconSize: [40, 40], 
+        iconAnchor: [20, 40]
     });
 
     riderMarker = L.marker([initLat, initLng], { 
