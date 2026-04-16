@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ==========================================
-        // USERS
+        // USERS — Owner & Admin
         // ==========================================
         $owner = User::create([
             'name' => 'Eki Owner',
@@ -33,53 +33,38 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $rider1 = User::create([
-            'name' => 'Andi Rider',
-            'email' => 'rider1@coffee.com',
-            'whatsapp' => '6281234567891',
-            'password' => Hash::make('password'),
-            'role' => 'rider',
-        ]);
+        // ==========================================
+        // USERS — 39 Riders (random names)
+        // ==========================================
+        $firstNames = [
+            'Andi', 'Budi', 'Cahyo', 'Dimas', 'Eko', 'Fajar', 'Galih', 'Hendra',
+            'Ilham', 'Joko', 'Kurniawan', 'Lutfi', 'Maulana', 'Naufal', 'Oscar',
+            'Pratama', 'Qadri', 'Rizky', 'Surya', 'Taufik', 'Umar', 'Vino',
+            'Wahyu', 'Xander', 'Yusuf', 'Zaki', 'Agung', 'Bagas', 'Candra',
+            'Dani', 'Erwin', 'Firman', 'Gilang', 'Hafiz', 'Irfan', 'Jefri',
+            'Kevin', 'Lukman', 'Mansyur',
+        ];
 
-        $rider2 = User::create([
-            'name' => 'Rudi Rider',
-            'email' => 'rider2@coffee.com',
-            'whatsapp' => '6281234567892',
-            'password' => Hash::make('password'),
-            'role' => 'rider',
-        ]);
+        $lastNames = [
+            'Pratama', 'Saputra', 'Wijaya', 'Nugroho', 'Hidayat', 'Santoso',
+            'Ramadhan', 'Permana', 'Kurniawan', 'Siregar', 'Nasution', 'Harahap',
+            'Lubis', 'Tarigan', 'Sembiring', 'Ginting', 'Situmorang', 'Simanjuntak',
+            'Panjaitan', 'Hutabarat',
+        ];
 
-        $rider3 = User::create([
-            'name' => 'Dimas Rider',
-            'email' => 'rider3@coffee.com',
-            'whatsapp' => '6281234567893',
-            'password' => Hash::make('password'),
-            'role' => 'rider',
-        ]);
+        $riders = [];
+        for ($i = 1; $i <= 39; $i++) {
+            $number = str_pad($i, 2, '0', STR_PAD_LEFT);
+            $name = $firstNames[$i - 1] . ' ' . $lastNames[array_rand($lastNames)];
 
-        $rider4 = User::create([
-            'name' => 'Fajar Rider',
-            'email' => 'rider4@coffee.com',
-            'whatsapp' => '6281234567894',
-            'password' => Hash::make('password'),
-            'role' => 'rider',
-        ]);
-
-        $rider5 = User::create([
-            'name' => 'Rizky Rider',
-            'email' => 'rider5@coffee.com',
-            'whatsapp' => '6281234567895',
-            'password' => Hash::make('password'),
-            'role' => 'rider',
-        ]);
-
-        $rider6 = User::create([
-            'name' => 'Hendra Rider',
-            'email' => 'rider6@coffee.com',
-            'whatsapp' => '6281234567896',
-            'password' => Hash::make('password'),
-            'role' => 'rider',
-        ]);
+            $riders[] = User::create([
+                'name' => $name,
+                'email' => "tether{$number}@tether.com",
+                'whatsapp' => '628' . rand(1000000000, 9999999999),
+                'password' => Hash::make('password'),
+                'role' => 'rider',
+            ]);
+        }
 
         // ==========================================
         // PRODUCTS (Tether Brew Menu)
@@ -105,64 +90,54 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ==========================================
-        // CARTS (6 Gerobak di area Medan)
+        // CARTS — 39 Gerobak (semua nonaktif)
         // ==========================================
-        $cart1 = Cart::create([
-            'name' => 'Tether Brew #01',
-            'description' => 'Gerobak Tether Brew area USU (Universitas Sumatera Utara)',
-            'user_id' => $rider1->id,
-            'status' => 'active',
-        ]);
+        $areas = [
+            'USU', 'STMIK Triguna Dharma', 'Cadika Medan Johor', 'Medan Sunggal',
+            'Medan Polonia', 'Medan Helvetia', 'Medan Kota', 'Medan Timur',
+            'Medan Baru', 'Medan Selayang', 'Medan Tuntungan', 'Medan Amplas',
+            'Medan Denai', 'Medan Area', 'Medan Perjuangan', 'Medan Tembung',
+            'Medan Marelan', 'Medan Labuhan', 'Medan Belawan', 'Medan Deli',
+            'Medan Petisah', 'Medan Maimun', 'Padang Bulan', 'Setia Budi',
+            'Jalan Gatot Subroto', 'Jalan Sisingamangaraja', 'Jalan Jamin Ginting',
+            'Jalan Adam Malik', 'Jalan Ringroad', 'Jalan SM Raja', 'Jalan Krakatau',
+            'Jalan Sutomo', 'Jalan Iskandar Muda', 'Jalan Djamin Ginting',
+            'Jalan Kapten Muslim', 'Jalan Sei Batang Hari', 'Komplek MMTC',
+            'Komplek Cemara Asri', 'Tanjung Morawa',
+        ];
 
-        $cart2 = Cart::create([
-            'name' => 'Tether Brew #02',
-            'description' => 'Gerobak Tether Brew area STMIK Triguna Dharma',
-            'user_id' => $rider2->id,
-            'status' => 'active',
-        ]);
+        // Koordinat dasar Medan dengan variasi
+        $baseLat = 3.5700;
+        $baseLng = 98.6600;
 
-        $cart3 = Cart::create([
-            'name' => 'Tether Brew #03',
-            'description' => 'Gerobak Tether Brew area Cadika Medan Johor',
-            'user_id' => $rider3->id,
-            'status' => 'active',
-        ]);
+        $carts = [];
+        for ($i = 0; $i < 39; $i++) {
+            $number = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
 
-        $cart4 = Cart::create([
-            'name' => 'Tether Brew #04',
-            'description' => 'Gerobak Tether Brew area Medan Sunggal',
-            'user_id' => $rider4->id,
-            'status' => 'active',
-        ]);
+            $cart = Cart::create([
+                'name' => "Tether Brew #{$number}",
+                'description' => "Gerobak Tether Brew area {$areas[$i]}",
+                'user_id' => $riders[$i]->id,
+                'status' => 'inactive',
+            ]);
 
-        $cart5 = Cart::create([
-            'name' => 'Tether Brew #05',
-            'description' => 'Gerobak Tether Brew area Medan Polonia',
-            'user_id' => $rider5->id,
-            'status' => 'active',
-        ]);
+            // Lokasi tersebar di area Medan
+            $lat = $baseLat + (rand(-400, 400) / 10000);
+            $lng = $baseLng + (rand(-400, 400) / 10000);
 
-        $cart6 = Cart::create([
-            'name' => 'Tether Brew #06',
-            'description' => 'Gerobak Tether Brew area Medan Helvetia',
-            'user_id' => $rider6->id,
-            'status' => 'active',
-        ]);
+            CartLocation::create([
+                'cart_id' => $cart->id,
+                'latitude' => round($lat, 4),
+                'longitude' => round($lng, 4),
+            ]);
 
-        // ==========================================
-        // LOCATIONS (Medan area)
-        // ==========================================
-        CartLocation::create(['cart_id' => $cart1->id, 'latitude' => 3.5652, 'longitude' => 98.6565]);  // USU (Universitas Sumatera Utara)
-        CartLocation::create(['cart_id' => $cart2->id, 'latitude' => 3.5870, 'longitude' => 98.6518]);  // STMIK Triguna Dharma
-        CartLocation::create(['cart_id' => $cart3->id, 'latitude' => 3.5735, 'longitude' => 98.6895]);  // Cadika Medan Johor
-        CartLocation::create(['cart_id' => $cart4->id, 'latitude' => 3.5423, 'longitude' => 98.6192]);  // Medan Sunggal
-        CartLocation::create(['cart_id' => $cart5->id, 'latitude' => 3.5590, 'longitude' => 98.6840]);  // Medan Polonia
-        CartLocation::create(['cart_id' => $cart6->id, 'latitude' => 3.5982, 'longitude' => 98.6410]);  // Medan Helvetia
+            $carts[] = $cart;
+        }
 
         // ==========================================
         // INVENTORIES (stock per gerobak)
         // ==========================================
-        foreach ([$cart1, $cart2, $cart3, $cart4, $cart5, $cart6] as $cart) {
+        foreach ($carts as $cart) {
             foreach ($products as $product) {
                 Inventory::create([
                     'cart_id' => $cart->id,
@@ -173,14 +148,12 @@ class DatabaseSeeder extends Seeder
         }
 
         // ==========================================
-        // SAMPLE TRANSACTIONS
+        // SAMPLE TRANSACTIONS (beberapa gerobak saja)
         // ==========================================
-        $this->createSampleTransactions($cart1, $rider1, $products);
-        $this->createSampleTransactions($cart2, $rider2, $products);
-        $this->createSampleTransactions($cart3, $rider3, $products);
-        $this->createSampleTransactions($cart4, $rider4, $products);
-        $this->createSampleTransactions($cart5, $rider5, $products);
-        $this->createSampleTransactions($cart6, $rider6, $products);
+        $sampleCarts = array_slice($carts, 0, 6);
+        foreach ($sampleCarts as $index => $cart) {
+            $this->createSampleTransactions($cart, $riders[$index], $products);
+        }
     }
 
     private function createSampleTransactions(Cart $cart, User $rider, $products): void
@@ -226,4 +199,3 @@ class DatabaseSeeder extends Seeder
         }
     }
 }
-
