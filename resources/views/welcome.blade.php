@@ -180,6 +180,22 @@
         <button class="mobile-toggle" @click="mobileOpen = !mobileOpen" >☰</button>
     </nav>
 
+    {{-- ===== MOBILE THEME TOGGLE ===== --}}
+    <div class="mobile-theme-toggle-wrapper">
+        <button @click="window.switchTheme($event, () => darkMode = !darkMode)" class="theme-toggle-btn-landing">
+            <template x-if="darkMode">
+                <svg width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"/><line x1="12" x2="12" y1="1" y2="3"/><line x1="12" x2="12" y1="21" y2="23"/><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/><line x1="1" x2="3" y1="12" y2="12"/><line x1="21" x2="23" y1="12" y2="12"/><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>
+                </svg>
+            </template>
+            <template x-if="!darkMode">
+                <svg width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </template>
+        </button>
+    </div>
+
     {{-- ===== HOME / HERO ===== --}}
     <section class="hero" id="home">
         <div class="hero-bg">
@@ -190,7 +206,7 @@
                 <span class="badge-dot"></span>
                 Tether Brew · Kopi Keliling Medan
             </div>
-            <h1>Kopi Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
+            <h1>Kopi Premium, Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
             <p>Temukan gerobak kopi keliling Tether Brew terdekat di Medan. Kopi segar berkualitas mulai Rp 8.000, cek lokasi, menu, dan stok secara realtime.</p>
             <div class="hero-cta">
                 <a href="#maps" class="btn-hero btn-hero-primary">
