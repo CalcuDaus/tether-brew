@@ -32,11 +32,11 @@ class LandingController extends Controller
                     'longitude' => (float) $cart->location->longitude,
                     'updated_at' => $cart->location->updated_at->diffForHumans(),
                     'menu' => $cart->inventories
-                        ->filter(fn($inv) => $inv->stock > 0 && $inv->product->is_active)
+                        ->filter(fn($inv) => $inv->product->is_active)
                         ->map(fn($inv) => [
                             'name' => $inv->product->name,
                             'price' => (float) $inv->product->price,
-                            'stock' => $inv->stock,
+                            'stock' => 99,
                             'category' => $inv->product->category,
                             'image' => $inv->product->image,
                         ])

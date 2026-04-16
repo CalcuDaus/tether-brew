@@ -370,6 +370,26 @@
             position: relative;
         }
         .menu-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+        .menu-card.menu-card-disabled {
+            opacity: 0.45;
+            filter: grayscale(0.7);
+            pointer-events: none;
+            position: relative;
+        }
+        .menu-card.menu-card-disabled::after {
+            content: 'Segera Hadir';
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(0,0,0,0.7);
+            color: #9ca3af;
+            font-size: 10px; font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+        .menu-card.menu-card-disabled:hover { transform: none; box-shadow: none; }
         .menu-card-top {
             background: var(--card-top-bg); position: relative; height: 180px;
             display: flex; align-items: center; justify-content: center;
@@ -1021,6 +1041,17 @@
     border-bottom: 1px solid var(--border-color);
 }
 .order-menu-row:last-child { border-bottom: none; }
+.order-menu-row.order-menu-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    position: relative;
+}
+.order-menu-row.order-menu-disabled .order-menu-name::after {
+    content: ' · Tidak tersedia';
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
 .order-menu-info {
     display: flex; flex-direction: column; gap: 2px;
     flex: 1; min-width: 0;
