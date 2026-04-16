@@ -588,6 +588,37 @@
             border-bottom-color: rgba(255, 255, 255, 0.9) !important;
         }
 
+        /* ===== USER LOCATION MARKER ===== */
+        .user-location-marker { background: none !important; border: none !important; }
+        .user-marker-icon {
+            width: 36px; height: 36px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #22c55e;
+            box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.1), 0 4px 12px rgba(0,0,0,0.3);
+            animation: userPulse 2.5s infinite ease-in-out;
+        }
+        @keyframes userPulse {
+            0%, 100% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.1), 0 4px 12px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 0 0 14px rgba(34, 197, 94, 0.05), 0 4px 12px rgba(0,0,0,0.3); }
+        }
+        .user-tooltip {
+            background: rgba(34, 197, 94, 0.9) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 3px 10px !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 12px rgba(34,197,94,0.3) !important;
+        }
+        .user-tooltip::before {
+            border-bottom-color: rgba(34, 197, 94, 0.9) !important;
+        }
+
         /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }

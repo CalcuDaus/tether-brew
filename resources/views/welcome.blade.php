@@ -496,9 +496,27 @@
                         // USER LOCATION (for distance estimation)
                         // =============================================
                         let userLatLng = null;
+                        let userMarker = null;
+
+                        const userIcon = L.divIcon({
+                            className: 'user-location-marker',
+                            html: '<div class="user-marker-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>',
+                            iconSize: [36, 36],
+                            iconAnchor: [18, 18]
+                        });
+
                         if ('geolocation' in navigator) {
                             navigator.geolocation.getCurrentPosition(
-                                pos => { userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude); },
+                                pos => {
+                                    userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+                                    // Place user marker on map
+                                    userMarker = L.marker([pos.coords.latitude, pos.coords.longitude], { icon: userIcon, zIndexOffset: 1000 })
+                                        .addTo(map)
+                                        .bindTooltip('Lokasi Anda', {
+                                            permanent: true, direction: 'bottom', offset: [0, 6],
+                                            className: 'user-tooltip'
+                                        });
+                                },
                                 () => { console.log('Geolocation denied or unavailable'); },
                                 { enableHighAccuracy: false, timeout: 8000 }
                             );
