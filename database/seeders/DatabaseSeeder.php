@@ -71,21 +71,21 @@ class DatabaseSeeder extends Seeder
         // ==========================================
         $products = collect([
             // Coffee
-            Product::create(['name' => 'Cold Brew', 'description' => 'Kopi cold brew premium yang diekstrak dingin selama 12 jam', 'price' => 15000, 'category' => 'kopi']),
-            Product::create(['name' => 'Honey Brew', 'description' => 'Kopi dengan campuran madu asli pilihan', 'price' => 15000, 'category' => 'kopi']),
-            Product::create(['name' => 'Aren Brew', 'description' => 'Kopi susu dengan gula aren nusantara', 'price' => 12000, 'category' => 'kopi']),
-            Product::create(['name' => 'Pandan Brew', 'description' => 'Kopi dengan aroma pandan yang khas dan segar', 'price' => 12000, 'category' => 'kopi']),
-            Product::create(['name' => 'Caramel Brew', 'description' => 'Kopi dengan karamel manis yang creamy', 'price' => 12000, 'category' => 'kopi']),
-            Product::create(['name' => 'Vanilla Brew', 'description' => 'Kopi dengan vanilla yang lembut dan harum', 'price' => 12000, 'category' => 'kopi']),
-            Product::create(['name' => 'Butterscotch Brew', 'description' => 'Kopi dengan butterscotch yang gurih manis', 'price' => 12000, 'category' => 'kopi']),
-            Product::create(['name' => 'Kopsu Brew', 'description' => 'Kopi susu klasik ala Tether Brew', 'price' => 10000, 'category' => 'kopi']),
-            Product::create(['name' => 'Americano Vanilla', 'description' => 'Americano dengan sentuhan vanilla segar', 'price' => 10000, 'category' => 'kopi']),
-            Product::create(['name' => 'Americano Apple', 'description' => 'Americano dengan rasa apel yang unik', 'price' => 10000, 'category' => 'kopi']),
-            Product::create(['name' => 'Americano', 'description' => 'Espresso murni dengan air panas', 'price' => 8000, 'category' => 'kopi']),
+            Product::create(['name' => 'Cold Brew', 'description' => 'Kopi cold brew premium yang diekstrak dingin selama 12 jam', 'price' => 15000, 'category' => 'kopi', 'image' => 'cold-brew.webp']),
+            Product::create(['name' => 'Honey Brew', 'description' => 'Kopi dengan campuran madu asli pilihan', 'price' => 15000, 'category' => 'kopi', 'image' => 'honey-brew.webp']),
+            Product::create(['name' => 'Aren Brew', 'description' => 'Kopi susu dengan gula aren nusantara', 'price' => 12000, 'category' => 'kopi', 'image' => 'aren-brew.webp']),
+            Product::create(['name' => 'Pandan Brew', 'description' => 'Kopi dengan aroma pandan yang khas dan segar', 'price' => 12000, 'category' => 'kopi', 'image' => 'pandan-brew.webp']),
+            Product::create(['name' => 'Caramel Brew', 'description' => 'Kopi dengan karamel manis yang creamy', 'price' => 12000, 'category' => 'kopi', 'image' => 'caramel-brew.webp']),
+            Product::create(['name' => 'Vanilla Brew', 'description' => 'Kopi dengan vanilla yang lembut dan harum', 'price' => 12000, 'category' => 'kopi', 'image' => 'vanilla-brew.webp']),
+            Product::create(['name' => 'Butterscotch Brew', 'description' => 'Kopi dengan butterscotch yang gurih manis', 'price' => 12000, 'category' => 'kopi', 'image' => 'butterscotch-brew.webp']),
+            Product::create(['name' => 'Kopsu Brew', 'description' => 'Kopi susu klasik ala Tether Brew', 'price' => 10000, 'category' => 'kopi', 'image' => 'kopsu-brew.webp']),
+            Product::create(['name' => 'Americano Vanilla', 'description' => 'Americano dengan sentuhan vanilla segar', 'price' => 10000, 'category' => 'kopi', 'image' => 'americano-vanilla.webp']),
+            Product::create(['name' => 'Americano Apple', 'description' => 'Americano dengan rasa apel yang unik', 'price' => 10000, 'category' => 'kopi', 'image' => 'americano-apple.webp']),
+            Product::create(['name' => 'Americano', 'description' => 'Espresso murni dengan air panas', 'price' => 8000, 'category' => 'kopi', 'image' => 'americano.webp']),
 
             // Non-Coffee
-            Product::create(['name' => 'Matcha Brew', 'description' => 'Green tea matcha premium yang creamy', 'price' => 12000, 'category' => 'non-kopi']),
-            Product::create(['name' => 'Cokelat Brew', 'description' => 'Cokelat premium yang rich dan lembut', 'price' => 12000, 'category' => 'non-kopi']),
+            Product::create(['name' => 'Matcha Brew', 'description' => 'Green tea matcha premium yang creamy', 'price' => 12000, 'category' => 'non-kopi', 'image' => 'matcha-brew.webp']),
+            Product::create(['name' => 'Cokelat Brew', 'description' => 'Cokelat premium yang rich dan lembut', 'price' => 12000, 'category' => 'non-kopi', 'image' => 'cokelat-brew.webp']),
             Product::create(['name' => 'Taro Brew', 'description' => 'Minuman taro premium yang manis dan creamy', 'price' => 12000, 'category' => 'non-kopi', 'image' => 'taro-brew.webp']),
         ]);
 
