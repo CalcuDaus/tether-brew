@@ -108,7 +108,7 @@
     @vite(['resources/css/landing.css'])
     <script>
         (function() {
-            const theme = localStorage.getItem('theme') || 'dark';
+            const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'light') {
                 document.documentElement.classList.add('light-theme');
             }
@@ -155,7 +155,7 @@
         };
     </script>
 </head>
-<body x-data="{ mobileOpen: false, darkMode: localStorage.getItem('theme') !== 'light' }">
+<body x-data="{ mobileOpen: false, darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }">
 
     {{-- ===== NAVBAR ===== --}}
     <nav class="navbar" id="navbar">
@@ -492,7 +492,7 @@
                         const darkTiles = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
                         const lightTiles = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
-                        let activeTileLayer = L.tileLayer(localStorage.getItem('theme') === 'light' ? lightTiles : darkTiles, {
+                        let activeTileLayer = L.tileLayer((localStorage.getItem('theme') || 'light') === 'light' ? lightTiles : darkTiles, {
                             maxZoom: 19
                         }).addTo(map);
 

@@ -643,6 +643,21 @@
             .topbar {
                 padding: 12px 16px;
             }
+
+            /* Rider dashboard: GPS tracking card first on mobile */
+            .rider-dashboard-wrapper {
+                display: flex;
+                flex-direction: column;
+            }
+            .rider-tracking-section {
+                order: -1;
+            }
+            .rider-stats-section {
+                order: 0;
+            }
+            .rider-transactions-section {
+                order: 1;
+            }
         }
 
         @media (max-width: 480px) {

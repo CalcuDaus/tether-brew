@@ -440,11 +440,13 @@
         /* ===== GEROBAK LIST ===== */
         .gerobak-section {
             padding: 80px 40px;
+            overflow: hidden;
         }
         .gerobak-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px; max-width: 1200px; margin: 0 auto;
+            overflow: hidden;
         }
         .gerobak-card {
             background: var(--bg-card);
@@ -452,6 +454,8 @@
             border-radius: var(--radius-lg);
             padding: 20px;
             transition: all 0.3s; cursor: pointer;
+            min-width: 0;
+            overflow: hidden;
         }
         .gerobak-card:hover {
             transform: translateY(-4px);
@@ -745,7 +749,7 @@
             
             .menu-card-price { font-size: 12px; }
             .menu-card-btn { padding: 4px 14px; font-size: 13px; }
-            .gerobak-grid { grid-template-columns: repeat(2, 1fr); }
+            .gerobak-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .about-grid { grid-template-columns: 1fr; }
             .contact-inner { padding: 32px 20px; }
             .menu-tabs { flex-wrap: wrap; }
@@ -882,6 +886,10 @@
     .deco-cup-1 { width: 150px; left: -5%; }
     .deco-cup-2 { width: 220px; right: -5%; bottom: 8%; }
     .deco-cup-3 { width: 180px; left: -5%; }
+}
+
+@media (max-width: 480px) {
+    .gerobak-grid { grid-template-columns: 1fr !important; }
 }
 
 

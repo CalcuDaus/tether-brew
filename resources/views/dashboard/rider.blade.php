@@ -3,8 +3,9 @@
 
 @section('content')
 @if($cart)
+    <div class="rider-dashboard-wrapper">
     {{-- Cart Info & Location --}}
-    <div class="stats-grid">
+    <div class="stats-grid rider-stats-section">
         <div class="stat-card">
             <div class="stat-icon gold">
                 <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -49,7 +50,7 @@
         </div>
     </div>
 
-    <div class="grid-2">
+    <div class="grid-2 rider-tracking-section">
         {{-- Live Auto-Tracking --}}
         <div class="card">
             <div class="card-header flex-between">
@@ -158,7 +159,7 @@
     </div>
 
     {{-- Today's Transactions --}}
-    <div class="card mt-5-custom">
+    <div class="card mt-5-custom rider-transactions-section">
         <div class="card-header">
             <h3 class="card-title">
                 <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -210,6 +211,7 @@
             @endif
         </div>
     </div>
+    </div>
 @else
     <div class="empty-state p-80-20">
         <div class="empty-state-icon"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div>
@@ -245,7 +247,7 @@
     const darkTiles = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
     const lightTiles = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
     
-    let activeTileLayer = L.tileLayer(localStorage.getItem('theme') === 'light' ? lightTiles : darkTiles, {
+    let activeTileLayer = L.tileLayer((localStorage.getItem('theme') || 'light') === 'light' ? lightTiles : darkTiles, {
         maxZoom: 19
     }).addTo(riderMap);
 

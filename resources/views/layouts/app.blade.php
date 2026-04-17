@@ -15,7 +15,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         (function() {
-            const theme = localStorage.getItem('theme') || 'dark';
+            const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'light') {
                 document.documentElement.classList.add('light-theme');
             }
@@ -65,7 +65,7 @@
     </script>
     @stack('styles')
 </head>
-<body x-data="{ sidebarOpen: false, darkMode: localStorage.getItem('theme') !== 'light' }">
+<body x-data="{ sidebarOpen: false, darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }">
 
     {{-- Sidebar --}}
     <aside class="sidebar" :class="{ 'open': sidebarOpen }" @click.away="sidebarOpen = false">
