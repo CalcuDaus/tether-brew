@@ -8,6 +8,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RiderController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -57,6 +58,14 @@ Route::middleware('auth')->group(function () {
 
         // All Transactions
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    });
+
+    // ==========================================
+    // OWNER ONLY ROUTES
+    // ==========================================
+    Route::middleware('role:owner')->group(function () {
+        // Accounts CRUD
+        Route::resource('accounts', AccountController::class);
     });
 
     // ==========================================

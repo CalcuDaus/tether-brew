@@ -293,6 +293,7 @@
                 Memuat data gerobak...
             </div>
         </div>
+        <div class="gerobak-pagination" id="cart-pagination"></div>
     </section>
 
     {{-- ===== ABOUT ===== --}}
@@ -709,9 +710,7 @@
                             msg += `\n *Total: ${formatRupiah(total)}*`;
                             if (eta) msg += `\n *Estimasi saya sampai: ${eta}*`;
                             if (notes) msg += `\n\n Catatan: ${notes}`;
-                            if (userLatLng) {
-                                msg += `\n\n Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
-                            }
+                            msg += `\n\n Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
                             msg += `\n\nMohon konfirmasi ketersediaannya dan jangan kemana-mana dulu ya! `;
 
             return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
@@ -827,12 +826,21 @@
                     if (initial && bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] });
                 }
 
+                // =============================================
+                // GEROBAK PAGINATION
+                // =============================================
+                const CARTS_PER_PAGE = 5;
+                let currentCartPage = 1;
+                let lastSortedCarts = [];
+
                 function renderCartCards(carts) {
                     const grid = document.getElementById('cart-grid');
+                    const paginationEl = document.getElementById('cart-pagination');
                     document.getElementById('cart-count-label').textContent = carts.length + ' gerobak aktif · live';
 
                     if (carts.length === 0) {
                         grid.innerHTML = '<div class="gerobak-empty-state">Belum ada gerobak aktif saat ini.</div>';
+                        paginationEl.innerHTML = '';
                         return;
                     }
 
@@ -844,8 +852,16 @@
                             return (distA === null ? Infinity : distA) - (distB === null ? Infinity : distB);
                         });
                     }
+                    lastSortedCarts = sortedCarts;
 
-                    grid.innerHTML = sortedCarts.map(cart => {
+                    const totalPages = Math.ceil(sortedCarts.length / CARTS_PER_PAGE);
+                    if (currentCartPage > totalPages) currentCartPage = totalPages;
+                    if (currentCartPage < 1) currentCartPage = 1;
+
+                    const startIdx = (currentCartPage - 1) * CARTS_PER_PAGE;
+                    const pageCarts = sortedCarts.slice(startIdx, startIdx + CARTS_PER_PAGE);
+
+                    grid.innerHTML = pageCarts.map(cart => {
                         const distText = getDistanceText(cart.latitude, cart.longitude);
                         return `
                         <div class="gerobak-card" onclick="map.setView([${cart.latitude},${cart.longitude}],16); document.getElementById('maps').scrollIntoView({behavior:'smooth'});">
@@ -859,7 +875,67 @@
                             </div>
                         </div>
                     `}).join('');
+
+                    // Render pagination
+                    renderCartPagination(totalPages);
                 }
+
+                function renderCartPagination(totalPages) {
+                    const paginationEl = document.getElementById('cart-pagination');
+                    if (totalPages <= 1) {
+                        paginationEl.innerHTML = '';
+                        return;
+                    }
+
+                    let html = '';
+
+                    // Previous button
+                    html += `<button class="pagination-btn pagination-prev ${currentCartPage === 1 ? 'disabled' : ''}" onclick="goToCartPage(${currentCartPage - 1})" ${currentCartPage === 1 ? 'disabled' : ''}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>`;
+
+                    // Page numbers with ellipsis
+                    const pages = getPaginationRange(currentCartPage, totalPages);
+                    pages.forEach(p => {
+                        if (p === '...') {
+                            html += `<span class="pagination-ellipsis">…</span>`;
+                        } else {
+                            html += `<button class="pagination-btn pagination-num ${p === currentCartPage ? 'active' : ''}" onclick="goToCartPage(${p})">${p}</button>`;
+                        }
+                    });
+
+                    // Next button
+                    html += `<button class="pagination-btn pagination-next ${currentCartPage === totalPages ? 'disabled' : ''}" onclick="goToCartPage(${currentCartPage + 1})" ${currentCartPage === totalPages ? 'disabled' : ''}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>`;
+
+                    // Page info
+                    html += `<div class="pagination-info">${lastSortedCarts.length} gerobak</div>`;
+
+                    paginationEl.innerHTML = html;
+                }
+
+                function getPaginationRange(current, total) {
+                    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+                    const pages = [];
+                    if (current <= 3) {
+                        pages.push(1, 2, 3, 4, '...', total);
+                    } else if (current >= total - 2) {
+                        pages.push(1, '...', total - 3, total - 2, total - 1, total);
+                    } else {
+                        pages.push(1, '...', current - 1, current, current + 1, '...', total);
+                    }
+                    return pages;
+                }
+
+                window.goToCartPage = function(page) {
+                    const totalPages = Math.ceil(lastSortedCarts.length / CARTS_PER_PAGE);
+                    if (page < 1 || page > totalPages) return;
+                    currentCartPage = page;
+                    renderCartCards(allCartsData);
+                    // Smooth scroll to gerobak section top
+                    document.getElementById('gerobak').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
 
                 // Initial load
                 renderCartsOnMap(carts, true);
