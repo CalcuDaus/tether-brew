@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 93 notes | Score threshold: >40
+> 135 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,20 +18,14 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Important Warnings
-
-- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
-
-Content summary (3
-
 ## Project Standards
 
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
 - Replaced auth Score — confirmed 3x
+- what-changed in scratchpad_ght9t992.md — confirmed 5x
+- what-changed in scratchpad_qk5ujuqs.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
-- Replaced auth Replaced — confirmed 3x
-- Replaced auth Score — externalizes configuration for environment flexibility — confirmed 3x
+- what-changed in shared-context.json — confirmed 3x
+- Replaced auth Score — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 
