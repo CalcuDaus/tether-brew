@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 154 notes | Score threshold: >40
+> 185 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,16 +18,30 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
+## Important Warnings
+
+- **⚠️ GOTCHA: Added API key auth authentication** — - > 181 notes | Score threshold: >40
++ > 182 notes | Score threshold: 
+- **⚠️ GOTCHA: Replaced auth Score** — - > 177 notes | Score threshold: >40
++ > 178 notes | Score threshold: 
+- **⚠️ GOTCHA: Updated API endpoint Patched — ensures atomic multi-step database operations** — - - problem-fix in agent-rules.md
++ - Patched security issue QNUM — ha
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Bagian — prevents null/undefined runtime crash
+
 ## Project Standards
 
-- what-changed in welcome.blade.php — confirmed 5x
+- Added API key auth authentication — prevents XSS injection attacks — confirmed 3x
 - Replaced auth Score — externalizes configuration for environment flexibility — confirmed 3x
-- Replaced auth Score — confirmed 3x
-- what-changed in scratchpad_ght9t992.md — confirmed 5x
-- what-changed in scratchpad_qk5ujuqs.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
-- Replaced auth Score — confirmed 3x
+- what-changed in shared-context.json — confirmed 7x
+- problem-fix in agent-rules.md — confirmed 3x
+- Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x
+- Strengthened types Patched
+- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 4x
+- what-changed in welcome.blade.php — confirmed 10x
+
+## Known Fixes
+
+- ❌ - - Fixed null crash in Bagian — prevents null/undefined runtime crashes → ✅ problem-fix in agent-rules.md
 
 ## Learned Patterns
 

@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 154 notes | Score threshold: >40
+> 185 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,16 +18,30 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
+## Important Warnings
+
+- **⚠️ GOTCHA: Added API key auth authentication** — - > 181 notes | Score threshold: >40
++ > 182 notes | Score threshold: 
+- **⚠️ GOTCHA: Replaced auth Score** — - > 177 notes | Score threshold: >40
++ > 178 notes | Score threshold: 
+- **⚠️ GOTCHA: Updated API endpoint Patched — ensures atomic multi-step database operations** — - - problem-fix in agent-rules.md
++ - Patched security issue QNUM — ha
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Bagian — prevents null/undefined runtime crash
+
 ## Project Standards
 
-- what-changed in welcome.blade.php — confirmed 5x
+- Added API key auth authentication — prevents XSS injection attacks — confirmed 3x
 - Replaced auth Score — externalizes configuration for environment flexibility — confirmed 3x
-- Replaced auth Score — confirmed 3x
-- what-changed in scratchpad_ght9t992.md — confirmed 5x
-- what-changed in scratchpad_qk5ujuqs.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
-- Replaced auth Score — confirmed 3x
+- what-changed in shared-context.json — confirmed 7x
+- problem-fix in agent-rules.md — confirmed 3x
+- Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x
+- Strengthened types Patched
+- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 4x
+- what-changed in welcome.blade.php — confirmed 10x
+
+## Known Fixes
+
+- ❌ - - Fixed null crash in Bagian — prevents null/undefined runtime crashes → ✅ problem-fix in agent-rules.md
 
 ## Learned Patterns
 
@@ -291,104 +305,7 @@ n8n offers two Python execution modes:
 **Recommendation**: Use **Python (Beta)** for better n8...
 (truncated)
 
-
-### 📚 Core Framework Rules: [czlonkowski/n8n-code-javascript]
-# JavaScript Code Node
-
-Expert guidance for writing JavaScript code in n8n Code nodes.
-
----
-
-## Quick Start
-
-
-
-### Essential Rules
-
-1. **Choose "Run Once for All Items" mode** (recommended for most use cases)
-2. **Access data**: `$input.all()`, `$input.first()`, or `$input.item`
-3. **CRITICAL**: Must return `[{json: {...}}]` format
-4. **CRITICAL**: Webhook data is under `$json.body` (not `$json` directly)
-5. **Built-ins available**: $helpers.httpRequest(), DateTime (Luxon), $jmespath()
-
----
-
-## Mode Selection Guide
-
-The Code node offers two execution modes. Choose based on your use case:
-
-### Run Once for All Items (Recommended - Default)
-
-**Use this mode for:** 95% of use cases
-
-- **How it works**: Code executes **once** regardless of input count
-- **Data access**: `$input.all()` or `items` array
-- **Best for**: Aggregation, filtering, batch processing, transformations, API calls with all data
-- **Performance**: Faster for multiple items (single execution)
-
-
-
-**When to use:**
-- ✅ Comparing items across the dataset
-- ✅ Calculating totals, averages, or statistics
-- ✅ Sorting or ranking items
-- ✅ Deduplication
-- ✅ Building aggregated reports
-- ✅ Combining data from multiple items
-
-### Run Once for Each Item
-
-**Use this mode for:** Specialized cases only
-
-- **How it works**: Code executes **separately** for each input item
-- **Data access**: `$input.item` or `$item`
-- **Best for**: Item-specific logic, independent operations, per-item validation
-- **Performance**: Slower for large datasets (multiple executions)
-
-
-
-**When to use:**
-- ✅ Each item needs independent API call
-- ✅ Per-item validation with different error handling
-- ✅ Item-specific transformations based on item properties
-- ✅ When items must be processed separately for business logic
-
-**Decision Shortcut:**
-- **Need to look at multiple items?** → Use "All Items" mode
-- **Each item completely independent?** → Use "Each Item" mode
-- **Not sure?** → Use "All Items" mode (you can always loop inside)
-
----
-
-## Data Access Patterns
-
-### Pattern 1: $input.all() - Most Common
-
-**Use when**: Processing arrays, batch operations, aggregations
-
-
-
-### Pattern 2: $input.first() - Very Common
-
-**Use when**: Working with single objects, API responses, first-in-first-out
-
-
-
-### Pattern 3: $input.item - Each Item Mode Only
-
-**Use when**: In "Run Once for Each Item" mode
-
-
-
-### Pattern 4: $node - Reference Other Nodes
-
-**Use when**: Need data from specific nodes in workflow
-
-
-
-**See**: [DATA_ACCESS.md](DATA_ACCESS.md) ...
-(truncated)
-
+- [JavaScript/TypeScript] Use === not == (strict equality prevents type coercion bugs)
 
 ## Available Tools (ON-DEMAND only)
 - `sys_core_01(q)` — Deep search when stuck

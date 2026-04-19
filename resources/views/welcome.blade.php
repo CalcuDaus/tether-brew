@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {{-- ===== SEO META TAGS ===== --}}
-    <title>Tether Brew – Kopi Keliling Segar & Murah di Medan | Mulai Rp 8.000</title>
-    <meta name="description" content="Tether Brew adalah kopi keliling terbaik di Medan. Kopi segar, murah mulai Rp 8.000, langsung diantar ke lokasimu. Temukan gerobak terdekat via peta realtime. Cold Brew, Americano, Matcha & 13+ varian lainnya!">
-    <meta name="keywords" content="kopi Medan, kopi keliling Medan, kopi murah Medan, kopi segar Medan, gerobak kopi Medan, kopi terdekat Medan, Tether Brew, cold brew Medan, es kopi susu Medan, kopi online Medan, jual kopi Medan, kopi delivery Medan, kopi Sumatera Utara">
+    <title>Tether Brew – Kopi Keliling Medan Sekitar | Kopi Segar Mulai Rp 8.000</title>
+    <meta name="description" content="Cari kopi keliling Medan sekitar? Tether Brew jawabannya! Kopi keliling dengan racikan premium dan harga murah mulai Rp 8.000. Temukan gerobak terdekat sekarang!">
+    <meta name="keywords" content="kopi keliling, kopi keliling medan, kopi keliling medan sekitar, kopi keliling terdekat medan, kopi medan, kopi segar medan, gerobak kopi medan, tether brew, es kopi medan">
     <meta name="author" content="Tether Brew">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <link rel="canonical" href="{{ url('/') }}">
@@ -22,8 +22,8 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="id_ID">
     <meta property="og:site_name" content="Tether Brew">
-    <meta property="og:title" content="Tether Brew – Kopi Keliling Segar & Murah di Medan">
-    <meta property="og:description" content="Kopi segar keliling di Medan mulai Rp 8.000! Temukan gerobak Tether Brew terdekat, lihat menu & stok realtime, pesan langsung via WhatsApp.">
+    <meta property="og:title" content="Tether Brew – Kopi Keliling Medan Sekitar">
+    <meta property="og:description" content="Cari kopi keliling Medan sekitar? Tether Brew adalah pilihan kopi keliling premium mulai Rp 8.000! Cek lokasi gerobak terdekat di peta.">
     <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:image" content="{{ asset('favicon.webp') }}">
     <meta property="og:image:width" content="512">
@@ -32,8 +32,8 @@
 
     {{-- ===== TWITTER CARD ===== --}}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Tether Brew – Kopi Keliling Segar & Murah di Medan">
-    <meta name="twitter:description" content="Kopi segar keliling di Medan mulai Rp 8.000! 13+ varian menu. Temukan gerobak terdekat via peta realtime.">
+    <meta name="twitter:title" content="Tether Brew – Kopi Keliling Medan Sekitar">
+    <meta name="twitter:description" content="Cari kopi keliling Medan sekitar? Temukan gerobak kopi keliling Tether Brew terdekat via peta realtime! Harga mulai 8rb.">
     <meta name="twitter:image" content="{{ asset('favicon.webp') }}">
 
     {{-- ===== JSON-LD STRUCTURED DATA ===== --}}
@@ -42,8 +42,8 @@
     '@context' => 'https://schema.org',
     '@type' => 'FoodEstablishment',
     'name' => 'Tether Brew',
-    'alternateName' => 'Tether Brew Kopi Keliling Medan',
-    'description' => 'Tether Brew adalah layanan kopi keliling di Medan yang menyajikan kopi segar berkualitas dengan harga terjangkau mulai dari Rp 8.000. Tersedia 13+ varian menu termasuk Cold Brew, Honey Brew, Americano, Matcha, dan lainnya.',
+    'alternateName' => 'Kopi Keliling Medan',
+    'description' => 'Tether Brew adalah pelopor kopi keliling di Medan sekitarnya. Menyajikan minuman premium secara mobile melalui gerobak kopi keliling terdekat, dengan harga murah mulai Rp 8.000.',
     'url' => url('/'),
     'logo' => asset('favicon.webp'),
     'image' => asset('favicon.webp'),
@@ -207,8 +207,8 @@
                 <span class="badge-dot"></span>
                 Tether Brew · Kopi Keliling Medan
             </div>
-            <h1>Kopi Premium, Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
-            <p>Temukan gerobak kopi keliling Tether Brew terdekat di Medan. Kopi segar berkualitas mulai Rp 8.000, cek lokasi, menu, dan stok secara realtime.</p>
+            <h1><span class="highlight">Kopi Keliling</span> Medan Sekitar dari Tether Brew</h1>
+            <p>Mencari kopi keliling Medan sekitar? Temukan gerobak kopi keliling premium kami yang tersebar di kota. Segar, berkualitas, dan terjangkau mulai Rp 8.000.</p>
             <div class="hero-cta">
                 <a href="#maps" class="btn-hero btn-hero-primary">
                     <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -303,8 +303,8 @@
         </div>
         <div class="section-header">
             <div class="section-tag">TENTANG</div>
-            <h2 class="section-title">Kenapa Tether Brew?</h2>
-            <p class="section-subtitle">Kopi keliling terbaik di Medan — segar, murah, dan selalu dekat dengan lokasimu</p>
+            <h2 class="section-title">Kenapa Pilih Tether Brew?</h2>
+            <p class="section-subtitle">Pelopor kopi keliling Medan sekitar! Sensasi kopi premium yang langsung meluncur ke lokasimu</p>
         </div>
         <div class="about-grid">
             <div class="about-card">
