@@ -788,7 +788,7 @@
                         const distText = getDistanceText(cart.latitude, cart.longitude);
                         const popupContent = `
                             <div class="popup-title">${cart.name}</div>
-                            <div class="popup-rider">${cart.rider}${distText ? ' · ' + distText : ''}</div>
+                            <div class="popup-rider">${cart.rider}${distText ? ' · <svg class="icon-two-tone" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>' + distText : ''}</div>
                             <div class="popup-menu-title">${cart.menu.length} menu tersedia</div>
                             <div class="popup-updated">Update: ${cart.updated_at}</div>
                             <div class="popup-contact-wrapper">
