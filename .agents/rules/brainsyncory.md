@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 135 notes | Score threshold: >40
+> 154 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,14 +20,14 @@
 
 ## Project Standards
 
+- what-changed in welcome.blade.php — confirmed 5x
+- Replaced auth Score — externalizes configuration for environment flexibility — confirmed 3x
 - Replaced auth Score — confirmed 3x
 - what-changed in scratchpad_ght9t992.md — confirmed 5x
 - what-changed in scratchpad_qk5ujuqs.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in shared-context.json — confirmed 3x
 - Replaced auth Score — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
 
 ## Learned Patterns
 

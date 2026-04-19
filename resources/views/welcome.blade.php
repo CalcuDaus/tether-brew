@@ -421,19 +421,7 @@
                 <label for="order-notes">Catatan Pesanan</label>
                 <textarea id="order-notes" class="order-notes" placeholder="Cth: Less ice.." rows="2"></textarea>
             </div>
-            <div class="order-eta-wrapper">
-                <label for="order-eta">Estimasi Saya Sampai</label>
-                <select id="order-eta" class="order-eta-select">
-                    <option value="">— Pilih estimasi —</option>
-                    <option value="Saya sudah di lokasi">Saya sudah di lokasi</option>
-                    <option value="± 5 menit"> ± 5 menit</option>
-                    <option value="± 10 menit"> ± 10 menit</option>
-                    <option value="± 15 menit"> ± 15 menit</option>
-                    <option value="± 30 menit"> ± 30 menit</option>
-                    <option value="Lebih dari 30 menit"> Lebih dari 30 menit</option>
-                    </select>
-                    <div id="order-eta-hint" class="order-eta-hint"></div>
-                    </div>
+            <!-- Bagian ETA disembunyikan dari UI untuk menghemat ruang -->
                     <div class="order-panel-footer">
                         <div class="order-summary">
                             <div class="order-total-row">
@@ -582,8 +570,6 @@
                         const orderWaBtn = document.getElementById('order-wa-btn');
                         const orderNavBtn = document.getElementById('order-nav-btn');
                         const orderLocBtn = document.getElementById('order-loc-btn');
-                        const orderEta = document.getElementById('order-eta');
-                        const orderEtaHint = document.getElementById('order-eta-hint');
                         const orderCloseBtn = document.getElementById('order-close-btn');
 
                         function openOrderPanel(cart) {
@@ -606,18 +592,8 @@
                             // Navigation button
                             orderNavBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${cart.latitude},${cart.longitude}`;
 
-                            // ETA auto-fill based on distance
-                            const meters = getDistanceMeters(cart.latitude, cart.longitude);
-                            const autoEta = estimateETA(meters);
-                            if (autoEta) {
-                                orderEta.value = autoEta;
-                                orderEtaHint.textContent = `Otomatis berdasarkan jarak ± ${dist}`;
-                                orderEtaHint.style.display = 'block';
-                            } else {
-                                orderEta.value = '';
-                                orderEtaHint.textContent = 'Aktifkan lokasi untuk estimasi otomatis';
-                                orderEtaHint.style.display = 'block';
-                            }
+                            // ETA dan Navigasi
+                            // Jarak & ETA dihitung di background saat generate WA Link
 
                             // Location share button
                             if (userLatLng && currentOrderCart?.whatsapp) {
@@ -700,7 +676,9 @@
                             const selected = orderItems.filter(i => i.qty > 0);
                             const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
                             const notes = orderNotes.value.trim();
-                            const eta = orderEta.value;
+
+                            const meters = getDistanceMeters(currentOrderCart.latitude, currentOrderCart.longitude);
+                            const eta = estimateETA(meters);
 
                             let msg = `Halo Tether Brew *${currentOrderCart.name}*,\nSaya mau pesan:\n\n`;
                             selected.forEach(item => {
@@ -731,13 +709,8 @@
             return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
         }
 
-        // Update WA link on notes/eta change
+        // Update WA link on notes change
         orderNotes.addEventListener('input', updateOrderTotal);
-        orderEta.addEventListener('change', function() {
-            orderEtaHint.textContent = '';
-            orderEtaHint.style.display = 'none';
-            updateOrderTotal();
-        });
 
         // =============================================
         // MENU & MAP DATA
