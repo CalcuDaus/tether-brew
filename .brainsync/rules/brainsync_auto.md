@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 39 notes | Score threshold: >40
+> 93 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -26,17 +26,20 @@ Content summary (3
 
 ## Project Standards
 
-- convention in agent-rules.md
-- convention in .gitignore
-- Extract repeated class patterns into components
-- Use responsive prefixes consistently (sm:, md:, lg:, xl:)
-- Don't use arbitrary values when a utility class exists
-- Follow PEP 8 style guide
-- Use pathlib for file paths, not os.path string manipulation
-- Use virtual environments (venv, poetry, or conda)
+- what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Replaced auth Score — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Replaced auth Replaced — confirmed 3x
+- Replaced auth Score — externalizes configuration for environment flexibility — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 
-## Verified Best Practices
+## Learned Patterns
 
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 2x)
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 3x)
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 4x)
 - Agent generates new migration for every change (squash related changes)
 - Agent installs packages without checking if already installed
 

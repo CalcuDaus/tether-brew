@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(10);
+        $query = Product::latest();
+        
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        
+        $products = $query->paginate(10)->withQueryString();
         return view('products.index', compact('products'));
     }
 

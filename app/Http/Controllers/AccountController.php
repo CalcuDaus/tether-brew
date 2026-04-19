@@ -9,9 +9,19 @@ use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $accounts = User::latest()->paginate(10);
+        $query = User::latest();
+        
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('role', 'like', "%{$search}%");
+            });
+        }
+
+        $accounts = $query->paginate(10)->withQueryString();
         return view('accounts.index', compact('accounts'));
     }
 

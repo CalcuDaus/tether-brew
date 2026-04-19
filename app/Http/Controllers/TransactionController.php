@@ -110,11 +110,29 @@ class TransactionController extends Controller
     }
 
     // Admin: all transactions
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Transaction::with(['cart', 'user', 'items.product'])
-            ->latest()
-            ->paginate(15);
+        $query = Transaction::with(['cart', 'user', 'items.product'])->latest();
+
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                // Remove '#' if user typed it for ID
+                $cleanSearch = str_replace('#', '', $search);
+                if (is_numeric($cleanSearch)) {
+                    $q->where('id', $cleanSearch);
+                }
+                
+                $q->orWhere('payment_method', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('cart', function($cq) use ($search) {
+                      $cq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $transactions = $query->paginate(15)->withQueryString();
 
         return view('transactions.index', compact('transactions'));
     }

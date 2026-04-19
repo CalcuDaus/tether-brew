@@ -232,6 +232,74 @@
         </div>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableContainers = document.querySelectorAll('.table-container');
+            
+            tableContainers.forEach(container => {
+                const table = container.querySelector('table');
+                if (!table) return;
+
+                // Membungkus input search dengan form untuk pencarian server-side
+                const searchForm = document.createElement('form');
+                searchForm.action = window.location.pathname; // Submit ke halaman saat ini
+                searchForm.method = 'GET';
+                searchForm.style.display = 'flex';
+                searchForm.style.justifyContent = 'flex-end';
+                searchForm.style.marginBottom = '1rem';
+                
+                // Menjaga parameter query lain selain page dan search
+                const currentUrlParams = new URLSearchParams(window.location.search);
+                currentUrlParams.delete('page'); // Reset pagination saat mencari
+                currentUrlParams.delete('search');
+
+                currentUrlParams.forEach((value, key) => {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = key;
+                    hiddenInput.value = value;
+                    searchForm.appendChild(hiddenInput);
+                });
+
+                // Membuat element input
+                const searchInput = document.createElement('input');
+                searchInput.setAttribute('type', 'text');
+                searchInput.setAttribute('name', 'search');
+                
+                // Isi input dengan parameter pencarian saat ini jika ada
+                const currentSearch = new URLSearchParams(window.location.search).get('search');
+                if (currentSearch) {
+                    searchInput.value = currentSearch;
+                }
+
+                searchInput.setAttribute('placeholder', 'Ketik & Tekan Enter untuk mencari...');
+                searchInput.className = 'form-input'; 
+                searchInput.style.maxWidth = '300px';
+
+                searchForm.appendChild(searchInput);
+                
+                // Menyisipkan form sebelum elemen container tabel
+                container.parentNode.insertBefore(searchForm, container);
+
+                // Tambahkan filter sisi klien agar instan untuk data di halaman saat ini
+                const tbody = table.querySelector('tbody');
+                if (!tbody) return;
+                const rows = tbody.querySelectorAll('tr');
+
+                searchInput.addEventListener('keyup', function(e) {
+                    const term = e.target.value.toLowerCase();
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        if (text.includes(term)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

@@ -9,9 +9,21 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $carts = Cart::with(['user', 'location'])->latest()->paginate(10);
+        $query = Cart::with(['user', 'location'])->latest();
+        
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('status', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        $carts = $query->paginate(10)->withQueryString();
         return view('carts.index', compact('carts'));
     }
 

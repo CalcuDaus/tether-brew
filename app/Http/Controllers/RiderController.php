@@ -10,12 +10,19 @@ use Illuminate\Validation\Rule;
 
 class RiderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $riders = User::where('role', 'rider')
-            ->with('carts')
-            ->latest()
-            ->paginate(10);
+        $query = User::where('role', 'rider')->with('carts')->latest();
+
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('whatsapp', 'like', "%{$search}%");
+            });
+        }
+
+        $riders = $query->paginate(10)->withQueryString();
 
         return view('riders.index', compact('riders'));
     }
