@@ -207,7 +207,7 @@
                 <span class="badge-dot"></span>
                 Tether Brew · Kopi Keliling Medan
             </div>
-            <h1><span class="highlight">Kopi Keliling</span> Medan Sekitar dari Tether Brew</h1>
+            <h1>Kopi Premium, Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
             <p>Mencari kopi keliling Medan sekitar? Temukan gerobak kopi keliling premium kami yang tersebar di kota. Segar, berkualitas, dan terjangkau mulai Rp 8.000.</p>
             <div class="hero-cta">
                 <a href="#maps" class="btn-hero btn-hero-primary">
