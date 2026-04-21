@@ -17,6 +17,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/api/carts-map', [LandingController::class, 'cartsMapData'])->name('api.carts-map');
 
+// SEO Routes
+Route::get('/sitemap.xml', function () {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>' . url('/') . '</loc>
+        <lastmod>' . date('Y-m-d') . '</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+</urlset>';
+    return response($xml, 200)->header('Content-Type', 'text/xml');
+});
+
+Route::get('/robots.txt', function () {
+    $txt = "User-agent: *\nAllow: /\n\nSitemap: " . url('/sitemap.xml');
+    return response($txt, 200)->header('Content-Type', 'text/plain');
+});
+
 // ==========================================
 // AUTH ROUTES (Guest only)
 // ==========================================
