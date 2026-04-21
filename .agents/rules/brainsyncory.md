@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 249 notes | Score threshold: >40
+> 251 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -28,8 +28,17 @@
 
 Content summary (6
 
+## Active: `.`
+
+- **⚠️ GOTCHA: Added API key auth authentication**
+- **⚠️ GOTCHA: Added API key auth authentication**
+- **gotcha in agent-rules.md**
+- **convention in .gitignore**
+- **⚠️ GOTCHA: Added API key auth authentication**
+
 ## Project Standards
 
+- convention in .gitignore
 - Added API key auth authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
@@ -37,7 +46,6 @@ Content summary (6
 - what-changed in shared-context.json — confirmed 3x
 - Updated API endpoint Fixed — ensures atomic multi-step database operations — confirmed 3x
 - what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 5x
 
 ## Known Fixes
 

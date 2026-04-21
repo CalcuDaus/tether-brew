@@ -1,4 +1,4 @@
 > **BrainSync Context Pumper** 🧠
-> Dynamically loaded for active file: `storage\app\public\BingSiteAuth.xml` (Domain: **Generic Logic**)
+> Dynamically loaded for active file: `BingSiteAuth.xml` (Domain: **Generic Logic**)
 
 *No specific memory context found for this file's domain.*
