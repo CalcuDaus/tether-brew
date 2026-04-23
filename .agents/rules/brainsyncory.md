@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 253 notes | Score threshold: >40
+> 288 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,26 +18,24 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Important Warnings
+## Active: `resources/views`
 
-- **⚠️ GOTCHA: Added API key auth authentication** — - > 232 notes | Score threshold: >40
-+ > 233 notes | Score threshold: 
-- **⚠️ GOTCHA: Added API key auth authentication** — - > 231 notes | Score threshold: >40
-+ > 232 notes | Score threshold: 
-- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
-
-Content summary (6
+- **what-changed in welcome.blade.php — confirmed 10x**
+- **what-changed in welcome.blade.php — confirmed 5x**
+- **Fixed null crash in Bagian — prevents null/undefined runtime crashes**
+- **Fixed null crash in Estimasi — prevents null/undefined runtime crashes**
+- **discovery in welcome.blade.php**
 
 ## Project Standards
 
-- Added API key auth authentication — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added API key auth authentication — confirmed 4x
-- what-changed in shared-context.json — confirmed 3x
-- Updated API endpoint Fixed — ensures atomic multi-step database operations — confirmed 3x
+- what-changed in welcome.blade.php — confirmed 10x
+- what-changed in welcome.blade.php — confirmed 5x
 - what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 5x
+- Strengthened types Updated
+- Strengthened types Recent
+- Strengthened types Project
+- convention in agent-rules.md
+- convention in .gitignore
 
 ## Known Fixes
 
@@ -46,9 +44,9 @@ Content summary (6
 
 ## Learned Patterns
 
-- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 2x)
 - Always: what-changed in brainsync_auto.md — confirmed 3x (seen 3x)
 - Always: what-changed in brainsync_auto.md — confirmed 3x (seen 4x)
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 5x)
 - Agent generates new migration for every change (squash related changes)
 - Agent installs packages without checking if already installed
 
@@ -90,8 +88,8 @@ Guidance for using the `tinybird-sdk` package to define Tinybird resources in Py
 - Build: `tinybird build` (builds against configured dev target)
 - Deploy: `tinybird deploy` (deploys to main/production)
 - Preview in CI: `tinybird preview`
-- Migrate: `tinybird migrate` (convert .datasource/.pipe files to Python)
-- Server-side only; never expose tokens in browsers
+- Migrate: `tinybird migra...
+(truncated)
 
 
 ### 📚 Core Framework Rules: [expo/expo-tailwind-setup]
@@ -157,64 +155,7 @@ Since react-native-css requires explicit CSS element wrapping, create reusable c
 
 
 
-### Animated Components (`src/tw/animated.tsx`)
-
-
-
-## Usage
-
-Import CSS-wrapped components from your tw directory:
-
-
-
-## Custom Theme Variables
-
-Add custom theme variables in your global.css using `@theme`:
-
-
-
-## Platform-Specific Styles
-
-Use platform media queries for platform-specific styling:
-
-
-
-## Apple System Colors with CSS Variables
-
-Create a CSS file for Apple semantic colors:
-
-
-
-Then use in components:
-
-
-
-## Using CSS Variables in JavaScript
-
-Use the `useCSSVariable` hook:
-
-
-
-## Key Differences from NativeWind v4 / Tailwind v3
-
-1. **No babel.config.js** - Configuration is now CSS-first
-2. **PostCSS plugin** - Uses `@tailwindcss/postcss` instead of `tailwindcss`
-3. **CSS imports** - Use `@import "tailwindcss/..."` instead of `@tailwind` directives
-4. **Theme config** - Use `@theme` in CSS instead of `tailwind.config.js`
-5. **Component wrappers** - Must wrap components with `useCssElement` for className support
-6. **Metro config** - Use `withNativewind` with different options (`inlineVariables: false`)
-
-## Troubleshooting
-
-### Styles not applying
-
-1. Ensure you have the CSS file imported in your app entry
-2. Check that components are wrapped with `useCssElement`
-3. Verify Metro config has `withNativewind` applied
-
-### Platform colors not working
-
-1. Use `platformColor()` i...
+...
 (truncated)
 
 
@@ -257,56 +198,9 @@ Expert guidance for writing Python code in n8n Code nodes.
 
 ## Mode Selection Guide
 
-Same as JavaScript - choose based on your use case:
-
-### Run Once for All Items (Recommended - Default)
-
-**Use this mode for:** 95% of use cases
-
-- **How it works**: Code executes **once** regardless of input count
-- **Data access**: `_input.all()` or `_items` array (Native mode)
-- **Best for**: Aggregation, filtering, batch processing, transformations
-- **Performance**: Faster for multiple items (single execution)
-
-
-
-### Run Once for Each Item
-
-**Use this mode for:** Specialized cases only
-
-- **How it works**: Code executes **separately** for each input item
-- **Data access**: `_input.item` or `_item` (Native mode)
-- **Best for**: Item-specific logic, independent operations, per-item validation
-- **Performance**: Slower for large datasets (multiple executions)
-
-
-
----
-
-## Python Modes: Beta vs Native
-
-n8n offers two Python execution modes:
-
-### Python (Beta) - Recommended
-- **Use**: `_input`, `_json`, `_node` helper syntax
-- **Best for**: Most Python use cases
-- **Helpers available**: `_now`, `_today`, `_jmespath()`
-- **Import**: `from datetime import datetime`
-
-
-
-### Python (Native) (Beta)
-- **Use**: `_items`, `_item` variables only
-- **No helpers**: No `_input`, `_now`, etc.
-- **More limited**: Standard Python only
-- **Use when**: Need pure Python without n8n helpers
-
-
-
-**Recommendation**: Use **Python (Beta)** for better n8...
+Same as JavaScript - choose based on your use ca...
 (truncated)
 
-- [JavaScript/TypeScript] Use === not == (strict equality prevents type coercion bugs)
 
 ## Available Tools (ON-DEMAND only)
 - `sys_core_01(q)` — Deep search when stuck
