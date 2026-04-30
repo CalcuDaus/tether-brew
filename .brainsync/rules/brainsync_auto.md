@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 288 notes | Score threshold: >40
+> 289 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -31,11 +31,8 @@
 - what-changed in welcome.blade.php — confirmed 10x
 - what-changed in welcome.blade.php — confirmed 5x
 - what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x
-- Strengthened types Updated
-- Strengthened types Recent
-- Strengthened types Project
-- convention in agent-rules.md
-- convention in .gitignore
+- Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x
+- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 4x
 
 ## Known Fixes
 

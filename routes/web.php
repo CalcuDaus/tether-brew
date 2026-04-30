@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RiderController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ArtikelController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 // ==========================================
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/api/carts-map', [LandingController::class, 'cartsMapData'])->name('api.carts-map');
+Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
+Route::get('/artikel/{slug}', [ArtikelController::class, 'show'])->name('artikel.show');
 
 // SEO Routes
 Route::get('/sitemap.xml', function () {
@@ -77,6 +80,16 @@ Route::middleware('auth')->group(function () {
 
         // All Transactions
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+
+        // Artikel CRUD
+        Route::prefix('admin/artikel')->name('admin.artikel.')->group(function () {
+            Route::get('/', [ArtikelController::class, 'adminIndex'])->name('index');
+            Route::get('/create', [ArtikelController::class, 'create'])->name('create');
+            Route::post('/', [ArtikelController::class, 'store'])->name('store');
+            Route::get('/{artikel}/edit', [ArtikelController::class, 'edit'])->name('edit');
+            Route::put('/{artikel}', [ArtikelController::class, 'update'])->name('update');
+            Route::delete('/{artikel}', [ArtikelController::class, 'destroy'])->name('destroy');
+        });
     });
 
     // ==========================================

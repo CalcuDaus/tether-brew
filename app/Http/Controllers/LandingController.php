@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Artikel;
 use App\Models\Cart;
 use App\Models\CartLocation;
 use Illuminate\Http\Request;
@@ -10,7 +11,13 @@ class LandingController extends Controller
 {
     public function index()
     {
-        return view('welcome');
+        // 3 artikel terbaru yang sudah dipublish
+        $artikels = Artikel::published()
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        return view('welcome', compact('artikels'));
     }
 
     // API endpoint for map data (returns JSON)
@@ -48,4 +55,3 @@ class LandingController extends Controller
         return response()->json($carts);
     }
 }
-
