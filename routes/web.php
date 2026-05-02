@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LandingController;
@@ -118,5 +120,39 @@ Route::middleware('auth')->group(function () {
         // Update stock
         Route::post('/stock', [InventoryController::class, 'riderUpdateStock'])->name('stock.update');
     });
+});
+
+// ==========================================
+// CUSTOMER AUTH ROUTES (Phone-based)
+// ==========================================
+Route::prefix('customer')->name('customer.')->middleware('guest')->group(function () {
+    Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [CustomerAuthController::class, 'login']);
+    Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [CustomerAuthController::class, 'register']);
+});
+Route::post('/customer/logout', [CustomerAuthController::class, 'logout'])
+    ->middleware('auth')->name('customer.logout');
+
+// ==========================================
+// CUSTOMER CHAT ROUTES
+// ==========================================
+Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
+    Route::post('/start', [ChatController::class, 'startConversation'])->name('start');
+    Route::get('/{conversation}/messages', [ChatController::class, 'getMessages'])->name('messages');
+    Route::post('/{conversation}/send', [ChatController::class, 'sendMessage'])->name('send');
+    Route::post('/{conversation}/read', [ChatController::class, 'markAsRead'])->name('read');
+});
+
+// ==========================================
+// RIDER CHAT ROUTES (inside auth)
+// ==========================================
+Route::middleware(['auth', 'role:rider'])->prefix('rider/chat')->name('rider.chat.')->group(function () {
+    Route::get('/', [ChatController::class, 'riderConversations'])->name('index');
+    Route::get('/conversations-json', [ChatController::class, 'riderConversationsJson'])->name('conversations.json');
+    Route::get('/{conversation}', [ChatController::class, 'riderChat'])->name('show');
+    Route::get('/{conversation}/messages', [ChatController::class, 'getMessages'])->name('messages');
+    Route::post('/{conversation}/send', [ChatController::class, 'sendMessage'])->name('send');
+    Route::post('/{conversation}/send-qris', [ChatController::class, 'sendQris'])->name('qris');
 });
 

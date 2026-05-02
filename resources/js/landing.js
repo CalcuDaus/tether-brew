@@ -198,29 +198,53 @@
                             }
                         }
 
-                        function generateWhatsAppLink() {
-                            if (!currentOrderCart) return '#';
-                            const phone = currentOrderCart.whatsapp;
-                            const selected = orderItems.filter(i => i.qty > 0);
-                            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
-                            const notes = orderNotes.value.trim();
+        function generateOrderText() {
+            if (!currentOrderCart) return '';
+            const selected = orderItems.filter(i => i.qty > 0);
+            if (selected.length === 0) return '';
 
-                            const meters = getDistanceMeters(currentOrderCart.latitude, currentOrderCart.longitude);
-                            const eta = estimateETA(meters);
+            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            const notes = orderNotes.value.trim();
 
-                            let msg = `Halo Tether Brew *${currentOrderCart.name}*,\nSaya mau pesan:\n\n`;
-                            selected.forEach(item => {
-                                const sub = item.price * item.qty;
-                                msg += ` ${item.name} x${item.qty} = ${formatRupiah(sub)}\n`;
-                            });
-                            msg += `\n *Total: ${formatRupiah(total)}*`;
-                            if (eta) msg += `\n *Estimasi saya sampai: ${eta}*`;
-                            if (notes) msg += `\n\n Catatan: ${notes}`;
-                            if (userLatLng) {
-                                msg += `\n\n Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
-                            }
-                            msg += `\n\nMohon konfirmasi ketersediaannya dan jangan kemana-mana dulu ya! `;
+            const meters = getDistanceMeters(currentOrderCart.latitude, currentOrderCart.longitude);
+            const eta = estimateETA(meters);
 
+            let msg = `Halo Tether Brew *${currentOrderCart.name}*,\nSaya mau pesan:\n\n`;
+            selected.forEach(item => {
+                const sub = item.price * item.qty;
+                msg += ` ${item.name} x${item.qty} = ${formatRupiah(sub)}\n`;
+            });
+            msg += `\n *Total: ${formatRupiah(total)}*`;
+            if (eta) msg += `\n *Estimasi saya sampai: ${eta}*`;
+            if (notes) msg += `\n\n Catatan: ${notes}`;
+            if (userLatLng) {
+                msg += `\n\n Lokasi saya: https://maps.google.com/?q=${userLatLng.lat},${userLatLng.lng}`;
+            }
+            msg += `\n\nMohon konfirmasi ketersediaannya dan jangan kemana-mana dulu ya! `;
+            return msg;
+        }
+
+        function generateChatDraftText() {
+            if (!currentOrderCart) return '';
+            const selected = orderItems.filter(i => i.qty > 0);
+            if (selected.length === 0) return '';
+
+            const total = selected.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            const notes = orderNotes.value.trim();
+
+            let msg = `Saya mau pesan: `;
+            const items = selected.map(item => `${item.name} (x${item.qty})`);
+            msg += items.join(', ');
+            msg += `. Total: ${formatRupiah(total)}.`;
+            
+            if (notes) msg += ` Catatan: ${notes}`;
+            return msg;
+        }
+
+        function generateWhatsAppLink() {
+            if (!currentOrderCart) return '#';
+            const phone = currentOrderCart.whatsapp;
+            const msg = generateOrderText();
             return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
         }
 
@@ -446,7 +470,7 @@
 
                 // Periodic refresh (every 8 seconds)
                 setInterval(() => {
-                    fetch('/api/carts-map')
+                    fetch('/api/carts-map?_t=' + new Date().getTime(), { cache: 'no-store' })
                         .then(r => r.json())
                         .then(carts => {
                             allCartsData = carts;
@@ -537,3 +561,415 @@
         // Expose functions globally for inline onclick handlers
         window.openOrderPanel = openOrderPanel;
         window.changeQty = changeQty;
+
+        // =============================================
+        // DM CHAT SYSTEM (with polling fallback)
+        // =============================================
+        let currentConversation = null;
+        let chatEchoInstance = null;
+        let chatMessages = [];
+        let chatPollingTimer = null;
+        let isChatDrawerOpen = false;
+
+        function openChat() {
+            const customerId = document.body.dataset.customerId;
+            if (!customerId) {
+                openAuthModal();
+                return;
+            }
+            startChat();
+        }
+
+        function openAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        async function startChat() {
+            if (!currentOrderCart || !currentOrderCart.rider_id) return;
+
+            try {
+                const res = await fetch('/chat/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        rider_id: currentOrderCart.rider_id,
+                        cart_id: currentOrderCart.id,
+                    }),
+                });
+
+                if (!res.ok) throw new Error('Failed to start chat');
+
+                const data = await res.json();
+                currentConversation = data.conversation;
+
+                // Update drawer header
+                const riderName = currentOrderCart.rider || 'Rider';
+                document.getElementById('chat-rider-name').textContent = riderName;
+                document.getElementById('chat-rider-avatar').textContent = riderName.charAt(0).toUpperCase();
+
+                openChatDrawer();
+                await loadChatMessages();
+
+                // Start polling for new messages (reliable fallback)
+                startChatPolling();
+
+                // Also try WebSocket for instant delivery
+                subscribeToChatChannel();
+
+                // Pre-fill draft text
+                const draft = generateChatDraftText();
+                if (draft) {
+                    const chatInput = document.getElementById('chat-input');
+                    if (chatInput) {
+                        chatInput.value = draft;
+                        chatInput.dispatchEvent(new Event('input'));
+                        chatInput.focus();
+                    }
+                }
+            } catch (err) {
+                console.error('Chat start failed:', err);
+            }
+        }
+
+        async function openChatFromHistory(cartId, riderId, riderName) {
+            closeAccountModal();
+            try {
+                const res = await fetch('/chat/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        rider_id: riderId,
+                        cart_id: cartId,
+                    }),
+                });
+
+                if (!res.ok) throw new Error('Failed to start chat from history');
+
+                const data = await res.json();
+                currentConversation = data.conversation;
+
+                // Update drawer header
+                document.getElementById('chat-rider-name').textContent = riderName || 'Rider';
+                document.getElementById('chat-rider-avatar').textContent = (riderName || 'R').charAt(0).toUpperCase();
+
+                openChatDrawer();
+                await loadChatMessages();
+                startChatPolling();
+                subscribeToChatChannel();
+
+            } catch (err) {
+                console.error('Chat open from history failed:', err);
+            }
+        }
+
+        function openChatDrawer() {
+            const drawer = document.getElementById('chat-drawer');
+            if (drawer) drawer.style.display = 'flex';
+            isChatDrawerOpen = true;
+        }
+
+        function closeChat() {
+            const drawer = document.getElementById('chat-drawer');
+            if (drawer) drawer.style.display = 'none';
+            isChatDrawerOpen = false;
+
+            // Stop polling
+            stopChatPolling();
+
+            // Unsubscribe from channel
+            if (chatEchoInstance && currentConversation) {
+                chatEchoInstance.leave(`conversation.${currentConversation.id}`);
+            }
+        }
+
+        async function loadChatMessages() {
+            if (!currentConversation) return;
+
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = '<div class="chat-empty">Memuat pesan...</div>';
+
+            try {
+                const res = await fetch(`/chat/${currentConversation.id}/messages?_t=${Date.now()}`, {
+                    headers: { 'Accept': 'application/json' },
+                    cache: 'no-store',
+                });
+                const data = await res.json();
+                chatMessages = (data.data || []).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                renderChatMessages();
+                scrollChatToBottom();
+
+                // Mark as read
+                fetch(`/chat/${currentConversation.id}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    }
+                });
+            } catch (err) {
+                container.innerHTML = '<div class="chat-empty">Gagal memuat pesan</div>';
+            }
+        }
+
+        // Polling: fetch new messages every 3 seconds
+        function startChatPolling() {
+            stopChatPolling(); // clear any existing timer
+            chatPollingTimer = setInterval(async () => {
+                if (!currentConversation || !isChatDrawerOpen) {
+                    stopChatPolling();
+                    return;
+                }
+                try {
+                    const res = await fetch(`/chat/${currentConversation.id}/messages?_t=${Date.now()}`, {
+                        headers: { 'Accept': 'application/json' },
+                        cache: 'no-store',
+                    });
+                    const data = await res.json();
+                    const freshMessages = (data.data || []).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+                    // Only update if there are new messages
+                    if (freshMessages.length !== chatMessages.length) {
+                        chatMessages = freshMessages;
+                        renderChatMessages();
+                        scrollChatToBottom();
+
+                        // Mark as read
+                        fetch(`/chat/${currentConversation.id}/read`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            }
+                        });
+                    }
+                } catch (err) {
+                    // Silently ignore polling errors
+                }
+            }, 3000);
+        }
+
+        function stopChatPolling() {
+            if (chatPollingTimer) {
+                clearInterval(chatPollingTimer);
+                chatPollingTimer = null;
+            }
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages');
+            const customerId = parseInt(document.body.dataset.customerId);
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = '<div class="chat-empty">Belum ada pesan. Mulai percakapan!</div>';
+                return;
+            }
+
+            container.innerHTML = chatMessages.map(msg => {
+                const isSent = msg.sender_id === customerId;
+                const time = new Date(msg.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+                let contentHtml = '';
+                if (msg.attachment_path) {
+                    if (msg.attachment_type === 'image') {
+                        contentHtml += `<img src="/storage/${msg.attachment_path}" alt="attachment" class="chat-attachment-img" onclick="window.open('/storage/${msg.attachment_path}', '_blank')">`;
+                    } else if (msg.attachment_type === 'pdf') {
+                        contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" class="chat-attachment-pdf">📄 Lihat PDF</a>`;
+                    }
+                }
+                if (msg.body) {
+                    contentHtml += `<div>${escapeHtmlChat(msg.body)}</div>`;
+                }
+
+                return `<div class="chat-bubble ${isSent ? 'sent' : 'received'}">
+                    ${contentHtml}
+                    <div class="chat-bubble-time">${time}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function scrollChatToBottom() {
+            const container = document.getElementById('chat-messages');
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 50);
+        }
+
+        function escapeHtmlChat(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function sendChatMessage() {
+            if (!currentConversation) return;
+
+            const input = document.getElementById('chat-input');
+            const body = input.value.trim();
+            if (!body) return;
+
+            input.value = '';
+
+            try {
+                const res = await fetch(`/chat/${currentConversation.id}/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ body }),
+                });
+
+                if (!res.ok) throw new Error('Send failed');
+
+                const data = await res.json();
+                chatMessages.push(data.message);
+                renderChatMessages();
+                scrollChatToBottom();
+            } catch (err) {
+                input.value = body;
+            }
+        }
+
+        async function sendChatAttachment() {
+            if (!currentConversation) return;
+
+            const fileInput = document.getElementById('chat-file-input');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('attachment', file);
+            formData.append('body', ''); // optional text, leave empty
+
+            try {
+                const res = await fetch(`/chat/${currentConversation.id}/send`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
+                });
+
+                if (!res.ok) throw new Error('Upload failed');
+
+                const data = await res.json();
+                chatMessages.push(data.message);
+                renderChatMessages();
+                scrollChatToBottom();
+            } catch (err) {
+                console.error('Attachment send failed:', err);
+            }
+
+            fileInput.value = ''; // reset input
+        }
+
+        // WebSocket subscription (best-effort, polling is the reliable fallback)
+        function subscribeToChatChannel() {
+            if (!currentConversation) return;
+
+            try {
+                import('laravel-echo').then((EchoModule) => {
+                    import('pusher-js').then((PusherModule) => {
+                        const Pusher = PusherModule.default;
+                        window.Pusher = Pusher;
+
+                        if (!chatEchoInstance) {
+                            const EchoClass = EchoModule.default;
+                            chatEchoInstance = new EchoClass({
+                                broadcaster: 'reverb',
+                                key: import.meta.env.VITE_REVERB_APP_KEY,
+                                wsHost: import.meta.env.VITE_REVERB_HOST,
+                                wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+                                wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+                                forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+                                enabledTransports: ['ws', 'wss'],
+                                authorizer: (channel, options) => {
+                                    return {
+                                        authorize: (socketId, callback) => {
+                                            fetch('/broadcasting/auth', {
+                                                method: 'POST',
+                                                credentials: 'same-origin',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                                    'Accept': 'application/json'
+                                                },
+                                                body: JSON.stringify({
+                                                    socket_id: socketId,
+                                                    channel_name: channel.name
+                                                })
+                                            })
+                                            .then(response => {
+                                                if (!response.ok) throw new Error('Auth failed');
+                                                return response.json();
+                                            })
+                                            .then(data => callback(false, data))
+                                            .catch(error => callback(true, error));
+                                        }
+                                    };
+                                }
+                            });
+                        }
+
+                        chatEchoInstance.private(`conversation.${currentConversation.id}`)
+                            .listen('MessageSent', (e) => {
+                                // Check for duplicate (polling might have already added it)
+                                if (chatMessages.some(m => m.id === e.id)) return;
+
+                                chatMessages.push({
+                                    id: e.id,
+                                    conversation_id: e.conversation_id,
+                                    sender_id: e.sender_id,
+                                    body: e.body,
+                                    attachment_path: e.attachment_path,
+                                    attachment_type: e.attachment_type,
+                                    created_at: e.created_at,
+                                    sender: { name: e.sender_name },
+                                });
+                                renderChatMessages();
+                                scrollChatToBottom();
+                            });
+                    });
+                }).catch(err => {
+                    console.warn('Echo import failed, polling fallback is active:', err);
+                });
+            } catch (err) {
+                console.warn('Echo not available, polling fallback is active:', err);
+            }
+        }
+
+        // Enter to send in chat input
+        const chatInput = document.getElementById('chat-input');
+        if (chatInput) {
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChatMessage();
+                }
+            });
+        }
+
+        // Expose chat functions globally
+        window.openChat = openChat;
+        window.closeChat = closeChat;
+        window.sendChatMessage = sendChatMessage;
+        window.openAuthModal = openAuthModal;
+        window.closeAuthModal = closeAuthModal;
+        window.openChatFromHistory = openChatFromHistory;
+        window.sendChatAttachment = sendChatAttachment;

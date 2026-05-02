@@ -1,0 +1,35 @@
+{
+  "name": "Tether Brew Rider",
+  "short_name": "TB Rider",
+  "description": "Dashboard rider Tether Brew. Kelola POS, tracking GPS, dan chat pelanggan.",
+  "start_url": "/dashboard?utm_source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
+  "lang": "id",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "/icons/rider-72x72.png",   "sizes": "72x72",   "type": "image/png" },
+    { "src": "/icons/rider-96x96.png",   "sizes": "96x96",   "type": "image/png" },
+    { "src": "/icons/rider-128x128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "/icons/rider-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "/icons/rider-152x152.png", "sizes": "152x152", "type": "image/png" },
+    { "src": "/icons/rider-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/rider-384x384.png", "sizes": "384x384", "type": "image/png" },
+    { "src": "/icons/rider-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buka POS",
+      "url": "/rider/pos?utm_source=pwa",
+      "icons": [{ "src": "/icons/rider-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Chat Pelanggan",
+      "url": "/rider/chat?utm_source=pwa",
+      "icons": [{ "src": "/icons/rider-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'whatsapp', 'password', 'role'])]
+#[Fillable(['name', 'email', 'whatsapp', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->role === 'rider';
     }
 
+    public function isCustomer(): bool
+    {
+        return $this->role === 'customer';
+    }
+
     public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
@@ -54,5 +59,15 @@ class User extends Authenticatable
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function customerConversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'customer_id');
+    }
+
+    public function riderConversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'rider_id');
     }
 }

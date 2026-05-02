@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - Tether Brew</title>
+    @if(auth()->check() && auth()->user()->isRider())
+        <link rel="manifest" href="/manifest-rider.json">
+        <meta name="theme-color" content="#1e293b">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="TB Rider">
+        <link rel="apple-touch-icon" href="/icons/rider-192x192.png">
+    @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -65,7 +73,7 @@
     </script>
     @stack('styles')
 </head>
-<body x-data="{ sidebarOpen: false, darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }">
+<body x-data="{ sidebarOpen: false, darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }" class="{{ auth()->check() && auth()->user()->isRider() ? 'is-rider' : '' }}">
 
     {{-- Sidebar --}}
     <aside class="sidebar" :class="{ 'open': sidebarOpen }" @click.away="sidebarOpen = false">
@@ -165,6 +173,16 @@
                                 <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
                             </svg>
                         </span> Riwayat
+                    </a>
+                    <a href="{{ route('rider.chat.index') }}" class="nav-link {{ request()->routeIs('rider.chat.*') ? 'active' : '' }}">
+                        <span class="nav-link-icon">
+                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </span> Chat
+                        @if(isset($unreadChatCount) && $unreadChatCount > 0)
+                            <span style="background: var(--accent); color: white; font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 10px; margin-left: auto;">{{ $unreadChatCount }}</span>
+                        @endif
                     </a>
                 </div>
             @endif
@@ -307,6 +325,105 @@
             });
         });
     </script>
+    @if(auth()->check() && auth()->user()->isRider())
+    {{-- ===== BOTTOM NAV MOBILE (RIDER) ===== --}}
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a href="{{ route('dashboard') }}" class="bottom-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Beranda</span>
+            </a>
+            <a href="{{ route('rider.pos') }}" class="bottom-nav-item {{ request()->routeIs('rider.pos') ? 'active' : '' }}">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>POS</span>
+            </a>
+            <a href="{{ route('rider.transactions') }}" class="bottom-nav-item {{ request()->routeIs('rider.transactions') ? 'active' : '' }}">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+                <span>Riwayat</span>
+            </a>
+            <a href="{{ route('rider.chat.index') }}" class="bottom-nav-item {{ request()->routeIs('rider.chat.*') ? 'active' : '' }}" style="position:relative;">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span>Chat</span>
+                @if(isset($unreadChatCount) && $unreadChatCount > 0)
+                    <span style="position:absolute; top:-5px; right:15px; background:var(--accent-red); color:white; font-size:10px; border-radius:10px; padding:2px 6px;">{{ $unreadChatCount }}</span>
+                @endif
+            </a>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('rider-account-modal').style.display='flex'" class="bottom-nav-item">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Akun</span>
+            </a>
+        </div>
+    </nav>
+
+    {{-- ===== ACCOUNT MODAL ===== --}}
+    <div id="rider-account-modal" class="account-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-card); padding:24px; border-radius:16px; width:90%; max-width:400px; text-align:center; border: 1px solid var(--border-color);">
+            <div style="width:64px; height:64px; border-radius:50%; background:var(--gradient-gold); margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:700; color:#fff;">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
+            <h3 style="margin-bottom:4px; font-size: 1.2rem; color: var(--text-primary);">{{ auth()->user()->name }}</h3>
+            <p style="margin:0 0 20px 0; color:var(--text-secondary); font-size:14px; text-transform: capitalize;">{{ auth()->user()->role }}</p>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-danger" style="width:100%; justify-content:center;">Keluar</button>
+            </form>
+            <button onclick="document.getElementById('rider-account-modal').style.display='none'" class="btn btn-secondary" style="width:100%; justify-content:center; margin-top:12px;">Batal</button>
+        </div>
+    </div>
+    @endif
+
+    @if(auth()->check() && auth()->user()->isRider())
+    <script>
+    // Register Rider Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw-rider.js', { scope: '/' })
+                .then(reg => console.log('Rider SW registered:', reg.scope))
+                .catch(err => console.log('Rider SW failed:', err));
+        });
+    }
+
+    // Custom Install Prompt for Rider
+    let riderDeferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        riderDeferredPrompt = e;
+        setTimeout(() => {
+            if (!riderDeferredPrompt) return;
+            const banner = document.createElement('div');
+            banner.id = 'pwa-rider-install';
+            banner.innerHTML = `
+                <div style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1e293b,#334155);color:white;padding:14px 24px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:99999;display:flex;align-items:center;gap:12px;font-family:Inter,sans-serif;max-width:90%;border:1px solid rgba(255,255,255,0.1);animation:riderSlideUp .4s ease;">
+                    <span style="font-size:1.5rem;">🏍️</span>
+                    <div style="flex:1;">
+                        <div style="font-weight:700;font-size:0.95rem;">Install TB Rider</div>
+                        <div style="font-size:0.8rem;opacity:0.8;">Akses POS & tracking lebih cepat</div>
+                    </div>
+                    <button onclick="installRiderPWA()" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;padding:8px 16px;border-radius:10px;font-weight:700;font-size:0.85rem;cursor:pointer;">Install</button>
+                    <button onclick="this.closest('#pwa-rider-install').remove()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;padding:4px;">✕</button>
+                </div>
+            `;
+            document.body.appendChild(banner);
+        }, 10000);
+    });
+
+    async function installRiderPWA() {
+        if (!riderDeferredPrompt) return;
+        riderDeferredPrompt.prompt();
+        const { outcome } = await riderDeferredPrompt.userChoice;
+        riderDeferredPrompt = null;
+        const banner = document.getElementById('pwa-rider-install');
+        if (banner) banner.remove();
+    }
+    </script>
+    <style>
+    @keyframes riderSlideUp {
+        from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    </style>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

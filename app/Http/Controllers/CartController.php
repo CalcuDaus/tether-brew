@@ -125,10 +125,14 @@ class CartController extends Controller
 
         $cart = Cart::where('user_id', $request->user()->id)->firstOrFail();
 
-        CartLocation::updateOrCreate(
+        $location = CartLocation::updateOrCreate(
             ['cart_id' => $cart->id],
-            ['latitude' => $validated['latitude'], 'longitude' => $validated['longitude']]
+            [
+                'latitude' => $validated['latitude'],
+                'longitude' => $validated['longitude'],
+            ]
         );
+        $location->touch();
 
         return back()->with('success', 'Lokasi berhasil diperbarui!');
     }
@@ -163,6 +167,7 @@ class CartController extends Controller
         $validated = $request->validate([
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
+            'status' => 'nullable|string|in:active,inactive'
         ]);
 
         $cart = Cart::where('user_id', $request->user()->id)->first();
@@ -171,14 +176,18 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => 'Cart not found for this user'], 404);
         }
 
-        CartLocation::updateOrCreate(
+        if (isset($validated['status']) && $cart->status !== $validated['status']) {
+            $cart->update(['status' => $validated['status']]);
+        }
+
+        $location = CartLocation::updateOrCreate(
             ['cart_id' => $cart->id],
             [
                 'latitude' => $validated['latitude'],
                 'longitude' => $validated['longitude'],
-                'updated_at' => now()
             ]
         );
+        $location->touch();
 
         return response()->json(['success' => true]);
     }

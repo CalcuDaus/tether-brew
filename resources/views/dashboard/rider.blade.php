@@ -229,6 +229,9 @@
     // =============================================
     const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
     const LIVE_URL = "{{ route('rider.location.live') }}";
+    const IS_LOCAL = {{ app()->environment('local') ? 'true' : 'false' }};
+    const MOCK_LAT = 3.5395706;
+    const MOCK_LNG = 98.6704442;
 
     let isTracking = false;
     let isSimulation = false;
@@ -238,8 +241,8 @@
     let riderMarker = null;
 
     // Initialize mini map
-    const initLat = {{ $cart->location?->latitude ?? 3.57 }};
-    const initLng = {{ $cart->location?->longitude ?? 98.65 }};
+    const initLat = {{ $cart->location?->latitude ?? 3.5395706 }};
+    const initLng = {{ $cart->location?->longitude ?? 98.6704442 }};
 
     riderMap = L.map('rider-map', { zoomControl: false, attributionControl: false }).setView([initLat, initLng], 16);
     
@@ -307,7 +310,7 @@
             addLog('⏹ Mode Simulasi MATI.');
             
             if (!isTracking) {
-                stopTracking(); // Reset UI
+                stopTrackingUI(); // Reset UI
             }
         }
     }
@@ -329,8 +332,11 @@
         riderMap.panTo([lat, lng]);
     }
 
-    async function sendLocation(lat, lng) {
+    async function sendLocation(lat, lng, status = null) {
         try {
+            const bodyData = { latitude: lat, longitude: lng };
+            if (status) bodyData.status = status;
+
             const res = await fetch(LIVE_URL, {
                 method: 'POST',
                 headers: {
@@ -338,12 +344,20 @@
                     'X-CSRF-TOKEN': CSRF_TOKEN,
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({ latitude: lat, longitude: lng }),
+                body: JSON.stringify(bodyData),
             });
             const data = await res.json();
             if (data.success) {
                 sendCount++;
                 addLog(`<svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Lokasi terkirim #${sendCount} → ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+                // Update badge if status active
+                if (status === 'active') {
+                    const statusVal = document.querySelector('.rider-stats-section .stat-card:nth-child(4) .stat-value');
+                    if(statusVal) statusVal.textContent = 'active';
+                } else if (status === 'inactive') {
+                    const statusVal = document.querySelector('.rider-stats-section .stat-card:nth-child(4) .stat-value');
+                    if(statusVal) statusVal.textContent = 'inactive';
+                }
             } else {
                 addLog(`⚠️ Server error: ${JSON.stringify(data)}`);
             }
@@ -366,7 +380,7 @@
             return;
         }
 
-        if (!navigator.geolocation) {
+        if (!navigator.geolocation && !IS_LOCAL) {
             addLog('❌ Browser tidak mendukung Geolocation');
             return;
         }
@@ -389,38 +403,68 @@
         statusText.style.color = '#22c55e';
         warn.classList.add('hidden');
 
-        addLog('🟢 Live tracking DIMULAI');
-
-        watchId = navigator.geolocation.watchPosition(
-            (pos) => {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                const accuracy = pos.coords.accuracy;
-                updateUI(lat, lng);
-                sendLocation(lat, lng);
-                addLog(`📡 GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)} (akurasi: ${accuracy.toFixed(0)}m)`);
-            },
-            (err) => {
-                addLog(`❌ GPS Error: ${err.message}`);
-                if (err.message.includes('secure origins') || err.code === 1) {
-                    warn.classList.remove('hidden');
+        // Development Mock vs Production Real
+        if (IS_LOCAL) {
+            addLog('🟢 Live tracking DIMULAI (Mode Development - Mock Location)');
+            updateUI(MOCK_LAT, MOCK_LNG);
+            sendLocation(MOCK_LAT, MOCK_LNG, 'active');
+            
+            watchId = setInterval(() => {
+                sendLocation(MOCK_LAT, MOCK_LNG);
+                addLog(`📡 Mock GPS: ${MOCK_LAT.toFixed(5)}, ${MOCK_LNG.toFixed(5)}`);
+            }, 8000);
+        } else {
+            addLog('🟢 Live tracking DIMULAI (Production)');
+            watchId = navigator.geolocation.watchPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    const accuracy = pos.coords.accuracy;
+                    updateUI(lat, lng);
+                    
+                    // On first update, set status active. Subsequent updates just send coords.
+                    const isFirst = (sendCount === 0); 
+                    sendLocation(lat, lng, isFirst ? 'active' : null);
+                    
+                    addLog(`📡 GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)} (akurasi: ${accuracy.toFixed(0)}m)`);
+                },
+                (err) => {
+                    addLog(`❌ GPS Error: ${err.message}`);
+                    if (err.message.includes('secure origins') || err.code === 1) {
+                        warn.classList.remove('hidden');
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 0, 
+                    timeout: 10000,
                 }
-            },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 0, 
-                timeout: 10000,
-            }
-        );
+            );
+        }
     }
 
     function stopTracking() {
-        isTracking = false;
-        if (watchId !== null) {
+        if (IS_LOCAL && watchId !== null) {
+            clearInterval(watchId);
+        } else if (watchId !== null) {
             navigator.geolocation.clearWatch(watchId);
-            watchId = null;
         }
+        watchId = null;
+        isTracking = false;
 
+        stopTrackingUI();
+
+        // Optional: send inactive status when stopped
+        const lastLat = document.getElementById('live-lat').textContent;
+        const lastLng = document.getElementById('live-lng').textContent;
+        if (lastLat !== '-' && lastLng !== '-') {
+            sendLocation(parseFloat(lastLat), parseFloat(lastLng), 'inactive');
+        }
+        
+        addLog(`🔴 Live tracking DIHENTIKAN (total ${sendCount} update terkirim)`);
+    }
+
+    function stopTrackingUI() {
         const btn = document.getElementById('tracking-toggle');
         const badge = document.getElementById('tracking-badge');
         const statusText = document.getElementById('tracking-status-text');
@@ -435,8 +479,6 @@
 
         statusText.textContent = 'Klik tombol untuk mulai memancarkan lokasi';
         statusText.style.color = 'var(--text-muted)';
-
-        addLog(`🔴 Live tracking DIHENTIKAN (total ${sendCount} update terkirim)`);
     }
 
     // Fix map rendering issue inside hidden/tab containers

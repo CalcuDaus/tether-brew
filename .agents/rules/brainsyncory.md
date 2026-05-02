@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 289 notes | Score threshold: >40
+> 292 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,21 +18,16 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Active: `resources/views`
-
-- **what-changed in welcome.blade.php — confirmed 10x**
-- **what-changed in welcome.blade.php — confirmed 5x**
-- **Fixed null crash in Bagian — prevents null/undefined runtime crashes**
-- **Fixed null crash in Estimasi — prevents null/undefined runtime crashes**
-- **discovery in welcome.blade.php**
-
 ## Project Standards
 
-- what-changed in welcome.blade.php — confirmed 10x
-- what-changed in welcome.blade.php — confirmed 5x
-- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x
-- Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x
-- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 4x
+- 🟢 Edited resources/views/welcome.blade.php (11 changes, 3min) — confirmed 3x
+- Strengthened types Updated
+- Strengthened types Recent
+- Strengthened types Project
+- convention in agent-rules.md
+- what-changed in brainsync_auto.md — confirmed 3x
+- Added API key auth authentication — confirmed 3x
+- Added API key auth authentication — confirmed 3x
 
 ## Known Fixes
 
