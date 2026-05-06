@@ -226,6 +226,15 @@
                 <h1 class="topbar-title">@yield('title', 'Dashboard')</h1>
             </div>
             <div class="topbar-actions">
+                @if(auth()->check() && auth()->user()->isRider())
+                    <button id="pwa-install-btn-rider" style="display:none;" onclick="installRiderPWA()" class="btn btn-secondary btn-sm flex-center" style="width: 40px; height: 40px; padding: 0; border-radius: 50%;" title="Install App">
+                        <svg width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                    </button>
+                @endif
                 <button @click="window.switchTheme($event, () => darkMode = !darkMode)" class="btn btn-secondary btn-sm flex-center" style="width: 40px; height: 40px; padding: 0; border-radius: 50%;">
                     <template x-if="darkMode">
                         <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -388,6 +397,11 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         riderDeferredPrompt = e;
+
+        // Tampilkan tombol di topbar
+        const topbarBtn = document.getElementById('pwa-install-btn-rider');
+        if (topbarBtn) topbarBtn.style.display = 'flex';
+
         setTimeout(() => {
             if (!riderDeferredPrompt) return;
             const banner = document.createElement('div');
@@ -413,9 +427,21 @@
         riderDeferredPrompt.prompt();
         const { outcome } = await riderDeferredPrompt.userChoice;
         riderDeferredPrompt = null;
+        
+        const topbarBtn = document.getElementById('pwa-install-btn-rider');
+        if (topbarBtn) topbarBtn.style.display = 'none';
+        
         const banner = document.getElementById('pwa-rider-install');
         if (banner) banner.remove();
     }
+
+    window.addEventListener('appinstalled', (evt) => {
+        const topbarBtn = document.getElementById('pwa-install-btn-rider');
+        if (topbarBtn) topbarBtn.style.display = 'none';
+        const banner = document.getElementById('pwa-rider-install');
+        if (banner) banner.remove();
+        console.log('TB Rider was installed');
+    });
     </script>
     <style>
     @keyframes riderSlideUp {
