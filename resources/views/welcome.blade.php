@@ -221,28 +221,49 @@
             <h1>Kopi Premium, Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
             <p>Mencari kopi keliling Medan sekitar? Temukan gerobak kopi keliling premium kami yang tersebar di kota. Segar, berkualitas, dan terjangkau mulai Rp 8.000.</p>
             <div class="hero-cta">
-                <a href="#maps" class="btn-hero btn-hero-primary">
-                    <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                <div class="hero-cta-row">
+                    <a href="#maps" class="btn-hero btn-hero-primary">
+                        <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Lihat Peta
+                        </a>
+                        @if(auth()->check() && auth()->user()->isCustomer())
+                            <a href="#menu" class="btn-hero btn-hero-secondary">
+                                <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                                    <line x1="6" x2="6" y1="1" y2="4" />
+                                    <line x1="10" x2="10" y1="1" y2="4" />
+                                    <line x1="14" x2="14" y1="1" y2="4" />
+                                </svg>
+                                Lihat Menu
+                            </a>
+                        @else
+                            <a href="{{ route('customer.login') }}" class="btn-hero btn-hero-secondary">
+                                <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                    <polyline points="10 17 15 12 10 7" />
+                                    <line x1="15" x2="3" y1="12" y2="12" />
+                                </svg>
+                                Login
+                            </a>
+                        @endif
+                        </div>
+                <button id="pwa-install-btn" class="btn-hero btn-hero-install" style="display: none;" onclick="installPWA()">
+                    <svg width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
-                    Lihat Peta
-                </a>
-                @if(auth()->check() && auth()->user()->isCustomer())
-                    <a href="#menu" class="btn-hero btn-hero-secondary">
-                        <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/>
-                        </svg>
-                        Lihat Menu
-                    </a>
-                @else
-                    <a href="{{ route('customer.login') }}" class="btn-hero btn-hero-secondary">
-                        <svg class="icon-two-tone" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/>
-                        </svg>
-                        Login
-                    </a>
-                @endif
-            </div>
+                    Install
+                </button>
+                </div>
             <div class="hero-stats">
                 <div>
                     <div class="hero-stat-value" id="stat-carts">-</div>
@@ -715,26 +736,13 @@ if ('serviceWorker' in navigator) {
 
 // Custom Install Prompt
 let deferredPrompt;
+const installBtn = document.getElementById('pwa-install-btn');
+
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    setTimeout(() => {
-        if (!deferredPrompt) return;
-        const banner = document.createElement('div');
-        banner.id = 'pwa-install-banner';
-        banner.innerHTML = `
-            <div style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#16a34a;color:white;padding:14px 24px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);z-index:99999;display:flex;align-items:center;gap:12px;font-family:Inter,sans-serif;max-width:90%;animation:slideUp .4s ease;">
-                <span style="font-size:1.5rem;">☕</span>
-                <div style="flex:1;">
-                    <div style="font-weight:700;font-size:0.95rem;">Install Tether Brew</div>
-                    <div style="font-size:0.8rem;opacity:0.9;">Akses cepat tanpa buka browser</div>
-                </div>
-                <button onclick="installPWA()" style="background:white;color:#16a34a;border:none;padding:8px 16px;border-radius:10px;font-weight:700;font-size:0.85rem;cursor:pointer;">Install</button>
-                <button onclick="this.closest('#pwa-install-banner').remove()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;padding:4px;">✕</button>
-            </div>
-        `;
-        document.body.appendChild(banner);
-    }, 30000);
+    // Tampilkan tombol install di hero section
+    if (installBtn) installBtn.style.display = 'inline-flex';
 });
 
 async function installPWA() {
@@ -742,9 +750,14 @@ async function installPWA() {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     deferredPrompt = null;
-    const banner = document.getElementById('pwa-install-banner');
-    if (banner) banner.remove();
+    // Sembunyikan tombol setelah user memilih
+    if (installBtn) installBtn.style.display = 'none';
 }
+
+window.addEventListener('appinstalled', (evt) => {
+    if (installBtn) installBtn.style.display = 'none';
+    console.log('Tether Brew was installed');
+});
 </script>
 <style>
 @keyframes slideUp {

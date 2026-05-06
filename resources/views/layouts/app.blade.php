@@ -393,14 +393,15 @@
             const banner = document.createElement('div');
             banner.id = 'pwa-rider-install';
             banner.innerHTML = `
-                <div style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1e293b,#334155);color:white;padding:14px 24px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:99999;display:flex;align-items:center;gap:12px;font-family:Inter,sans-serif;max-width:90%;border:1px solid rgba(255,255,255,0.1);animation:riderSlideUp .4s ease;">
-                    <span style="font-size:1.5rem;">🏍️</span>
-                    <div style="flex:1;">
-                        <div style="font-weight:700;font-size:0.95rem;">Install TB Rider</div>
-                        <div style="font-size:0.8rem;opacity:0.8;">Akses POS & tracking lebih cepat</div>
+                <div style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.4);z-index:99999;display:flex;align-items:center;justify-content:space-between;width:calc(100% - 40px);max-width:400px;font-family:Inter,sans-serif;border:1px solid rgba(255,255,255,0.1);animation:riderSlideUp .4s ease;">
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <span style="font-weight:700;font-size:14px;line-height:1.2;">Install TB Rider</span>
+                        <span style="font-size:12px;opacity:0.8;line-height:1.2;">Akses POS lebih cepat</span>
                     </div>
-                    <button onclick="installRiderPWA()" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;padding:8px 16px;border-radius:10px;font-weight:700;font-size:0.85rem;cursor:pointer;">Install</button>
-                    <button onclick="this.closest('#pwa-rider-install').remove()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;padding:4px;">✕</button>
+                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                        <button onclick="installRiderPWA()" style="background:#22c55e;color:white;border:none;padding:6px 14px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">Install</button>
+                        <button onclick="this.closest('#pwa-rider-install').remove()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0;line-height:1;opacity:0.6;">&times;</button>
+                    </div>
                 </div>
             `;
             document.body.appendChild(banner);
