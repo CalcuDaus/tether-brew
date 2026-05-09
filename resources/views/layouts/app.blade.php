@@ -227,7 +227,9 @@
             </div>
             <div class="topbar-actions">
                 @if(auth()->check() && auth()->user()->isRider())
-                    <button id="pwa-install-btn-rider" style="display:none;" onclick="installRiderPWA()" class="btn btn-secondary btn-sm flex-center" style="width: 40px; height: 40px; padding: 0; border-radius: 50%;" title="Install App">
+                    <button id="pwa-install-btn-rider" style="display:flex;" onclick="installRiderPWA()"
+                        class="btn btn-secondary btn-sm flex-center" style="width: 40px; height: 40px; padding: 0; border-radius: 50%;"
+                        title="Install App">
                         <svg width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                             <polyline points="7 10 12 15 17 10" />
@@ -382,73 +384,73 @@
     @endif
 
     @if(auth()->check() && auth()->user()->isRider())
-    <script>
-    // Register Rider Service Worker
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw-rider.js', { scope: '/' })
-                .then(reg => console.log('Rider SW registered:', reg.scope))
-                .catch(err => console.log('Rider SW failed:', err));
+        <script>
+        // Register Rider Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw-rider.js', { scope: '/' })
+                    .then(reg => console.log('Rider SW registered:', reg.scope))
+                    .catch(err => console.log('Rider SW failed:', err));
+            });
+        }
+
+        // Custom Install Prompt for Rider
+        let riderDeferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            riderDeferredPrompt = e;
+
+            // Tampilkan tombol di topbar
+            const topbarBtn = document.getElementById('pwa-install-btn-rider');
+            if (topbarBtn) topbarBtn.style.display = 'flex';
+
+            setTimeout(() => {
+                if (!riderDeferredPrompt) return;
+                const banner = document.createElement('div');
+                banner.id = 'pwa-rider-install';
+                banner.innerHTML = `
+                    <div style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.4);z-index:99999;display:flex;align-items:center;justify-content:space-between;width:calc(100% - 40px);max-width:400px;font-family:Inter,sans-serif;border:1px solid rgba(255,255,255,0.1);animation:riderSlideUp .4s ease;">
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <span style="font-weight:700;font-size:14px;line-height:1.2;">Install TB Rider</span>
+                            <span style="font-size:12px;opacity:0.8;line-height:1.2;">Akses POS lebih cepat</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                            <button onclick="installRiderPWA()" style="background:#22c55e;color:white;border:none;padding:6px 14px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">Install</button>
+                            <button onclick="this.closest('#pwa-rider-install').remove()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0;line-height:1;opacity:0.6;">&times;</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(banner);
+            }, 10000);
         });
-    }
 
-    // Custom Install Prompt for Rider
-    let riderDeferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        riderDeferredPrompt = e;
-
-        // Tampilkan tombol di topbar
-        const topbarBtn = document.getElementById('pwa-install-btn-rider');
-        if (topbarBtn) topbarBtn.style.display = 'flex';
-
-        setTimeout(() => {
+        async function installRiderPWA() {
             if (!riderDeferredPrompt) return;
-            const banner = document.createElement('div');
-            banner.id = 'pwa-rider-install';
-            banner.innerHTML = `
-                <div style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.4);z-index:99999;display:flex;align-items:center;justify-content:space-between;width:calc(100% - 40px);max-width:400px;font-family:Inter,sans-serif;border:1px solid rgba(255,255,255,0.1);animation:riderSlideUp .4s ease;">
-                    <div style="display:flex;flex-direction:column;gap:4px;">
-                        <span style="font-weight:700;font-size:14px;line-height:1.2;">Install TB Rider</span>
-                        <span style="font-size:12px;opacity:0.8;line-height:1.2;">Akses POS lebih cepat</span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
-                        <button onclick="installRiderPWA()" style="background:#22c55e;color:white;border:none;padding:6px 14px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">Install</button>
-                        <button onclick="this.closest('#pwa-rider-install').remove()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0;line-height:1;opacity:0.6;">&times;</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(banner);
-        }, 10000);
-    });
+            riderDeferredPrompt.prompt();
+            const { outcome } = await riderDeferredPrompt.userChoice;
+            riderDeferredPrompt = null;
 
-    async function installRiderPWA() {
-        if (!riderDeferredPrompt) return;
-        riderDeferredPrompt.prompt();
-        const { outcome } = await riderDeferredPrompt.userChoice;
-        riderDeferredPrompt = null;
-        
-        const topbarBtn = document.getElementById('pwa-install-btn-rider');
-        if (topbarBtn) topbarBtn.style.display = 'none';
-        
-        const banner = document.getElementById('pwa-rider-install');
-        if (banner) banner.remove();
-    }
+            const topbarBtn = document.getElementById('pwa-install-btn-rider');
+            if (topbarBtn) topbarBtn.style.display = 'flex';
 
-    window.addEventListener('appinstalled', (evt) => {
-        const topbarBtn = document.getElementById('pwa-install-btn-rider');
-        if (topbarBtn) topbarBtn.style.display = 'none';
-        const banner = document.getElementById('pwa-rider-install');
-        if (banner) banner.remove();
-        console.log('TB Rider was installed');
-    });
-    </script>
-    <style>
-    @keyframes riderSlideUp {
-        from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
-    </style>
+            const banner = document.getElementById('pwa-rider-install');
+            if (banner) banner.remove();
+        }
+
+        window.addEventListener('appinstalled', (evt) => {
+            const topbarBtn = document.getElementById('pwa-install-btn-rider');
+            if (topbarBtn) topbarBtn.style.display = 'flex';
+            const banner = document.getElementById('pwa-rider-install');
+            if (banner) banner.remove();
+            console.log('TB Rider was installed');
+        });
+        </script>
+        <style>
+        @keyframes riderSlideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        </style>
     @endif
 
     @stack('scripts')

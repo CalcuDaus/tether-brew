@@ -1,9 +1,93 @@
 > **BrainSync Context Pumper** 🧠
-> Dynamically loaded for active file: `resources\views\welcome.blade.php` (Domain: **Generic Logic**)
+> Dynamically loaded for active file: `resources\views\layouts\app.blade.php` (Domain: **Generic Logic**)
 
 ### 📐 Generic Logic Conventions & Fixes
+- **[what-changed] Updated schema Tambahkan**: -             });
++ 
+-         });
++                 // Tambahkan filter sisi klien agar instan untuk data di halaman saat ini
+-     </script>
++                 const tbody = table.querySelector('tbody');
+-     @stack('scripts')
++                 if (!tbody) return;
+- </body>
++                 const rows = tbody.querySelectorAll('tr');
+- </html>
++ 
+- 
++                 searchInput.addEventListener('keyup', function(e) {
+- 
++                     const term = e.target.value.toLowerCase();
++                     rows.forEach(row => {
++                         const text = row.textContent.toLowerCase();
++                         if (text.includes(term)) {
++                             row.style.display = '';
++                         } else {
++                             row.style.display = 'none';
++                         }
++                     });
++                 });
++             });
++         });
++     </script>
++     @stack('scripts')
++ </body>
++ </html>
++ 
++ 
+- **[what-changed] Updated schema Membungkus**: -                 // Membungkus input search
++                 // Membungkus input search dengan form untuk pencarian server-side
+-                 const searchWrapper = document.createElement('div');
++                 const searchForm = document.createElement('form');
+-                 searchWrapper.style.display = 'flex';
++                 searchForm.action = window.location.pathname; // Submit ke halaman saat ini
+-                 searchWrapper.style.justifyContent = 'flex-end';
++                 searchForm.method = 'GET';
+-                 searchWrapper.style.marginBottom = '1rem';
++                 searchForm.style.display = 'flex';
+- 
++                 searchForm.style.justifyContent = 'flex-end';
+-                 // Membuat element input
++                 searchForm.style.marginBottom = '1rem';
+-                 const searchInput = document.createElement('input');
++                 
+-                 searchInput.setAttribute('type', 'text');
++                 // Menjaga parameter query lain selain page dan search
+-                 searchInput.setAttribute('placeholder', 'Cari data di tabel...');
++                 const currentUrlParams = new URLSearchParams(window.location.search);
+-                 searchInput.className = 'form-input'; 
++                 currentUrlParams.delete('page'); // Reset pagination saat mencari
+-                 searchInput.style.maxWidth = '300px';
++                 currentUrlParams.delete('search');
+-                 searchWrapper.appendChild(searchInput);
++                 currentUrlParams.forEach((value, key) => {
+-                 
++                     const hiddenInput = document.createElement('input');
+-                 // Menyisipkan sebelum elemen container tabel
++                     hiddenInput.type = 'hidden';
+-                 container.parentNode.insertBefore(searchWrapper, container);
++                     hiddenInput.name = key;
+- 
++                     hiddenInput.value = value;
+- 
+… [diff truncated]
+- **[what-changed] 🟢 Edited resources/views/welcome.blade.php (265 changes, 26min)**: Active editing session on resources/views/welcome.blade.php.
+265 content changes over 26 minutes.
 - **[convention] 🟢 Edited resources/views/welcome.blade.php (11 changes, 3min) — confirmed 3x**: Active editing session on resources/views/welcome.blade.php.
 11 content changes over 3 minutes.
+- **[convention] what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x**: File updated (external): storage/framework/views/0c44c772d4b26bf390351d1f22323d9d.php
+
+Content summary (482 lines):
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <title>Tether Brew – Kopi Keliling Medan Sekitar | Kopi Segar Mulai Rp 8.000</title>
+    <meta name="description" content="Cari kopi keliling Medan sekitar? Tether Brew jawabannya! Kopi keliling dengan racikan premium dan harga murah mulai Rp 8.000. Temukan gerobak terdekat sekarang!">
+    <meta name="keywords" content="kopi keliling, ko
 - **[discovery] discovery in welcome.blade.php**: -     @vite(['resources/css/landing.css'])
 +     @vite(['resources/css/landing.css', 'resources/js/landing.js'])
 -             <img src="/storage/image/kopi-tether-new.webp" alt="Tether Brew Coffee Background">
@@ -55,23 +139,6 @@
 +     <meta name="twitter:title" content="Tether Brew – Kopi Keliling Medan Sekitar">
 -     <meta name="twitter:description" content="Kopi segar keliling di Medan mulai Rp 8.000! 13+ varian menu. Temukan gerobak terde
 … [diff truncated]
-- **[convention] what-changed in welcome.blade.php — confirmed 10x**: -                             <div class="popup-rider">${cart.rider}${distText ? ' · ' + distText : ''}</div>
-+                             <div class="popup-rider">${cart.rider}${distText ? ' · <svg class="icon-two-tone" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>' + distText : ''}</div>
-- **[convention] what-changed in welcome.blade.php — confirmed 5x**: -                             <div class="popup-rider">${cart.rider}${distText ? ' ·  ' + distText : ''}</div>
-+                             <div class="popup-rider">${cart.rider}${distText ? ' · ' + distText : ''}</div>
-- **[convention] what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x**: File updated (external): storage/framework/views/0c44c772d4b26bf390351d1f22323d9d.php
-
-Content summary (482 lines):
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    
-    <title>Tether Brew – Kopi Keliling Medan Sekitar | Kopi Segar Mulai Rp 8.000</title>
-    <meta name="description" content="Cari kopi keliling Medan sekitar? Tether Brew jawabannya! Kopi keliling dengan racikan premium dan harga murah mulai Rp 8.000. Temukan gerobak terdekat sekarang!">
-    <meta name="keywords" content="kopi keliling, ko
 - **[convention] Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x**: -     '<?php $__contextArgs = [];
 +     '<?php $__contextArgs = [];
 - if (context()->has($__contextArgs[0])) :
@@ -112,6 +179,10 @@ Content summary (482 lines):
 + if (isset($value)) { $__contextPrevious[] = $value; }
 -                             <div class="popup-rider">${cart.rider}${distText ? ' · ' + distText : ''}</div>
 +                             <div class="popup-rider">${cart.rider}${distText ? ' · <svg class="icon-two-tone" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>' + distText : ''}</div>
+- **[convention] what-changed in welcome.blade.php — confirmed 10x**: -                             <div class="popup-rider">${cart.rider}${distText ? ' · ' + distText : ''}</div>
++                             <div class="popup-rider">${cart.rider}${distText ? ' · <svg class="icon-two-tone" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:2px; margin-left:4px; margin-top:-2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>' + distText : ''}</div>
+- **[convention] what-changed in welcome.blade.php — confirmed 5x**: -                             <div class="popup-rider">${cart.rider}${distText ? ' ·  ' + distText : ''}</div>
++                             <div class="popup-rider">${cart.rider}${distText ? ' · ' + distText : ''}</div>
 - **[what-changed] 🟢 Edited database/seeders/DatabaseSeeder.php (18 changes, 331min)**: Active editing session on database/seeders/DatabaseSeeder.php.
 18 content changes over 331 minutes.
 - **[what-changed] Updated schema Membungkus**: -                 // Membungkus input search
@@ -175,158 +246,3 @@ class TransactionController extends Controller
             ->firstOrFail();
 
  
-- **[what-changed] Updated schema Tambahkan**: -             });
-+ 
--         });
-+                 // Tambahkan filter sisi klien agar instan untuk data di halaman saat ini
--     </script>
-+                 const tbody = table.querySelector('tbody');
--     @stack('scripts')
-+                 if (!tbody) return;
-- </body>
-+                 const rows = tbody.querySelectorAll('tr');
-- </html>
-+ 
-- 
-+                 searchInput.addEventListener('keyup', function(e) {
-- 
-+                     const term = e.target.value.toLowerCase();
-+                     rows.forEach(row => {
-+                         const text = row.textContent.toLowerCase();
-+                         if (text.includes(term)) {
-+                             row.style.display = '';
-+                         } else {
-+                             row.style.display = 'none';
-+                         }
-+                     });
-+                 });
-+             });
-+         });
-+     </script>
-+     @stack('scripts')
-+ </body>
-+ </html>
-+ 
-+ 
-- **[what-changed] Updated location database schema — prevents null/undefined runtime crashes**: -     public function index()
-+     public function index(Request $request)
--         $carts = Cart::with(['user', 'location'])->latest()->paginate(10);
-+         $query = Cart::with(['user', 'location'])->latest();
--         return view('carts.index', compact('carts'));
-+         
--     }
-+         if ($search = $request->get('search')) {
-- 
-+             $query->where(function($q) use ($search) {
--     public function create()
-+                 $q->where('name', 'like', "%{$search}%")
--     {
-+                   ->orWhere('status', 'like', "%{$search}%")
--         $riders = User::where('role', 'rider')->get();
-+                   ->orWhereHas('user', function($uq) use ($search) {
--         return view('carts.create', compact('riders'));
-+                       $uq->where('name', 'like', "%{$search}%");
--     }
-+                   });
-- 
-+             });
--     public function store(Request $request)
-+         }
--     {
-+         
--         $validated = $request->validate([
-+         $carts = $query->paginate(10)->withQueryString();
--             'name' => 'required|string|max:255',
-+         return view('carts.index', compact('carts'));
--             'description' => 'nullable|string',
-+     }
--             'user_id' => 'nullable|exists:users,id',
-+ 
--             'status' => 'required|in:active,inactive,closed',
-+     public function create()
--             'latitude' => 'nullable|numeric|between:-90,90',
-+     {
--             'longitude' => 'nullable|numeric|between:-180,180',
-+         $riders = User::where('role', 'rider')->get();
--         ]);
-+         return view('carts.create', compact('riders'));
-- 
-+     }
--         $cart = Cart::create([
-+ 
--             'name' => $validated['name'],
-+     public function store(Request $request)
--             'description' => $validated['description'] ?? null,
-+     {
--             'user_id' => $validated['user_id'] ?? null,
-+         $validated = $request->validate([
--             'status' => $validated['status'],
-+    
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [CartController]
-- **[what-changed] Updated all database schema — prevents null/undefined runtime crashes**: -     public function index()
-+     public function index(Request $request)
--         $riders = User::where('role', 'rider')
-+         $query = User::where('role', 'rider')->with('carts')->latest();
--             ->with('carts')
-+ 
--             ->latest()
-+         if ($search = $request->get('search')) {
--             ->paginate(10);
-+             $query->where(function($q) use ($search) {
-- 
-+                 $q->where('name', 'like', "%{$search}%")
--         return view('riders.index', compact('riders'));
-+                   ->orWhere('email', 'like', "%{$search}%")
--     }
-+                   ->orWhere('whatsapp', 'like', "%{$search}%");
-- 
-+             });
--     public function create()
-+         }
--     {
-+ 
--         return view('riders.create');
-+         $riders = $query->paginate(10)->withQueryString();
--     }
-+ 
-- 
-+         return view('riders.index', compact('riders'));
--     public function store(Request $request)
-+     }
--     {
-+ 
--         $validated = $request->validate([
-+     public function create()
--             'name' => 'required|string|max:255',
-+     {
--             'email' => 'required|email|unique:users,email',
-+         return view('riders.create');
--             'whatsapp' => 'nullable|string|max:20',
-+     }
--             'password' => 'required|string|min:6|confirmed',
-+ 
--         ]);
-+     public function store(Request $request)
-- 
-+     {
--         User::create([
-+         $validated = $request->validate([
--             'name' => $validated['name'],
-+             'name' => 'required|string|max:255',
--             'email' => $validated['email'],
-+             'email' => 'required|email|unique:users,email',
--             'whatsapp' => $validated['whatsapp'] ?? null,
-+             'whatsapp' => 'nullable|string|max:20',
--             'password' => Hash::make($validated['password']),
-+             'password' => 'required|string|min:6|confirmed',
--             'role' => 'rider',
-+         ]);
--         ]);
-+ 
-- 
-+         User::creat
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [RiderController]

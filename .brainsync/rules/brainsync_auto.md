@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 293 notes | Score threshold: >40
+> 296 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,24 +18,23 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Active: `resources/views`
+## Active: `resources/views/layouts`
 
-- **🟢 Edited resources/views/welcome.blade.php (11 changes, 3min) — confirmed 3x**
-- **what-changed in welcome.blade.php — confirmed 10x**
-- **what-changed in welcome.blade.php — confirmed 5x**
-- **Fixed null crash in Bagian — prevents null/undefined runtime crashes**
-- **Fixed null crash in Estimasi — prevents null/undefined runtime crashes**
+- **Updated schema Tambahkan**
+- **Updated schema Membungkus**
+- **Updated schema DOMContentLoaded**
+- **what-changed in app.blade.php**
 
 ## Project Standards
 
+- convention in .gitignore
 - 🟢 Edited resources/views/welcome.blade.php (11 changes, 3min) — confirmed 3x
+- convention in .gitignore
+- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x
+- Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x
+- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 4x
 - what-changed in welcome.blade.php — confirmed 10x
 - what-changed in welcome.blade.php — confirmed 5x
-- convention in .gitignore
-- Version your API from day 1 (/api/v1/)
-- Use consistent response format across all endpoints
-- Implement soft delete for important data — don't hard delete without confirmation
-- Handle timezone correctly — store UTC, display in user's timezone
 
 ## Known Fixes
 
