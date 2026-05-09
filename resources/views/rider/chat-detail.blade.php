@@ -35,14 +35,14 @@
         transition: all 0.2s;
     }
     .chat-detail-back:hover {
-        border-color: var(--accent-blue, #42a5f5);
-        color: var(--accent-blue, #42a5f5);
+        border-color: var(--accent-green, #22c55e);
+        color: var(--accent-green, #22c55e);
     }
     .chat-detail-avatar {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, var(--accent-blue, #42a5f5), #3b82f6);
+        background: linear-gradient(135deg, #22c55e, #16a34a);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -89,14 +89,17 @@
         animation: bubbleIn 0.2s ease-out;
     }
     .chat-bubble.sent {
-        background: var(--accent-blue, #42a5f5);
+        background: linear-gradient(135deg, #914a30, #6d3824);
         color: white;
         align-self: flex-end;
         border-bottom-right-radius: 4px;
     }
     .chat-bubble.received {
-        background: var(--bg);
-        border: 1px solid var(--border);
+        background: rgba(128, 128, 128, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         align-self: flex-start;
         border-bottom-left-radius: 4px;
     }
@@ -125,13 +128,13 @@
     }
     .chat-input-area input:focus {
         outline: none;
-        border-color: var(--accent-blue, #42a5f5);
+        border-color: var(--accent-green, #22c55e);
     }
     .chat-send-btn {
         padding: 0.65rem 1.2rem;
         border: none;
         border-radius: 12px;
-        background: linear-gradient(135deg, var(--accent-blue, #42a5f5), #3b82f6);
+        background: linear-gradient(135deg, #22c55e, #16a34a);
         color: white;
         font-weight: 600;
         font-size: 0.85rem;
@@ -144,7 +147,7 @@
     }
     .chat-send-btn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+        box-shadow: 0 4px 12px rgba(34,197,94,0.25);
     }
     .chat-send-btn:active {
         transform: translateY(0);
@@ -201,7 +204,7 @@
         <div class="chat-detail-avatar">{{ strtoupper(substr($conversation->customer->name ?? '?', 0, 1)) }}</div>
         <div class="chat-detail-info">
             <h3>{{ $conversation->customer->name ?? 'Customer' }}</h3>
-            <p>{{ $conversation->customer->phone ?? '' }}{{ $conversation->cart ? ' · ' . $conversation->cart->name : '' }}</p>
+            <p>{{ $conversation->customer->phone ?? '' }}</p>
         </div>
     </div>
 
@@ -310,7 +313,7 @@
                 if (msg.attachment_type === 'image') {
                     contentHtml += `<img src="/storage/${msg.attachment_path}" alt="attachment" style="max-width:100%; border-radius:8px; margin-bottom:0.3rem; cursor:pointer;" onclick="window.open('/storage/${msg.attachment_path}', '_blank')">`;
                 } else if (msg.attachment_type === 'pdf') {
-                    contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" style="color: ${isSent ? 'white' : 'var(--accent-blue, #42a5f5)'}; text-decoration: underline;">📄 Lihat PDF</a>`;
+                    contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" style="color: ${isSent ? 'white' : 'var(--accent-green, #22c55e)'}; text-decoration: underline;">📄 Lihat PDF</a>`;
                 }
             }
             if (msg.body) {
