@@ -2,259 +2,670 @@
 @section('title', 'Dashboard Owner')
 
 @section('content')
-{{-- Stats --}}
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon gold">
-            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-            </svg>
+    {{-- Stats Cards --}}
+    <div class="stats-grid">
+        <div class="stat-card" style="display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">Metode Pembayaran
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="width: 70px;">
+                    @if($totalCash + $totalQris > 0)
+                        <div id="payment-donut-chart"></div>
+                    @else
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Tidak ada</div>
+                    @endif
+                </div>
+                <div
+                    style="display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span
+                            style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #8b5c2a;"></span>
+                        Cash
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span
+                            style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>
+                        QRIS
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="stat-value">{{ $totalCarts }}</div>
-        <div class="stat-label">Total Gerobak</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon green">
-            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
+        <div class="stat-card stat-card-animated" style="position: relative; overflow: hidden; z-index: 1; padding-top: 40px;">
+            <div class="stat-icon-bg" style="position: absolute; top: -25px; left: -20px; width: 130px; height: 130px; opacity: 0.15; color: #22c55e; z-index: -1;">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="8" />
+                    <line x1="12" x2="12" y1="16" y2="8" />
+                    <line x1="10" x2="14" y1="10" y2="10" />
+                    <line x1="10" x2="14" y1="14" y2="14" />
+                </svg>
+            </div>
+            <div class="stat-value" style="position: relative; z-index: 2;">Rp {{ number_format($monthRevenue, 0, ',', '.') }}</div>
+            <div class="stat-label" style="position: relative; z-index: 2;">Pendapatan Bulan Ini</div>
         </div>
-        <div class="stat-value">{{ $activeCarts }}</div>
-        <div class="stat-label">Gerobak Aktif</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon blue">
-            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="16" y2="8"/><line x1="10" x2="14" y1="10" y2="10"/><line x1="10" x2="14" y1="14" y2="14"/>
-            </svg>
+        <div class="stat-card stat-card-animated" style="position: relative; overflow: hidden; z-index: 1; padding-top: 40px;">
+            <div class="stat-icon-bg" style="position: absolute; top: -25px; left: -20px; width: 130px; height: 130px; opacity: 0.15; color: #8b5c2a; z-index: -1;">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+                    <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+                    <line x1="6" x2="6" y1="2" y2="4" />
+                    <line x1="10" x2="10" y1="2" y2="4" />
+                    <line x1="14" x2="14" y1="2" y2="4" />
+                </svg>
+            </div>
+            <div class="stat-value" style="position: relative; z-index: 2;">{{ number_format($monthCups, 0, ',', '.') }} <small style="font-size:0.6em;opacity:0.7;">cup</small></div>
+            <div class="stat-label" style="position: relative; z-index: 2;">Cup Terjual Bulan Ini</div>
         </div>
-        <div class="stat-value">Rp {{ number_format($todayRevenue, 0, ',', '.') }}</div>
-        <div class="stat-label">Pendapatan Hari Ini</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon red">
-            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/>
-            </svg>
+        <div class="stat-card stat-card-animated" style="position: relative; overflow: hidden; z-index: 1; padding-top: 40px;">
+            <div class="stat-icon-bg" style="position: absolute; top: -25px; left: -20px; width: 130px; height: 130px; opacity: 0.15; color: #3b82f6; z-index: -1;">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                    <line x1="16" x2="16" y1="2" y2="6" />
+                    <line x1="8" x2="8" y1="2" y2="6" />
+                    <line x1="3" x2="21" y1="10" y2="10" />
+                </svg>
+            </div>
+            <div class="stat-value" style="position: relative; z-index: 2;">Rp {{ number_format($todayRevenue, 0, ',', '.') }}</div>
+            <div class="stat-label" style="position: relative; z-index: 2;">Pendapatan Hari Ini</div>
         </div>
-        <div class="stat-value">{{ $todayTransactions }}</div>
-        <div class="stat-label">Transaksi Hari Ini</div>
     </div>
-</div>
 
-{{-- Revenue Summary --}}
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-label mb-2-custom"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> Hari Ini</div>
-        <div class="stat-value text-xl">Rp {{ number_format($todayRevenue, 0, ',', '.') }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label mb-2-custom"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg> Minggu Ini</div>
-        <div class="stat-value text-xl">Rp {{ number_format($weekRevenue, 0, ',', '.') }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label mb-2-custom"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> Bulan Ini</div>
-        <div class="stat-value text-xl">Rp {{ number_format($monthRevenue, 0, ',', '.') }}</div>
-    </div>
-</div>
 
-<div class="grid-2 mt-2-custom">
-    {{-- Top Products --}}
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Produk Terlaris (30 Hari)</h3>
-        </div>
-        <div class="card-body card-body-no-padding">
-            @if($topProducts->count() > 0)
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Produk</th>
-                            <th>Terjual</th>
-                            <th>Revenue</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($topProducts as $i => $item)
-                            <tr>
-                                <td>{{ $i + 1 }}</td>
-                                <td class="text-primary-semi">{{ $item->product->name ?? '-' }}</td>
-                                <td>{{ $item->total_sold }} cup</td>
-                                <td class="text-gold-semi">Rp {{ number_format($item->total_revenue, 0, ',', '.') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
+    {{-- Row 1: Rider Performance Bar --}}
+    <div class="mt-2-custom">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.25em;">
+                        <path d="M3 3v18h18" />
+                        <path d="M18 17V9" />
+                        <path d="M13 17V5" />
+                        <path d="M8 17v-3" />
+                    </svg>
+                    Performance Rider (30 Hari)
+                </h3>
+            </div>
+            <div class="card-body">
+                @if(count($riderPerformance) > 0)
+                    <div id="rider-performance-chart"></div>
+                @else
+                    <div class="empty-state p-5-custom">
+                        <div class="empty-state-text">Belum ada data penjualan rider</div>
+                    </div>
+                @endif
+                </div>
+                </div>
+                </div>
+
+    {{-- Row 2: Revenue Trend + Top Products --}}
+    <div class="grid-2 mt-2-custom">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.25em;">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                        <polyline points="16 7 22 7 22 13" />
+                    </svg>
+                    Tren Pendapatan (14 Hari)
+                </h3>
+                </div>
+            <div class="card-body">
+                @if($dailyRevenue->count() > 0)
+                    <div id="revenue-trend-chart"></div>
+                @else
+                    <div class="empty-state p-5-custom">
+                        <div class="empty-state-text">Belum ada data pendapatan</div>
+                    </div>
+                @endif
+            </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.25em;">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                            <path d="M4 22h16" />
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                        </svg>
+                        Produk Terlaris (30 Hari)
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if($topProducts->count() > 0)
+                    <div id="top-products-chart"></div>
+                @else
+                        <div class="empty-state p-5-custom">
+                            <div class="empty-state-text">Belum ada data produk</div>
+                        </div>
+                    @endif
+                    </div>
+                    </div>
+                    </div>
+
+                    {{-- Rider Performance Table --}}
+                    <div class="card mt-5-custom" id="rider-performance-section">
+                        <div class="card-header print-hide">
+                            <h3 class="card-title">
+                                <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.25em;">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                Daftar Rider & Performance
+                            </h3>
+                        </div>
+                        <div class="card-body card-body-no-padding">
+                            
+                            {{-- Print Title for Report --}}
+                            <div class="print-title" style="display: none;">
+                                <h2>Laporan Performa Rider</h2>
+                                <p>Dicetak pada: {{ now()->format('d/m/Y H:i') }}</p>
+                            </div>
+
+                            @if(count($riderPerformance) > 0)
+                                            <div class="table-container" id="rider-performance-table-container">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Nama Rider</th>
+                                                            <th style="text-align: right;">Cup Terjual (30hr)</th>
+                                                            <th style="text-align: right;">Pendapatan (30hr)</th>
+                                                            <th style="text-align: center;">Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="owner-rider-table-body">
+                                                        @foreach($riderPerformance as $i => $rp)
+                                                            <tr class="owner-rider-row">
+                                                                <td>
+                                                                    @if($i === 0)
+                                                                        <span
+                                                                            style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#d4a24e,#8b5c2a);color:white;font-weight:700;font-size:0.8rem;">{{ $i + 1 }}</span>
+                                                                    @elseif($i === 1)
+                                                                        <span
+                                                                            style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#94a3b8,#64748b);color:white;font-weight:700;font-size:0.8rem;">{{ $i + 1 }}</span>
+                                                                    @elseif($i === 2)
+                                                                        <span
+                                                                            style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#d97706,#a16207);color:white;font-weight:700;font-size:0.8rem;">{{ $i + 1 }}</span>
+                                                                    @else
+                                                                        <span style="color:var(--text-muted);">{{ $i + 1 }}</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td class="text-primary-semi" style="font-weight: 600;">{{ $rp['name'] }}</td>
+                                                                <td style="text-align: right;">
+                                                                    <span style="font-weight:600;">{{ number_format($rp['cups'], 0, ',', '.') }}</span>
+                                                                    <small style="color:var(--text-muted);"> cup</small>
+                                                                </td>
+                                                                <td style="text-align: right;">
+                                                                    <span class="text-gold-semi" style="font-weight:600;">Rp
+                                                                        {{ number_format($rp['revenue'], 0, ',', '.') }}</span>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <a href="{{ route('owner.rider_performance.show', $rp['id']) }}"
+                                                                        class="btn btn-sm btn-primary" style="gap:0.3rem;font-size:0.8rem;">
+                                                                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                                                            <circle cx="12" cy="12" r="3" />
+                                                                        </svg>
+                                                                        Detail
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                </div>
+                                <div class="pagination-container print-hide" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-top: 1px solid #e2e8f0; background: var(--bg-card);">
+                                    <div style="font-size: 0.9rem; color: var(--text-muted);">
+                                        Menampilkan <span id="rider-page-info"></span> dari {{ count($riderPerformance) }} rider
+                                    </div>
+                                    <div style="display: flex; gap: 5px;">
+                                        <button onclick="changeRiderPage(-1)" id="rider-prev-btn" class="btn btn-sm" style="background: white; border: 1px solid #cbd5e1; color: #475569;">Sebelumnya</button>
+                                        <div id="rider-page-numbers" style="display: flex; gap: 5px;"></div>
+                                        <button onclick="changeRiderPage(1)" id="rider-next-btn" class="btn btn-sm" style="background: white; border: 1px solid #cbd5e1; color: #475569;">Selanjutnya</button>
+                                    </div>
+                                </div>
+                            @else
                 <div class="empty-state p-5-custom">
-                    <div class="empty-state-icon"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
-                    <div class="empty-state-text">Belum ada data penjualan</div>
+                    <div class="empty-state-text">Belum ada data rider</div>
                 </div>
             @endif
         </div>
     </div>
 
-    {{-- Daily Revenue Chart --}}
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg> Pendapatan 7 Hari Terakhir</h3>
-        </div>
-        <div class="card-body">
-            @if($dailyRevenue->count() > 0)
-                <div id="revenue-chart"></div>
-            @else
-                <div class="empty-state p-5-custom">
-                    <div class="empty-state-icon"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
-                    <div class="empty-state-text">Belum ada data pendapatan</div>
-                </div>
-            @endif
-        </div>
-    </div>
-</div>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const isLight = document.documentElement.classList.contains('light-theme');
+                const textColor = isLight ? '#475569' : '#94a3b8';
+                const gridColor = isLight ? '#e2e8f0' : '#1e293b';
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if($dailyRevenue->count() > 0)
-            const dailyData = @json($dailyRevenue);
-            const translatedDays = {
-                'Monday': 'Sen', 'Tuesday': 'Sel', 'Wednesday': 'Rab', 'Thursday': 'Kam',
-                'Friday': 'Jum', 'Saturday': 'Sab', 'Sunday': 'Min'
-            };
+                // Color palette - brown & green theme
+                const brownPrimary = '#8b5c2a';
+                const brownLight = '#c49a5c';
+                const greenPrimary = '#22c55e';
+                const greenLight = '#4ade80';
+                const brownGradient = ['#8b5c2a', '#a16b35', '#b87d42', '#c49a5c', '#d4b07a'];
+                const themeColors = ['#8b5c2a', '#22c55e', '#c49a5c', '#4ade80', '#d4a24e', '#16a34a', '#a16207', '#15803d'];
 
-            const series = [{
-                name: 'Pendapatan',
-                data: dailyData.map(item => item.revenue)
-            }];
+                // =========================================
+                // Chart 1: Rider Performance Bar Chart
+                // =========================================
+                @if(count($riderPerformance) > 0)
+                    const riderData = @json($riderPerformance);
+                    new ApexCharts(document.querySelector("#rider-performance-chart"), {
+                        series: [{
+                            name: 'Cup Terjual',
+                            data: riderData.map(r => r.cups)
+                        }],
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                            fontFamily: 'Inter, sans-serif',
+                            background: 'transparent',
+                            toolbar: { show: false }
+                        },
+                        theme: { mode: isLight ? 'light' : 'dark' },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 4,
+                                borderRadiusApplication: 'end',
+                                columnWidth: '55%',
+                                distributed: true
+                            }
+                        },
+                        colors: riderData.map((_, i) => i % 2 === 0 ? brownPrimary : greenPrimary),
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shade: 'dark',
+                                type: 'vertical',
+                                shadeIntensity: 0.3,
+                                opacityFrom: 1,
+                                opacityTo: 0.85,
+                                stops: [0, 100]
+                            }
+                        },
+                        dataLabels: { enabled: false },
+                        xaxis: {
+                            categories: riderData.map(r => r.name),
+                            labels: { style: { colors: textColor, fontWeight: 600 } },
+                            axisBorder: { show: false },
+                            axisTicks: { show: false }
+                        },
+                        yaxis: {
+                            labels: {
+                                formatter: val => val + ' cup',
+                                style: { colors: textColor }
+                            }
+                        },
+                        grid: { borderColor: gridColor, strokeDashArray: 4 },
+                        tooltip: {
+                            theme: 'dark',
+                            y: {
+                                formatter: function (val, { dataPointIndex }) {
+                                    return val + ' cup — Rp ' + riderData[dataPointIndex].revenue.toLocaleString('id-ID');
+                                }
+                            }
+                        },
+                        legend: { show: false }
+                    }).render();
+                @endif
 
-            const categories = dailyData.map(item => {
-                const dayName = new Date(item.date).toLocaleDateString('en-US', { weekday: 'long' });
-                return translatedDays[dayName] || dayName.substring(0, 3);
+                // =========================================
+                // Chart 2: Payment Method Donut (Small)
+                // =========================================
+                @if($totalCash + $totalQris > 0)
+                    new ApexCharts(document.querySelector("#payment-donut-chart"), {
+                        series: [{{ $totalCash }}, {{ $totalQris }}],
+                        chart: {
+                            type: 'donut',
+                            height: 70,
+                            fontFamily: 'Inter, sans-serif',
+                            background: 'transparent',
+                            sparkline: { enabled: true }
+                        },
+                        theme: { mode: isLight ? 'light' : 'dark' },
+                        labels: ['Cash', 'QRIS'],
+                        colors: [brownPrimary, greenPrimary],
+                        stroke: { width: 0 },
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    size: '60%'
+                                }
+                            }
+                        },
+                        dataLabels: { enabled: false },
+                        tooltip: {
+                            theme: 'dark',
+                            y: { formatter: val => 'Rp ' + val.toLocaleString('id-ID') }
+                        }
+                    }).render();
+                @endif
+
+                    // =========================================
+                    // Chart 3: Revenue Trend Area Chart
+                    // =========================================
+                    @if($dailyRevenue->count() > 0)
+                        const dailyData = @json($dailyRevenue);
+                        const translatedDays = {
+                            'Monday': 'Sen', 'Tuesday': 'Sel', 'Wednesday': 'Rab', 'Thursday': 'Kam',
+                            'Friday': 'Jum', 'Saturday': 'Sab', 'Sunday': 'Min'
+                        };
+
+                        new ApexCharts(document.querySelector("#revenue-trend-chart"), {
+                            series: [{
+                                name: 'Pendapatan',
+                                data: dailyData.map(d => d.revenue)
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 320,
+                                fontFamily: 'Inter, sans-serif',
+                                background: 'transparent',
+                                toolbar: { show: false },
+                                sparkline: { enabled: false }
+                            },
+                            theme: { mode: isLight ? 'light' : 'dark' },
+                            colors: [brownPrimary],
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    shadeIntensity: 1,
+                                    opacityFrom: 0.45,
+                                    opacityTo: 0.05,
+                                    stops: [0, 100]
+                                }
+                            },
+                            stroke: {
+                                curve: 'smooth',
+                                width: 3
+                            },
+                            markers: {
+                                size: 5,
+                                colors: [brownPrimary],
+                                strokeColors: isLight ? '#fff' : '#1e293b',
+                                strokeWidth: 2,
+                                hover: { size: 7 }
+                            },
+                            xaxis: {
+                                categories: dailyData.map(d => {
+                                    const dayName = new Date(d.date).toLocaleDateString('en-US', { weekday: 'long' });
+                                    const dateStr = new Date(d.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                                    return (translatedDays[dayName] || dayName.substring(0, 3)) + ' ' + dateStr;
+                                }),
+                                labels: {
+                                    style: { colors: textColor, fontSize: '11px' },
+                                    rotate: -45,
+                                    rotateAlways: dailyData.length > 7
+                                },
+                                axisBorder: { show: false },
+                                axisTicks: { show: false }
+                            },
+                            yaxis: {
+                                labels: {
+                                    formatter: val => 'Rp' + (val / 1000).toLocaleString('id-ID') + 'k',
+                                    style: { colors: textColor }
+                                }
+                            },
+                            grid: { borderColor: gridColor, strokeDashArray: 4 },
+                            tooltip: {
+                                theme: 'dark',
+                                y: { formatter: val => 'Rp ' + val.toLocaleString('id-ID') }
+                            }
+                        }).render();
+                    @endif
+
+                    // =========================================
+                    // Chart 4: Top Products Horizontal Bar
+                    // =========================================
+                    @if($topProducts->count() > 0)
+                        const productData = @json($topProducts);
+                        new ApexCharts(document.querySelector("#top-products-chart"), {
+                            series: [{
+                                name: 'Terjual',
+                                data: productData.map(p => p.total_sold)
+                            }],
+                            chart: {
+                                type: 'bar',
+                                height: Math.max(250, productData.length * 50),
+                                fontFamily: 'Inter, sans-serif',
+                                background: 'transparent',
+                                toolbar: { show: false }
+                            },
+                                    theme: { mode: isLight ? 'light' : 'dark' },
+                                    plotOptions: {
+                                        bar: {
+                                            borderRadius: 8,
+                                            horizontal: true,
+                                            barHeight: '60%',
+                                            distributed: true,
+                                            dataLabels: { position: 'top' }
+                                        }
+                                    },
+                                    colors: themeColors,
+                                    dataLabels: {
+                                        enabled: true,
+                                        formatter: val => val + ' cup',
+                                        offsetX: 30,
+                                        style: {
+                                            colors: [textColor],
+                                            fontSize: '12px',
+                                            fontWeight: 600
+                                        }
+                                    },
+                                    xaxis: {
+                                        categories: productData.map(p => p.product ? p.product.name : 'Unknown'),
+                                        labels: {
+                                            formatter: val => val + ' cup',
+                                            style: { colors: textColor }
+                                        },
+                                        axisBorder: { show: false },
+                                        axisTicks: { show: false }
+                                    },
+                                    yaxis: {
+                                        labels: {
+                                            style: { colors: textColor, fontWeight: 600, fontSize: '12px' }
+                                        }
+                                    },
+                                    grid: { borderColor: gridColor, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
+                                    tooltip: {
+                                        theme: 'dark',
+                                        y: { formatter: val => val + ' cup terjual' }
+                                    },
+                                    legend: { show: false }
+                                }).render();
+                    @endif
+
+                // Theme change listener
+                window.addEventListener('theme-changed', function () {
+                    location.reload();
+                });
+
+                // =========================================
+                // Rider Table Pagination
+                // =========================================
+                const rRowsPerPage = 10;
+                let rCurrentPage = 1;
+                const rRows = document.querySelectorAll('.owner-rider-row');
+                
+                if (rRows.length > 0) {
+                    const rTotalPages = Math.ceil(rRows.length / rRowsPerPage);
+
+                    function displayRiderRows() {
+                        const start = (rCurrentPage - 1) * rRowsPerPage;
+                        const end = start + rRowsPerPage;
+
+                        rRows.forEach((row, index) => {
+                            if (index >= start && index < end) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+
+                        const pageInfo = document.getElementById('rider-page-info');
+                        if (pageInfo) {
+                            const endRow = Math.min(end, rRows.length);
+                            pageInfo.textContent = `${start + 1} - ${endRow}`;
+                        }
+
+                        const prevBtn = document.getElementById('rider-prev-btn');
+                        const nextBtn = document.getElementById('rider-next-btn');
+                        if (prevBtn) {
+                            prevBtn.disabled = rCurrentPage === 1;
+                            prevBtn.style.opacity = rCurrentPage === 1 ? '0.5' : '1';
+                        }
+                        if (nextBtn) {
+                            nextBtn.disabled = rCurrentPage === rTotalPages;
+                            nextBtn.style.opacity = rCurrentPage === rTotalPages ? '0.5' : '1';
+                        }
+
+                        renderRiderPageNumbers();
+                    }
+
+                    function renderRiderPageNumbers() {
+                        const container = document.getElementById('rider-page-numbers');
+                        if (!container) return;
+                        container.innerHTML = '';
+
+                        let startPage = Math.max(1, rCurrentPage - 2);
+                        let endPage = Math.min(rTotalPages, startPage + 4);
+                        
+                        if (endPage - startPage < 4) {
+                            startPage = Math.max(1, endPage - 4);
+                        }
+
+                        for (let i = startPage; i <= endPage; i++) {
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'btn btn-sm';
+                            btn.textContent = i;
+                            if (i === rCurrentPage) {
+                                btn.style.background = '#8b5c2a'; // match theme
+                                btn.style.color = 'white';
+                                btn.style.border = '1px solid #8b5c2a';
+                            } else {
+                                btn.style.background = 'white';
+                                btn.style.color = '#475569';
+                                btn.style.border = '1px solid #cbd5e1';
+                            }
+                            btn.onclick = (e) => { 
+                                e.preventDefault();
+                                rCurrentPage = i; 
+                                displayRiderRows(); 
+                            };
+                            container.appendChild(btn);
+                        }
+                    }
+
+                    window.changeRiderPage = function(step) {
+                        rCurrentPage += step;
+                        if (rCurrentPage < 1) rCurrentPage = 1;
+                        if (rCurrentPage > rTotalPages) rCurrentPage = rTotalPages;
+                        displayRiderRows();
+                    };
+
+                    displayRiderRows();
+
+                    // Insert Print Button next to the auto-generated Search box
+                    setTimeout(() => {
+                        const rContainer = document.getElementById('rider-performance-table-container');
+                        if (rContainer && rContainer.previousElementSibling && rContainer.previousElementSibling.tagName === 'FORM') {
+                            const searchForm = rContainer.previousElementSibling;
+                            searchForm.style.gap = '10px';
+                            searchForm.style.alignItems = 'center';
+                            
+                            const printBtn = document.createElement('button');
+                            printBtn.type = 'button';
+                            printBtn.className = 'btn btn-primary print-hide';
+                            printBtn.style.padding = '8px 16px';
+                            printBtn.innerHTML = `
+                                <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                    <rect x="6" y="14" width="12" height="8"></rect>
+                                </svg> Print
+                            `;
+                            printBtn.onclick = function(e) {
+                                e.preventDefault();
+                                window.print();
+                            };
+                            
+                            searchForm.appendChild(printBtn);
+                        }
+                    }, 100); // short delay to ensure app.blade.php script has run
+                }
             });
+            </script>
+    @endpush
 
-            const isLightTheme = document.documentElement.classList.contains('light-theme');
+    @push('styles')
+        <style>
+            .stats-grid {
+                gap: 16px;
+            }
 
-            const options = {
-                series: series,
-                chart: {
-                    type: 'bar',
-                    height: 320,
-                    fontFamily: 'Inter, sans-serif',
-                    background: 'transparent',
-                    toolbar: { show: false },
-                    borderRadius: 8
-                },
-                theme: {
-                    mode: isLightTheme ? 'light' : 'dark'
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 6,
-                        columnWidth: '60%',
-                        distributed: true,
-                        dataLabels: {
-                            position: 'top',
-                        },
-                    }
-                },
-                colors: ['#22c55e'], 
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val) {
-                        return "Rp" + (val / 1000).toLocaleString('id-ID') + "k";
-                    },
-                    offsetY: -25,
-                    style: {
-                        colors: ['#22c55e'],
-                        fontSize: '12px',
-                        fontWeight: 700
-                    }
-                },
-                xaxis: {
-                    categories: categories,
-                    labels: {
-                        style: {
-                            colors: isLightTheme ? '#64748b' : '#94a3b8',
-                            fontWeight: 600
-                        }
-                    },
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) {
-                            return "Rp" + (val/1000).toLocaleString('id-ID') + "k";
-                        },
-                        style: {
-                            colors: '#64748b'
-                        }
-                    }
-                },
-                grid: {
-                    borderColor: isLightTheme ? '#e2e8f0' : '#1e293b',
-                    strokeDashArray: 4
-                },
-                tooltip: {
-                    theme: 'dark',
-                    y: {
-                        formatter: function (val) {
-                            return "Rp " + val.toLocaleString('id-ID');
-                        }
-                    }
-                },
-                legend: { show: false }
-            };
+            .stat-card-animated {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+            .stat-card-animated:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+            }
+            .stat-card-animated .stat-icon-bg {
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .stat-card-animated:hover .stat-icon-bg {
+                transform: scale(1.1) rotate(-5deg);
+                opacity: 0.25 !important;
+            }
 
-            const chart = new ApexCharts(document.querySelector("#revenue-chart"), options);
-            chart.render();
-        @endif
-    });
-</script>
-@endpush
-
-{{-- Recent Transactions --}}
-<div class="card mt-5-custom">
-    <div class="card-header">
-        <h3 class="card-title"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Transaksi Terbaru</h3>
-        <a href="{{ route('transactions.index') }}" class="btn btn-secondary btn-sm">Lihat Semua →</a>
-    </div>
-    <div class="card-body card-body-no-padding">
-        @if($recentTransactions->count() > 0)
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Gerobak</th>
-                            <th>Rider</th>
-                            <th>Total</th>
-                            <th>Bayar</th>
-                            <th>Waktu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($recentTransactions as $tx)
-                            <tr>
-                                <td>#{{ $tx->id }}</td>
-                                <td class="text-primary-semi">{{ $tx->cart->name ?? '-' }}</td>
-                                <td>{{ $tx->user->name ?? '-' }}</td>
-                                <td class="text-gold-semi">Rp {{ number_format($tx->total_price, 0, ',', '.') }}</td>
-                                <td><span class="badge badge-{{ $tx->payment_method }}">{{ strtoupper($tx->payment_method) }}</span></td>
-                                <td>{{ $tx->created_at->diffForHumans() }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <div class="empty-state">
-                <div class="empty-state-icon"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="16" y2="8"/><line x1="10" x2="14" y1="10" y2="10"/><line x1="10" x2="14" y1="14" y2="14"/></svg></div>
-                <div class="empty-state-text">Belum ada transaksi</div>
-            </div>
-        @endif
-    </div>
-</div>
+            @media print {
+                @page { margin: 15mm; }
+                body { font-size: 11pt; background: white !important; }
+                body * { visibility: hidden; }
+                
+                #rider-performance-section, #rider-performance-section * { visibility: visible; }
+                #rider-performance-section { 
+                    position: absolute; 
+                    left: 0; 
+                    top: 0; 
+                    width: 100%; 
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    box-shadow: none !important;
+                    border: none !important;
+                }
+                
+                .print-title { display: block !important; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #cbd5e1; margin-bottom: 20px !important; }
+                .print-title h2 { margin: 0; color: #8b5c2a; font-size: 16pt; }
+                .print-title p { margin: 5px 0 0 0; color: #64748b; font-size: 10pt; }
+                
+                .print-hide, form[method="GET"], .pagination-container { display: none !important; }
+                
+                /* Table print styles */
+                table { width: 100% !important; border-collapse: collapse !important; }
+                /* FORCE all rows to display when printing regardless of pagination */
+                .owner-rider-row { display: table-row !important; }
+                th { background-color: #f8fafc !important; color: #1e293b !important; border-bottom: 2px solid #cbd5e1 !important; padding: 10px 8px !important; font-weight: bold !important; font-size: 9.5pt !important; }
+                td { border-bottom: 1px solid #e2e8f0 !important; padding: 8px !important; font-size: 10pt !important; }
+                
+                /* Hide action column */
+                th:last-child, td:last-child { display: none !important; }
+            }
+        </style>
+    @endpush
 @endsection
-

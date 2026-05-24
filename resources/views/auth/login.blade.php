@@ -32,9 +32,6 @@
         <button type="submit" class="btn-auth">Masuk</button>
     </form>
 
-    <div class="auth-footer">
-        Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
-    </div>
 </div>
 @endsection
 

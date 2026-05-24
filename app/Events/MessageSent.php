@@ -17,7 +17,15 @@ class MessageSent implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        return [new PrivateChannel('conversation.' . $this->message->conversation_id)];
+        $conversation = $this->message->conversation;
+        $recipientId = $this->message->sender_id === $conversation->customer_id 
+            ? $conversation->rider_id 
+            : $conversation->customer_id;
+
+        return [
+            new PrivateChannel('conversation.' . $this->message->conversation_id),
+            new PrivateChannel('App.Models.User.' . $recipientId)
+        ];
     }
 
     public function broadcastWith(): array

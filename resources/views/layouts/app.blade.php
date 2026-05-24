@@ -19,8 +19,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
     <script>
         (function() {
             const theme = localStorage.getItem('theme') || 'light';
@@ -71,6 +78,50 @@
             );
         };
     </script>
+    <style>
+        /* Custom Select2 Theme Integration */
+        .select2-container--default .select2-selection--single {
+            background-color: var(--bg-card, #fff);
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 8px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--text-primary, #1e293b);
+            line-height: normal;
+            padding-left: 12px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+            right: 10px;
+        }
+        .select2-dropdown {
+            background-color: var(--bg-card, #fff);
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .select2-search--dropdown .select2-search__field {
+            background-color: var(--bg-main, #f8fafc);
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 6px;
+            color: var(--text-primary, #1e293b);
+        }
+        .select2-container--default .select2-results__option {
+            color: var(--text-primary, #1e293b);
+            padding: 8px 12px;
+        }
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: var(--accent, #3b82f6);
+            color: white;
+        }
+        .select2-container--default .select2-results__option--selected {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent, #3b82f6);
+        }
+    </style>
     @stack('styles')
 </head>
 <body x-data="{ sidebarOpen: false, darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }" class="{{ auth()->check() && auth()->user()->isRider() ? 'is-rider' : '' }}">
@@ -79,9 +130,7 @@
     <aside class="sidebar" :class="{ 'open': sidebarOpen }" @click.away="sidebarOpen = false">
         <div class="sidebar-brand">
             <div class="sidebar-brand-icon">
-                <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/>
-                </svg>
+                <img src="{{ asset('tether-icon-head.webp') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <div>
                 <div class="sidebar-brand-text">Tether Brew</div>
@@ -90,67 +139,186 @@
         </div>
 
         <nav class="sidebar-nav">
-            @if(auth()->user()->isOwner() || auth()->user()->isAdmin())
-                <div class="nav-section">
-                    <div class="nav-section-title">Menu Utama</div>
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            @if(auth()->user()->isOwner())
+                {{-- ====== OWNER SIDEBAR ====== --}}
+                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') || request()->routeIs('owner.rider_performance.*') ? 'active' : '' }}">
+                    <span class="nav-link-icon">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+                        </svg>
+                    </span> Dashboard
+                </a>
+
+                @php $isLaporanActive = request()->routeIs(['admin.journals.*', 'admin.rider_sales_report.*', 'admin.rider_minus.*', 'admin.payroll.*']); @endphp
+                <div class="nav-section" x-data="{ open: {{ $isLaporanActive ? 'true' : 'false' }} }">
+                    <div class="nav-link dropdown-toggle" @click="open = !open" :class="{ 'active': {{ $isLaporanActive ? 'true' : 'false' }} }">
                         <span class="nav-link-icon">
                             <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/>
                             </svg>
-                        </span> Dashboard
-                    </a>
-                    @if(auth()->user()->isOwner())
-                    <a href="{{ route('accounts.index') }}" class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
+                        </span>
+                        <span>Laporan</span>
+                        <svg class="dropdown-arrow" :class="{ 'rotated': open }" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div x-show="open" x-collapse x-transition.opacity.duration.300ms class="nav-submenu">
+                        <a href="{{ route('admin.journals.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.journals.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/></svg></span>
+                            Jurnal Umum
+                        </a>
+                        <a href="{{ route('admin.rider_sales_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales_report.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></span>
+                            Laporan Penjualan
+                        </a>
+                        <a href="{{ route('admin.rider_minus.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_minus.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg></span>
+                            Laporan Minus
+                        </a>
+                        <a href="{{ route('admin.payroll.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></span>
+                            Slip Gaji Rider
+                        </a>
+                    </div>
+                </div>
+
+                <a href="{{ route('accounts.index') }}" class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
+                    <span class="nav-link-icon">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </span> Kelola Akun
+                </a>
+
+            @elseif(auth()->user()->isAdmin())
+                {{-- ====== ADMIN SIDEBAR (unchanged) ====== --}}
+                @php
+                    $isOperasionalActive = request()->routeIs(['dashboard', 'admin.rider_sales.*', 'admin.journals.*', 'admin.rider_finances.*', 'admin.rider_minus.*', 'admin.payroll.*', 'admin.rider_sales_report.*', 'admin.chats.*']);
+                    $isManajemenActive = request()->routeIs(['carts.*', 'riders.*', 'products.*', 'inventories.*', 'transactions.*', 'admin.artikel.*', 'admin.journal_categories.*']);
+                @endphp
+
+                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <span class="nav-link-icon">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+                        </svg>
+                    </span> Dashboard
+                </a>
+
+                <div class="nav-section" x-data="{ open: {{ $isOperasionalActive && !request()->routeIs('dashboard') ? 'true' : 'false' }} }">
+                    <div class="nav-link dropdown-toggle" @click="open = !open" :class="{ 'active': {{ $isOperasionalActive && !request()->routeIs('dashboard') ? 'true' : 'false' }} }">
                         <span class="nav-link-icon">
                             <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                             </svg>
-                        </span> Akun
-                    </a>
-                    @endif
-                    <a href="{{ route('carts.index') }}" class="nav-link {{ request()->routeIs('carts.*') ? 'active' : '' }}">
+                        </span>
+                        <span>Operasional</span>
+                        <svg class="dropdown-arrow" :class="{ 'rotated': open }" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    
+                    <div x-show="open" x-collapse x-transition.opacity.duration.300ms class="nav-submenu">
+                        <a href="{{ route('admin.rider_sales.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </span>
+                            Input Penjualan
+                        </a>
+                        <a href="{{ route('admin.journals.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.journals.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+                            </span>
+                            Jurnal Umum
+                        </a>
+                        <a href="{{ route('admin.rider_finances.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_finances.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </span>
+                            Kasbon & Uang Makan
+                        </a>
+                        <a href="{{ route('admin.rider_minus.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_minus.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+                            </span>
+                            Laporan Minus
+                        </a>
+                        <a href="{{ route('admin.payroll.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><line x1="7" x2="7" y1="15" y2="15"/><line x1="12" x2="12" y1="15" y2="15"/></svg>
+                            </span>
+                            Slip Gaji Rider
+                        </a>
+                        <a href="{{ route('admin.rider_sales_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales_report.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                            </span>
+                            Laporan Penjualan
+                        </a>
+                        <a href="{{ route('admin.chats.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.chats.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                            </span>
+                            Monitoring Chat
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-section" x-data="{ open: {{ $isManajemenActive ? 'true' : 'false' }} }">
+                    <div class="nav-link dropdown-toggle" @click="open = !open" :class="{ 'active': {{ $isManajemenActive ? 'true' : 'false' }} }">
                         <span class="nav-link-icon">
                             <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                                <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                             </svg>
-                        </span> Gerobak
-                    </a>
-                    <a href="{{ route('riders.index') }}" class="nav-link {{ request()->routeIs('riders.*') ? 'active' : '' }}">
-                        <span class="nav-link-icon">
-                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </span> Rider
-                    </a>
-                    <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
-                        <span class="nav-link-icon">
-                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/>
-                            </svg>
-                        </span> Produk
-                    </a>
-                    <a href="{{ route('inventories.index') }}" class="nav-link {{ request()->routeIs('inventories.*') ? 'active' : '' }}">
-                        <span class="nav-link-icon">
-                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>
-                            </svg>
-                        </span> Stok
-                    </a>
-                    <a href="{{ route('transactions.index') }}" class="nav-link {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
-                        <span class="nav-link-icon">
-                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="16" y2="8"/><line x1="10" x2="14" y1="10" y2="10"/><line x1="10" x2="14" y1="14" y2="14"/>
-                            </svg>
-                        </span> Transaksi
-                    </a>
-                    <a href="{{ route('admin.artikel.index') }}" class="nav-link {{ request()->routeIs('admin.artikel.*') ? 'active' : '' }}">
-                        <span class="nav-link-icon">
-                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                            </svg>
-                        </span> Artikel
-                    </a>
+                        </span>
+                        <span>Manajemen Data</span>
+                        <svg class="dropdown-arrow" :class="{ 'rotated': open }" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+
+                    <div x-show="open" x-collapse x-transition.opacity.duration.300ms class="nav-submenu">
+                        <a href="{{ route('carts.index') }}" class="nav-submenu-item {{ request()->routeIs('carts.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                            </span>
+                            Gerobak
+                        </a>
+                        <a href="{{ route('riders.index') }}" class="nav-submenu-item {{ request()->routeIs('riders.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </span>
+                            Rider
+                        </a>
+                        <a href="{{ route('products.index') }}" class="nav-submenu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            </span>
+                            Produk
+                        </a>
+                        <a href="{{ route('inventories.index') }}" class="nav-submenu-item {{ request()->routeIs('inventories.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                            </span>
+                            Stok
+                        </a>
+                        <a href="{{ route('transactions.index') }}" class="nav-submenu-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </span>
+                            Transaksi
+                        </a>
+                        <a href="{{ route('admin.artikel.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.artikel.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16L4 22Z"/><path d="M12 18h4"/><path d="M12 14h4"/><path d="M12 10h4"/><path d="M8 6h8"/></svg>
+                            </span>
+                            Artikel
+                        </a>
+                        <a href="{{ route('admin.journal_categories.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.journal_categories.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </span>
+                            Kategori Jurnal
+                        </a>
+                    </div>
                 </div>
             @endif
 
@@ -160,13 +328,7 @@
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <span class="nav-link-icon"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span> Dashboard
                     </a>
-                    <a href="{{ route('rider.pos') }}" class="nav-link {{ request()->routeIs('rider.pos') ? 'active' : '' }}">
-                        <span class="nav-link-icon">
-                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/>
-                            </svg>
-                        </span> POS
-                    </a>
+
                     <a href="{{ route('rider.transactions') }}" class="nav-link {{ request()->routeIs('rider.transactions') ? 'active' : '' }}">
                         <span class="nav-link-icon">
                             <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -283,6 +445,7 @@
                 searchForm.style.display = 'flex';
                 searchForm.style.justifyContent = 'flex-end';
                 searchForm.style.marginBottom = '1rem';
+                searchForm.classList.add('print-hide');
                 
                 // Menjaga parameter query lain selain page dan search
                 const currentUrlParams = new URLSearchParams(window.location.search);
@@ -334,6 +497,24 @@
                     });
                 });
             });
+
+            // Initialize Select2 globally for all select inputs
+            $('select.form-input').each(function() {
+                let $this = $(this);
+                // Ensure dropdown works inside modals
+                let modal = $this.closest('.modal-overlay-animate, .account-modal-overlay, [id$="Modal"]');
+                let config = {
+                    width: '100%',
+                    placeholder: $this.find('option[value=""]').text() || 'Pilih opsi...',
+                };
+                if (modal.length) {
+                    config.dropdownParent = modal;
+                }
+                $this.select2(config).on('select2:select', function (e) {
+                    // Trigger native event for Vanilla JS / Alpine JS compatibility
+                    this.dispatchEvent(new Event('change', { bubbles: true }));
+                });
+            });
         });
     </script>
     @if(auth()->check() && auth()->user()->isRider())
@@ -344,10 +525,7 @@
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 <span>Beranda</span>
             </a>
-            <a href="{{ route('rider.pos') }}" class="bottom-nav-item {{ request()->routeIs('rider.pos') ? 'active' : '' }}">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                <span>POS</span>
-            </a>
+
             <a href="{{ route('rider.transactions') }}" class="bottom-nav-item {{ request()->routeIs('rider.transactions') ? 'active' : '' }}">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
                 <span>Riwayat</span>
@@ -451,6 +629,43 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         </style>
+    @endif
+
+    @if(auth()->check())
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (window.Echo) {
+                    window.Echo.private('App.Models.User.{{ auth()->user()->id }}')
+                        .listen('MessageSent', (e) => {
+                            // Cek jika sedang berada di halaman chat tersebut
+                            const isChatPage = window.location.pathname.includes(`/rider/chat/${e.conversation_id}`) || 
+                                               window.location.pathname.includes(`/customer/chat/${e.conversation_id}`);
+                            
+                            if (!isChatPage) {
+                                // Tampilkan notifikasi browser jika diizinkan
+                                if ("Notification" in window && Notification.permission === "granted") {
+                                    new Notification("Pesan Baru dari " + e.sender_name, {
+                                        body: e.body ? e.body : (e.attachment_path ? "Mengirim lampiran" : "Pesan baru"),
+                                        icon: "/icons/rider-192x192.png"
+                                    });
+                                } else if ("Notification" in window && Notification.permission !== "denied") {
+                                    Notification.requestPermission().then(function (permission) {
+                                        if (permission === "granted") {
+                                            new Notification("Pesan Baru dari " + e.sender_name, {
+                                                body: e.body ? e.body : (e.attachment_path ? "Mengirim lampiran" : "Pesan baru"),
+                                                icon: "/icons/rider-192x192.png"
+                                            });
+                                        }
+                                    });
+                                }
+                                
+                                // Opsi: Refresh badge counter unread chat (jika diperlukan)
+                                // Karena ini layout global, mungkin kita bisa inject/fetch API untuk update counter
+                            }
+                        });
+                }
+            });
+        </script>
     @endif
 
     @stack('scripts')

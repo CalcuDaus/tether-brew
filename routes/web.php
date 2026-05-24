@@ -12,6 +12,15 @@ use App\Http\Controllers\RiderController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\RiderDailySaleController;
+use App\Http\Controllers\JournalController;
+use App\Http\Controllers\RiderFinanceController;
+use App\Http\Controllers\RiderMinusController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\RiderSalesReportController;
+use App\Http\Controllers\JournalCategoryController;
+use App\Http\Controllers\AdminChatController;
+use App\Http\Controllers\OwnerRiderDetailController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -47,8 +56,8 @@ Route::get('/robots.txt', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    // Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    // Route::post('/register', [AuthController::class, 'register']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -92,6 +101,48 @@ Route::middleware('auth')->group(function () {
             Route::put('/{artikel}', [ArtikelController::class, 'update'])->name('update');
             Route::delete('/{artikel}', [ArtikelController::class, 'destroy'])->name('destroy');
         });
+
+        // Rider Daily Sales Input
+        Route::get('/rider-sales', [RiderDailySaleController::class, 'index'])->name('admin.rider_sales.index');
+        Route::get('/rider-sales/create', [RiderDailySaleController::class, 'create'])->name('admin.rider_sales.create');
+        Route::post('/rider-sales', [RiderDailySaleController::class, 'store'])->name('admin.rider_sales.store');
+        Route::get('/rider-sales/{riderSale}/edit', [RiderDailySaleController::class, 'edit'])->name('admin.rider_sales.edit');
+        Route::put('/rider-sales/{riderSale}', [RiderDailySaleController::class, 'update'])->name('admin.rider_sales.update');
+
+        // General Journal
+        Route::resource('journals', JournalController::class)->except(['show', 'edit', 'update'])->names([
+            'index' => 'admin.journals.index',
+            'create' => 'admin.journals.create',
+            'store' => 'admin.journals.store',
+            'destroy' => 'admin.journals.destroy',
+        ]);
+
+        Route::resource('journal-categories', JournalCategoryController::class)->except(['create', 'show', 'edit'])->names([
+            'index' => 'admin.journal_categories.index',
+            'store' => 'admin.journal_categories.store',
+            'update' => 'admin.journal_categories.update',
+            'destroy' => 'admin.journal_categories.destroy',
+        ]);
+
+        // Rider Finances (Kasbon & Uang Makan)
+        Route::get('/rider-finances', [RiderFinanceController::class, 'index'])->name('admin.rider_finances.index');
+        Route::post('/rider-finances', [RiderFinanceController::class, 'store'])->name('admin.rider_finances.store');
+        Route::delete('/rider-finances/{riderFinance}', [RiderFinanceController::class, 'destroy'])->name('admin.rider_finances.destroy');
+        Route::get('/api/rider-cups', [RiderFinanceController::class, 'getCups'])->name('admin.api.rider_cups');
+
+        // Laporan Minus
+        Route::get('/rider-minus', [RiderMinusController::class, 'index'])->name('admin.rider_minus.index');
+
+        // Payroll
+        Route::get('/payroll', [PayrollController::class, 'index'])->name('admin.payroll.index');
+
+        // Rider Sales Report (Printout Penjualan)
+        Route::get('/rider-sales-report', [RiderSalesReportController::class, 'index'])->name('admin.rider_sales_report.index');
+
+        // Admin Chat Monitoring
+        Route::get('/admin/chats', [AdminChatController::class, 'index'])->name('admin.chats.index');
+        Route::get('/admin/chats/{conversation}', [AdminChatController::class, 'show'])->name('admin.chats.show');
+        Route::get('/admin/chats/{conversation}/messages', [AdminChatController::class, 'getMessages'])->name('admin.chats.messages');
     });
 
     // ==========================================
@@ -100,6 +151,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:owner')->group(function () {
         // Accounts CRUD
         Route::resource('accounts', AccountController::class);
+
+        // Owner - Rider Performance Detail
+        Route::get('/owner/rider-performance/{rider}', [OwnerRiderDetailController::class, 'show'])->name('owner.rider_performance.show');
     });
 
     // ==========================================

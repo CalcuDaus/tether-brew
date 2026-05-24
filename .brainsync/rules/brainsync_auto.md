@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 296 notes | Score threshold: >40
+> 307 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,23 +18,9 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Active: `resources/views/layouts`
-
-- **Updated schema Tambahkan**
-- **Updated schema Membungkus**
-- **Updated schema DOMContentLoaded**
-- **what-changed in app.blade.php**
-
 ## Project Standards
 
-- convention in .gitignore
 - 🟢 Edited resources/views/welcome.blade.php (11 changes, 3min) — confirmed 3x
-- convention in .gitignore
-- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 3x
-- Fixed null crash in Bagian — prevents null/undefined runtime crashes — confirmed 6x
-- what-changed in 0c44c772d4b26bf390351d1f22323d9d.php — confirmed 4x
-- what-changed in welcome.blade.php — confirmed 10x
-- what-changed in welcome.blade.php — confirmed 5x
 
 ## Known Fixes
 

@@ -1,0 +1,414 @@
+@extends('layouts.app')
+
+@section('title', 'Jurnal Umum')
+
+@section('actions')
+    <button onclick="window.print()" class="btn btn-secondary btn-sm flex-center" style="gap:0.5rem;">
+        <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
+        </svg> Print
+    </button>
+@endsection
+
+@section('content')
+<div id="print-area">
+    <div class="print-title" style="display: none;">
+        <h2>Laporan Jurnal Umum</h2>
+        <p>Tether Brew — Dicetak: {{ now()->translatedFormat('d F Y') }}</p>
+    </div>
+
+<div class="card mb-4" style="background: var(--bg-card);">
+    <div class="card-body journal-summary-row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        {{-- Card Debit --}}
+        <div style="flex: 1; min-width: 220px; padding: 20px; border-radius: 12px; background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2); display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(34, 197, 94, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </div>
+            <div>
+                <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 4px;">Total Pemasukan (Debit)</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #22c55e;">Rp {{ number_format($totalDebit, 0, ',', '.') }}</div>
+            </div>
+        </div>
+        {{-- Card Kredit --}}
+        <div style="flex: 1; min-width: 220px; padding: 20px; border-radius: 12px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(239, 68, 68, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+            </div>
+            <div>
+                <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 4px;">Total Pengeluaran (Kredit)</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #ef4444;">Rp {{ number_format($totalCredit, 0, ',', '.') }}</div>
+            </div>
+        </div>
+        {{-- Card Saldo --}}
+        <div style="flex: 1; min-width: 220px; padding: 20px; border-radius: 12px; background: var(--gradient-gold); color: white; display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <path d="M2 10h20"></path>
+                    <path d="M16 14h2"></path>
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 0.85rem; margin-bottom: 4px; opacity: 0.9;">Saldo Saat Ini</div>
+                <div style="font-size: 1.5rem; font-weight: 700;">Rp {{ number_format($balance, 0, ',', '.') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header print-hide" style="padding-bottom: 0;">
+        <form method="GET" action="{{ route('admin.journals.index') }}" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 20px;">
+            <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+                <label class="form-label">Mulai Tanggal</label>
+                <div class="flatpickr-input-container">
+                    <input type="text" name="start_date" id="start_date" class="form-input datepicker" value="{{ request('start_date') }}" placeholder="Pilih tanggal...">
+                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 150px; margin-bottom: 0;">
+                <label class="form-label">Sampai Tanggal</label>
+                <div class="flatpickr-input-container">
+                    <input type="text" name="end_date" id="end_date" class="form-input datepicker" value="{{ request('end_date') }}" placeholder="Pilih tanggal...">
+                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+                <label class="form-label">Kategori</label>
+                <select name="category_id" class="form-input">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group" style="display: flex; gap: 8px; margin-bottom: 0;">
+                <button type="submit" class="btn btn-primary" style="height: 42px;">Filter</button>
+                <a href="{{ route('admin.journals.index') }}" class="btn btn-secondary" style="height: 42px; display: flex; align-items: center;">Reset</a>
+                <button type="button" onclick="openJournalModal()" class="btn btn-primary flex-center" style="height: 42px; gap:0.5rem; white-space: nowrap;">
+                    <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg> Input Jurnal
+                </button>
+            </div>
+        </form>
+    </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const commonConfig = {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "j F Y",
+            allowInput: true,
+            disableMobile: "true"
+        };
+
+        flatpickr("#start_date", {
+            ...commonConfig,
+            onChange: function(selectedDates, dateStr, instance) {
+                endPicker.set('minDate', dateStr);
+            }
+        });
+
+        const endPicker = flatpickr("#end_date", {
+            ...commonConfig,
+            minDate: document.getElementById('start_date').value || null
+        });
+
+        flatpickr("#modal_date", commonConfig);
+    });
+
+    function openJournalModal() {
+        document.getElementById('journalModal').style.display = 'flex';
+    }
+
+    function closeJournalModal() {
+        document.getElementById('journalModal').style.display = 'none';
+    }
+
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('journalModal');
+        if (event.target == modal) {
+            closeJournalModal();
+        }
+    });
+
+    // Pagination Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const rowsPerPage = 15;
+        let currentPage = 1;
+        const rows = document.querySelectorAll('.journal-row');
+        if (rows.length === 0) return;
+        
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+        function displayRows() {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+
+            rows.forEach((row, index) => {
+                // Gunakan style.display untuk mengontrol tampilan di layar
+                if (index >= start && index < end) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Update info text
+            const pageInfo = document.getElementById('page-info');
+            if (pageInfo) {
+                const endRow = Math.min(end, rows.length);
+                pageInfo.textContent = `${start + 1} - ${endRow}`;
+            }
+
+            // Update buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            if (prevBtn) {
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+            }
+            if (nextBtn) {
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
+            }
+
+            // Render page numbers
+            renderPageNumbers();
+        }
+
+        function renderPageNumbers() {
+            const container = document.getElementById('page-numbers');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-sm';
+                btn.textContent = i;
+                if (i === currentPage) {
+                    btn.style.background = '#8b5c2a'; // match theme
+                    btn.style.color = 'white';
+                    btn.style.border = '1px solid #8b5c2a';
+                } else {
+                    btn.style.background = 'white';
+                    btn.style.color = '#475569';
+                    btn.style.border = '1px solid #cbd5e1';
+                }
+                btn.onclick = (e) => { 
+                    e.preventDefault();
+                    currentPage = i; 
+                    displayRows(); 
+                };
+                container.appendChild(btn);
+            }
+        }
+
+        window.changePage = function(step) {
+            currentPage += step;
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            displayRows();
+        };
+
+        // Initialize pagination
+        displayRows();
+    });
+</script>
+@endpush
+    <div class="card-body">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Kategori</th>
+                        <th>Keterangan</th>
+                        <th>Tipe</th>
+                        <th style="text-align: right;">Jumlah (Rp)</th>
+                        <th>Diinput Oleh</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="journal-table-body">
+                    @forelse($journals as $journal)
+                        <tr class="journal-row">
+                            <td>{{ $journal->date->format('d/m/Y') }}</td>
+                            <td>
+                                @if($journal->category)
+                                    <span style="display: inline-block; padding: 2px 8px; background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">{{ $journal->category->name }}</span>
+                                @else
+                                    <span style="color: var(--text-muted); font-style: italic;">-</span>
+                                @endif
+                            </td>
+                            <td>{{ $journal->description }}</td>
+                            <td>
+                                @if($journal->type === 'debit')
+                                    <span style="color: #22c55e; font-weight: 600;">Debit (Masuk)</span>
+                                @else
+                                    <span style="color: #ef4444; font-weight: 600;">Kredit (Keluar)</span>
+                                @endif
+                            </td>
+                            <td style="text-align: right;">{{ number_format($journal->amount, 0, ',', '.') }}</td>
+                            <td>{{ $journal->creator->name }}</td>
+                            <td>
+                                <form method="POST" action="{{ route('admin.journals.destroy', $journal->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm" style="color: var(--accent-red); background: rgba(239, 68, 68, 0.1); border-radius: 8px; border: none; padding: 5px 10px;">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr id="no-data-row">
+                            <td colspan="7" style="text-align: center;">Belum ada data jurnal.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        {{-- Pagination Controls --}}
+        @if($journals->count() > 0)
+        <div class="pagination-container print-hide" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+            <div style="font-size: 0.9rem; color: var(--text-muted);">
+                Menampilkan <span id="page-info"></span> dari {{ $journals->count() }} data
+            </div>
+            <div style="display: flex; gap: 5px;">
+                <button onclick="changePage(-1)" id="prev-btn" class="btn btn-sm" style="background: white; border: 1px solid #cbd5e1; color: #475569;">Sebelumnya</button>
+                <div id="page-numbers" style="display: flex; gap: 5px;"></div>
+                <button onclick="changePage(1)" id="next-btn" class="btn btn-sm" style="background: white; border: 1px solid #cbd5e1; color: #475569;">Selanjutnya</button>
+            </div>
+        </div>
+        @endif
+
+        </div>
+    </div>
+</div>
+</div> {{-- End #print-area --}}
+
+<!-- Modal Input Jurnal -->
+<div id="journalModal" class="modal-overlay-animate" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="card modal-content-animate" style="width: 100%; max-width: 500px; margin: 20px; box-shadow: var(--shadow-lg);">
+        <div class="card-header">
+            <h3 class="card-title">Tambah Data Jurnal</h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('admin.journals.store') }}" method="POST">
+                @csrf
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">Tanggal</label>
+                    <div class="flatpickr-input-container">
+                        <input type="text" name="date" id="modal_date" class="form-input" value="{{ date('Y-m-d') }}" required placeholder="Pilih tanggal...">
+                        <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">Tipe Transaksi</label>
+                    <select name="type" class="form-input" required>
+                        <option value="debit">Debit (Pemasukan)</option>
+                        <option value="credit">Kredit (Pengeluaran)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">Kategori</label>
+                    <select name="journal_category_id" class="form-input">
+                        <option value="">Pilih Kategori (Opsional)...</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">Keterangan / Catatan</label>
+                    <input type="text" name="description" class="form-input" placeholder="Contoh: Beli gula, Pendapatan lain-lain..." required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Jumlah Uang (Rp)</label>
+                    <input type="number" name="amount" class="form-input" placeholder="0" min="0" required>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeJournalModal()" class="btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Jurnal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('styles')
+<style>
+    @media print {
+        @page { margin: 15mm; }
+        body { font-size: 11pt; }
+        body * { visibility: hidden; }
+        #print-area, #print-area * { visibility: visible; }
+        #print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
+        .print-title { display: block !important; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #cbd5e1; margin-bottom: 20px !important; }
+        .print-title h2 { margin: 0; color: #8b5c2a; font-size: 16pt; }
+        .print-title p { margin: 5px 0 0 0; color: #64748b; font-size: 10pt; }
+        .topbar, .sidebar, .btn, .print-hide, #journalModal, form[method="POST"], .modal-overlay-animate { display: none !important; }
+        .card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; break-inside: avoid; margin-bottom: 20px !important; border-radius: 8px !important; }
+        .card-header { background: transparent !important; border-bottom: 1px solid #cbd5e1 !important; padding: 12px 16px !important; }
+        .card-header.print-hide { display: none !important; }
+        .card-body { padding: 15px 16px !important; }
+
+        /* Summary cards styling for print */
+        .journal-summary-row { display: flex !important; gap: 15px !important; }
+        .journal-summary-row > div { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; background: white !important; color: #1e293b !important; }
+        .journal-summary-row > div:last-child { background: #f8f4ef !important; color: #1e293b !important; }
+
+        /* Table print styles */
+        table { width: 100% !important; border-collapse: collapse !important; }
+        /* FORCE all rows to display when printing regardless of pagination */
+        .journal-row { display: table-row !important; }
+        th { background-color: #f8fafc !important; color: #1e293b !important; border-bottom: 2px solid #cbd5e1 !important; padding: 10px 8px !important; font-weight: bold !important; font-size: 9.5pt !important; }
+        td { border-bottom: 1px solid #e2e8f0 !important; padding: 8px !important; font-size: 10pt !important; }
+        tfoot td { border-bottom: none !important; border-top: 2px solid #cbd5e1 !important; }
+
+        /* Hide action column */
+        th:last-child, td:last-child { display: none !important; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-overlay-animate {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .modal-content-animate {
+        animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+</style>
+@endpush

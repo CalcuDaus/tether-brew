@@ -578,7 +578,7 @@
         <div class="chat-auth-content">
             <button class="chat-auth-close" onclick="closeAuthModal()">✕</button>
             <div class="chat-auth-brand">
-                <h3>💬 Chat dengan Rider</h3>
+                <h3>Chat dengan Rider</h3>
                 <p>Masuk atau daftar untuk mulai chat langsung dengan rider gerobak kopi.</p>
             </div>
             <div class="chat-auth-buttons">
