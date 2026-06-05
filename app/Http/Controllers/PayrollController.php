@@ -40,8 +40,14 @@ class PayrollController extends Controller
             $endDate = null;
 
             if ($filterType === 'weekly' && $request->week_start) {
-                $startDate = Carbon::parse($request->week_start)->startOfDay();
-                $endDate = $startDate->copy()->addDays(6)->endOfDay();
+                if (str_contains($request->week_start, '|')) {
+                    $parts = explode('|', $request->week_start);
+                    $startDate = Carbon::parse($parts[0])->startOfDay();
+                    $endDate = Carbon::parse($parts[1])->endOfDay();
+                } else {
+                    $startDate = Carbon::parse($request->week_start)->startOfDay();
+                    $endDate = $startDate->copy()->addDays(6)->endOfDay();
+                }
             } elseif ($filterType === 'custom' && $request->date_from && $request->date_to) {
                 $startDate = Carbon::parse($request->date_from)->startOfDay();
                 $endDate = Carbon::parse($request->date_to)->endOfDay();

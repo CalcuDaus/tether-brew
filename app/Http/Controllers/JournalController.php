@@ -24,11 +24,13 @@ class JournalController extends Controller
             $query->whereDate('date', '<=', $request->end_date);
         }
 
-        $journals = $query->orderBy('id', 'desc')->get();
         $categories = \App\Models\JournalCategory::orderBy('name', 'asc')->get();
-        $totalDebit = $journals->where('type', 'debit')->sum('amount');
-        $totalCredit = $journals->where('type', 'credit')->sum('amount');
+        
+        $totalDebit = (clone $query)->where('type', 'debit')->sum('amount');
+        $totalCredit = (clone $query)->where('type', 'credit')->sum('amount');
         $balance = $totalDebit - $totalCredit;
+
+        $journals = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('admin.journals.index', compact('journals', 'totalDebit', 'totalCredit', 'balance', 'categories'));
     }

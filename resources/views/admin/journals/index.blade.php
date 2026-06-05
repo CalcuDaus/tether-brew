@@ -197,96 +197,7 @@
                     openJournalModal();
                 @endif
 
-                // Pagination Logic
-                document.addEventListener('DOMContentLoaded', function () {
-                    const rowsPerPage = 15;
-                    let currentPage = 1;
-                    const rows = document.querySelectorAll('.journal-row');
-                    if (rows.length === 0) return;
 
-                    const totalPages = Math.ceil(rows.length / rowsPerPage);
-
-                    function displayRows() {
-                        const start = (currentPage - 1) * rowsPerPage;
-                        const end = start + rowsPerPage;
-
-                        rows.forEach((row, index) => {
-                            // Gunakan style.display untuk mengontrol tampilan di layar
-                            if (index >= start && index < end) {
-                                row.style.display = '';
-                            } else {
-                                row.style.display = 'none';
-                            }
-                        });
-
-                        // Update info text
-                        const pageInfo = document.getElementById('page-info');
-                        if (pageInfo) {
-                            const endRow = Math.min(end, rows.length);
-                            pageInfo.textContent = `${start + 1} - ${endRow}`;
-                        }
-
-                        // Update buttons
-                        const prevBtn = document.getElementById('prev-btn');
-                        const nextBtn = document.getElementById('next-btn');
-                        if (prevBtn) {
-                            prevBtn.disabled = currentPage === 1;
-                            prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
-                        }
-                        if (nextBtn) {
-                            nextBtn.disabled = currentPage === totalPages;
-                            nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
-                        }
-
-                        // Render page numbers
-                        renderPageNumbers();
-                    }
-
-                    function renderPageNumbers() {
-                        const container = document.getElementById('page-numbers');
-                        if (!container) return;
-                        container.innerHTML = '';
-
-                        let startPage = Math.max(1, currentPage - 2);
-                        let endPage = Math.min(totalPages, startPage + 4);
-
-                        if (endPage - startPage < 4) {
-                            startPage = Math.max(1, endPage - 4);
-                        }
-
-                        for (let i = startPage; i <= endPage; i++) {
-                            const btn = document.createElement('button');
-                            btn.type = 'button';
-                            btn.className = 'btn btn-sm';
-                            btn.textContent = i;
-                            if (i === currentPage) {
-                                btn.style.background = '#8b5c2a'; // match theme
-                                btn.style.color = 'white';
-                                btn.style.border = '1px solid #8b5c2a';
-                            } else {
-                                btn.style.background = 'white';
-                                btn.style.color = '#475569';
-                                btn.style.border = '1px solid #cbd5e1';
-                            }
-                            btn.onclick = (e) => {
-                                e.preventDefault();
-                                currentPage = i;
-                                displayRows();
-                            };
-                            container.appendChild(btn);
-                        }
-                    }
-
-                    window.changePage = function (step) {
-                        currentPage += step;
-                        if (currentPage < 1) currentPage = 1;
-                        if (currentPage > totalPages) currentPage = totalPages;
-                        displayRows();
-                    };
-
-                    // Initialize pagination
-                    displayRows();
-                });
             </script>
         @endpush
         <div class="card-body">
@@ -346,20 +257,11 @@
             </div>
 
             {{-- Pagination Controls --}}
-            @if($journals->count() > 0)
+            @if($journals->hasPages())
                 <div class="pagination-container print-hide"
-                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 15px 20px; border-top: 1px solid #e2e8f0;">
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">
-                        Menampilkan <span id="page-info"></span> dari {{ $journals->count() }} data
-                    </div>
-                    <div style="display: flex; gap: 5px;">
-                        <button onclick="changePage(-1)" id="prev-btn" class="btn btn-sm"
-                            style="background: white; border: 1px solid #cbd5e1; color: #475569;">Sebelumnya</button>
-                        <div id="page-numbers" style="display: flex; gap: 5px;"></div>
-                        <button onclick="changePage(1)" id="next-btn" class="btn btn-sm"
-                            style="background: white; border: 1px solid #cbd5e1; color: #475569;">Selanjutnya</button>
-                        </div>
-                        </div>
+                    style="margin-top: 20px; padding: 15px 20px; border-top: 1px solid #e2e8f0;">
+                    {{ $journals->links() }}
+                </div>
             @endif
 
             </div>

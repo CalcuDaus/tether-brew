@@ -87,33 +87,6 @@ class RiderDailySaleController extends Controller
         $products = \App\Models\Product::orderBy('id', 'asc')->get();
         $stockData = [];
 
-        // 1. Get Cumulative Production up to this date
-        $productions = \App\Models\DailyProduction::forBranch($branchId)
-            ->whereDate('date', '<=', $date)
-            ->with('items')
-            ->get();
-
-        // 2. Get Cumulative Spoiled up to this date
-        $spoiledList = \App\Models\SpoiledProduct::forBranch($branchId)
-            ->whereDate('date', '<=', $date)
-            ->with('items')
-            ->get();
-
-        // 3. Get Cumulative Sales up to this date
-        $allSales = \App\Models\RiderDailySale::forBranch($branchId)
-            ->whereDate('date', '<=', $date)
-            ->when($request->rider_id, function($q) use ($request, $date) {
-                return $q->where(function($query) use ($request, $date) {
-                    $query->whereDate('date', '<', $date)
-                          ->orWhere(function($subQ) use ($request, $date) {
-                              $subQ->whereDate('date', $date)
-                                   ->where('rider_id', '!=', $request->rider_id);
-                          });
-                });
-            })
-            ->with('items')
-            ->get();
-
         // Get existing sale for this rider today to prefill
         $riderSale = null;
         if ($request->rider_id) {
@@ -125,29 +98,32 @@ class RiderDailySaleController extends Controller
         }
 
         foreach ($products as $product) {
-            $produced = 0;
-            foreach ($productions as $prod) {
-                $prodItem = $prod->items->where('product_id', $product->id)->first();
-                if ($prodItem) {
-                    $produced += $prodItem->quantity_produced;
-                }
-            }
+            $produced = \App\Models\DailyProductionItem::whereHas('production', function($q) use ($branchId, $date) {
+                $q->forBranch($branchId)->whereDate('date', '<=', $date);
+            })->where('product_id', $product->id)->sum('quantity_produced');
 
-            $spoiledQty = 0;
-            foreach ($spoiledList as $sp) {
-                $spItem = $sp->items->where('product_id', $product->id)->first();
-                if ($spItem) {
-                    $spoiledQty += $spItem->quantity;
-                }
-            }
+            $spoiledQty = \App\Models\SpoiledProductItem::whereHas('spoiledProduct', function($q) use ($branchId, $date) {
+                $q->forBranch($branchId)->whereDate('date', '<=', $date);
+            })->where('product_id', $product->id)->sum('quantity');
 
-            $used = 0;
-            foreach ($allSales as $sale) {
-                $saleItem = $sale->items->where('product_id', $product->id)->first();
-                if ($saleItem) {
-                    $used += ($saleItem->stock_out + $saleItem->stock_added - $saleItem->stock_return);
-                }
-            }
+            $usedQuery = \App\Models\RiderDailySaleItem::whereHas('sale', function($q) use ($branchId, $date, $request) {
+                $q->forBranch($branchId)->whereDate('date', '<=', $date)
+                  ->when($request->rider_id, function($query) use ($request, $date) {
+                      return $query->where(function($q2) use ($request, $date) {
+                          $q2->whereDate('date', '<', $date)
+                             ->orWhere(function($q3) use ($request, $date) {
+                                 $q3->whereDate('date', $date)
+                                    ->where('rider_id', '!=', $request->rider_id);
+                             });
+                      });
+                  });
+            })->where('product_id', $product->id);
+
+            $out = clone $usedQuery;
+            $add = clone $usedQuery;
+            $ret = clone $usedQuery;
+
+            $used = $out->sum('stock_out') + $add->sum('stock_added') - $ret->sum('stock_return');
 
             $available = max(0, $produced - $used - $spoiledQty);
 

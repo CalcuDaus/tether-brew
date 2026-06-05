@@ -582,28 +582,32 @@
 
                             weekSelect.innerHTML = '';
 
-                            // Find all Mondays in the month
-                            let date = new Date(year, month - 1, 1);
+                            let currentDate = new Date(year, month - 1, 1);
+                            let lastDayOfMonth = new Date(year, month, 0);
 
-                            // Move to first Monday
-                            while (date.getDay() !== 1) {
-                                date.setDate(date.getDate() + 1);
-                            }
+                            while (currentDate <= lastDayOfMonth) {
+                                let periodStart = new Date(currentDate);
+                                
+                                // Find the next Sunday or the last day of the month
+                                let periodEnd = new Date(currentDate);
+                                while (periodEnd.getDay() !== 0 && periodEnd < lastDayOfMonth) {
+                                    periodEnd.setDate(periodEnd.getDate() + 1);
+                                }
 
-                            while (date.getMonth() === month - 1) {
-                                const monday = new Date(date);
-                                const sunday = new Date(date);
-                                sunday.setDate(monday.getDate() + 6);
-
-                                const value = monday.toISOString().split('T')[0];
-                                const label = monday.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' - ' +
-                                    sunday.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                                const startValue = periodStart.toISOString().split('T')[0];
+                                const endValue = periodEnd.toISOString().split('T')[0];
+                                const value = startValue + '|' + endValue;
+                                
+                                const label = periodStart.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' - ' +
+                                              periodEnd.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
                                 const option = new Option(label, value);
                                 if (value === selectedValue) option.selected = true;
                                 weekSelect.add(option);
 
-                                date.setDate(date.getDate() + 7);
+                                // Move to the next day
+                                currentDate = new Date(periodEnd);
+                                currentDate.setDate(currentDate.getDate() + 1);
                             }
                         }
                     </script>
