@@ -29,7 +29,7 @@ class CustomerAuthController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect()->intended(route('customer.dashboard'));
         }
 
         return back()->withErrors(['phone' => 'Nomor HP atau password salah.']);
@@ -57,7 +57,7 @@ class CustomerAuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect('/');
+        return redirect()->route('customer.dashboard');
     }
 
     public function logout(Request $request)

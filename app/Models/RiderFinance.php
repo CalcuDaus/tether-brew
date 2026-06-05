@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 
 class RiderFinance extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
         'rider_id',
         'admin_id',
+        'branch_id',
         'date',
         'type',
         'amount',

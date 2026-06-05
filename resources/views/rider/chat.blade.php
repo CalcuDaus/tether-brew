@@ -120,7 +120,7 @@
                             {{ $conv->latestMessage?->body ?? 'Belum ada pesan' }}
                         </div>
                         @if($conv->cart)
-                            <div class="chat-conv-cart">📍 {{ $conv->cart->name }}</div>
+                            <div class="chat-conv-cart">ðŸ“ {{ $conv->cart->name }}</div>
                         @endif
                     </div>
                     <div class="chat-conv-meta">
@@ -194,7 +194,7 @@
                 <div class="chat-conv-info">
                     <div class="chat-conv-name">${escapeHtmlChatList(customerName)}</div>
                     <div class="chat-conv-preview">${preview}</div>
-                    ${cartName ? `<div class="chat-conv-cart">📍 ${escapeHtmlChatList(cartName)}</div>` : ''}
+                    ${cartName ? `<div class="chat-conv-cart">ðŸ“ ${escapeHtmlChatList(cartName)}</div>` : ''}
                 </div>
                 <div class="chat-conv-meta">
                     ${time ? `<span class="chat-conv-time">${time}</span>` : ''}

@@ -581,13 +581,11 @@
         }
 
         function openAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.style.display = 'flex';
+            window.location.href = '/customer/login';
         }
 
         function closeAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.style.display = 'none';
+            // Deprecated
         }
 
         async function startChat() {

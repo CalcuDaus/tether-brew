@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 
 class JournalCategory extends Model

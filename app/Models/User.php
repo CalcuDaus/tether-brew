@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Traits\BelongsToBranch;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -11,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'whatsapp', 'phone', 'password', 'role'])]
+#[Fillable(['name', 'email', 'whatsapp', 'phone', 'password', 'role', 'branch_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, BelongsToBranch;
 
     /**
      * Get the attributes that should be cast.
@@ -39,6 +40,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    public function isBar(): bool
+    {
+        return $this->role === 'bar';
     }
 
     public function isRider(): bool
@@ -69,5 +75,15 @@ class User extends Authenticatable
     public function riderConversations(): HasMany
     {
         return $this->hasMany(Conversation::class, 'rider_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function scopeForBranch($query, $branchId)
+    {
+        return $query->where('branch_id', $branchId);
     }
 }

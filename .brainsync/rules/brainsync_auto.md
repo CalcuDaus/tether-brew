@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 307 notes | Score threshold: >40
+> 328 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,9 +18,9 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Project Standards
+## Active: `resources/views/admin/rider_finances`
 
-- 🟢 Edited resources/views/welcome.blade.php (11 changes, 3min) — confirmed 3x
+- **🟢 Edited resources/views/admin/rider_finances/uang_makan.blade.php (48 changes, 28min)**
 
 ## Known Fixes
 

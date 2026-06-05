@@ -86,7 +86,7 @@
         </button>
     </div>
     <div class="card-body">
-        <div class="report-container" style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: 'Inter', sans-serif;">
+        <div class="report-container" style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: 'Poppins', sans-serif;">
             <!-- Header -->
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 20px;">
                 <h2 style="margin: 0; color: #1e293b; font-size: 24px;">TETHER BREW</h2>

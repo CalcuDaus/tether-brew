@@ -54,13 +54,13 @@
         {{-- Live Auto-Tracking --}}
         <div class="card">
             <div class="card-header flex-between">
-                <h3 class="card-title">📍 Live Tracking</h3>
+                <h3 class="card-title">ðŸ“ Live Tracking</h3>
                 <div class="flex-gap-2">
                     <button id="simulation-toggle" onclick="toggleSimulation()" class="btn btn-secondary btn-sm" title="Gunakan jika GPS diblokir browser/HTTP">
                         Mode Simulasi: OFF
                     </button>
                     <div id="tracking-badge" class="badge-red-sm">
-                        ⏹ Nonaktif
+                        â¹ Nonaktif
                     </div>
                 </div>
             </div>
@@ -71,11 +71,11 @@
                         <div class="text-primary-semi-mb-0">Auto-Tracking GPS</div>
                         <div id="tracking-status-text" class="text-sm-muted">Klik tombol untuk mulai memancarkan lokasi</div>
                         <div id="secure-origin-warning" class="text-xs text-red-500 mt-1 hidden">
-                            ⚠️ GPS diblokir (Butuh HTTPS). Gunakan <b>Mode Simulasi</b> di atas.
+                            âš ï¸ GPS diblokir (Butuh HTTPS). Gunakan <b>Mode Simulasi</b> di atas.
                         </div>
                     </div>
                     <button id="tracking-toggle" onclick="toggleTracking()" class="btn btn-primary min-w-120-center ml-4">
-                        🟢 Mulai
+                        ðŸŸ¢ Mulai
                     </button>
                 </div>
 
@@ -99,9 +99,9 @@
                 {{-- Log --}}
                 <div id="tracking-log" class="tracking-log-box">
                     @if($cart->location)
-                        <div><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Lokasi terakhir: {{ $cart->location->latitude }}, {{ $cart->location->longitude }} · {{ $cart->location->updated_at->diffForHumans() }}</div>
+                        <div><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Lokasi terakhir: {{ $cart->location->latitude }}, {{ $cart->location->longitude }} Â· {{ $cart->location->updated_at->diffForHumans() }}</div>
                     @else
-                        <div>⏳ Menunggu data lokasi...</div>
+                        <div>â³ Menunggu data lokasi...</div>
                     @endif
                 </div>
             </div>
@@ -279,7 +279,7 @@
             const pos = riderMarker.getLatLng();
             updateUI(pos.lat, pos.lng);
             sendLocation(pos.lat, pos.lng);
-            addLog(`🕹️ Simulasi: Marker dipindah ke ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}`);
+            addLog(`ðŸ•¹ï¸ Simulasi: Marker dipindah ke ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}`);
         }
     });
 
@@ -296,7 +296,7 @@
             btn.innerHTML = 'Mode Simulasi: ON';
             btn.classList.replace('btn-secondary', 'btn-gold');
             riderMarker.dragging.enable();
-            addLog('🛠️ Mode Simulasi AKTIF. Anda bisa menggeser marker di peta secara manual.');
+            addLog('ðŸ› ï¸ Mode Simulasi AKTIF. Anda bisa menggeser marker di peta secara manual.');
             
             // Auto start visual tracking if not active
             if (!isTracking) {
@@ -307,7 +307,7 @@
             btn.innerHTML = 'Mode Simulasi: OFF';
             btn.classList.replace('btn-gold', 'btn-secondary');
             riderMarker.dragging.disable();
-            addLog('⏹ Mode Simulasi MATI.');
+            addLog('â¹ Mode Simulasi MATI.');
             
             if (!isTracking) {
                 stopTrackingUI(); // Reset UI
@@ -349,7 +349,7 @@
             const data = await res.json();
             if (data.success) {
                 sendCount++;
-                addLog(`<svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Lokasi terkirim #${sendCount} → ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+                addLog(`<svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Lokasi terkirim #${sendCount} â†’ ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
                 // Update badge if status active
                 if (status === 'active') {
                     const statusVal = document.querySelector('.rider-stats-section .stat-card:nth-child(4) .stat-value');
@@ -359,10 +359,10 @@
                     if(statusVal) statusVal.textContent = 'inactive';
                 }
             } else {
-                addLog(`⚠️ Server error: ${JSON.stringify(data)}`);
+                addLog(`âš ï¸ Server error: ${JSON.stringify(data)}`);
             }
         } catch (err) {
-            addLog(`❌ Gagal kirim: ${err.message}`);
+            addLog(`âŒ Gagal kirim: ${err.message}`);
         }
     }
 
@@ -376,12 +376,12 @@
 
     function startTracking() {
         if (isSimulation) {
-            addLog('💡 Matikan Mode Simulasi sebelum memulai GPS Realtime.');
+            addLog('ðŸ’¡ Matikan Mode Simulasi sebelum memulai GPS Realtime.');
             return;
         }
 
         if (!navigator.geolocation && !IS_LOCAL) {
-            addLog('❌ Browser tidak mendukung Geolocation');
+            addLog('âŒ Browser tidak mendukung Geolocation');
             return;
         }
 
@@ -391,7 +391,7 @@
         const statusText = document.getElementById('tracking-status-text');
         const warn = document.getElementById('secure-origin-warning');
 
-        btn.innerHTML = '🔴 Berhenti';
+        btn.innerHTML = 'ðŸ”´ Berhenti';
         btn.classList.remove('btn-primary');
         btn.classList.add('btn-danger');
 
@@ -405,16 +405,16 @@
 
         // Development Mock vs Production Real
         if (IS_LOCAL) {
-            addLog('🟢 Live tracking DIMULAI (Mode Development - Mock Location)');
+            addLog('ðŸŸ¢ Live tracking DIMULAI (Mode Development - Mock Location)');
             updateUI(MOCK_LAT, MOCK_LNG);
             sendLocation(MOCK_LAT, MOCK_LNG, 'active');
             
             watchId = setInterval(() => {
                 sendLocation(MOCK_LAT, MOCK_LNG);
-                addLog(`📡 Mock GPS: ${MOCK_LAT.toFixed(5)}, ${MOCK_LNG.toFixed(5)}`);
+                addLog(`ðŸ“¡ Mock GPS: ${MOCK_LAT.toFixed(5)}, ${MOCK_LNG.toFixed(5)}`);
             }, 8000);
         } else {
-            addLog('🟢 Live tracking DIMULAI (Production)');
+            addLog('ðŸŸ¢ Live tracking DIMULAI (Production)');
             watchId = navigator.geolocation.watchPosition(
                 (pos) => {
                     const lat = pos.coords.latitude;
@@ -426,10 +426,10 @@
                     const isFirst = (sendCount === 0); 
                     sendLocation(lat, lng, isFirst ? 'active' : null);
                     
-                    addLog(`📡 GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)} (akurasi: ${accuracy.toFixed(0)}m)`);
+                    addLog(`ðŸ“¡ GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)} (akurasi: ${accuracy.toFixed(0)}m)`);
                 },
                 (err) => {
-                    addLog(`❌ GPS Error: ${err.message}`);
+                    addLog(`âŒ GPS Error: ${err.message}`);
                     if (err.message.includes('secure origins') || err.code === 1) {
                         warn.classList.remove('hidden');
                     }
@@ -461,7 +461,7 @@
             sendLocation(parseFloat(lastLat), parseFloat(lastLng), 'inactive');
         }
         
-        addLog(`🔴 Live tracking DIHENTIKAN (total ${sendCount} update terkirim)`);
+        addLog(`ðŸ”´ Live tracking DIHENTIKAN (total ${sendCount} update terkirim)`);
     }
 
     function stopTrackingUI() {
@@ -469,13 +469,13 @@
         const badge = document.getElementById('tracking-badge');
         const statusText = document.getElementById('tracking-status-text');
 
-        btn.innerHTML = '🟢 Mulai';
+        btn.innerHTML = 'ðŸŸ¢ Mulai';
         btn.classList.remove('btn-danger');
         btn.classList.add('btn-primary');
 
         badge.style.background = 'rgba(239, 83, 80, 0.15)';
         badge.style.color = '#ef5350';
-        badge.innerHTML = '⏹ Nonaktif';
+        badge.innerHTML = 'â¹ Nonaktif';
 
         statusText.textContent = 'Klik tombol untuk mulai memancarkan lokasi';
         statusText.style.color = 'var(--text-muted)';

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- ===== SEO META TAGS ===== --}}
-    <title>Tether Brew – Kopi Keliling Medan Sekitar | Kopi Segar Mulai Rp 8.000</title>
+    <title>Tether Brew Kopi Keliling Medan Sekitar | Kopi Segar Mulai Rp 8.000</title>
     <meta name="description" content="Cari kopi keliling Medan sekitar? Tether Brew jawabannya! Kopi keliling dengan racikan premium dan harga murah mulai Rp 8.000. Temukan gerobak terdekat sekarang!">
     <meta name="keywords" content="kopi keliling, kopi keliling medan, kopi keliling medan sekitar, kopi keliling terdekat medan, kopi medan, kopi segar medan, gerobak kopi medan, tether brew, es kopi medan">
     <meta name="author" content="Tether Brew">
@@ -23,7 +23,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="id_ID">
     <meta property="og:site_name" content="Tether Brew">
-    <meta property="og:title" content="Tether Brew – Kopi Keliling Medan Sekitar">
+    <meta property="og:title" content="Tether Brew â€“ Kopi Keliling Medan Sekitar">
     <meta property="og:description" content="Cari kopi keliling Medan sekitar? Tether Brew adalah pilihan kopi keliling premium mulai Rp 8.000! Cek lokasi gerobak terdekat di peta.">
     <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:image" content="{{ asset('favicon.webp') }}">
@@ -33,7 +33,7 @@
 
     {{-- ===== TWITTER CARD ===== --}}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Tether Brew – Kopi Keliling Medan Sekitar">
+    <meta name="twitter:title" content="Tether Brew â€“ Kopi Keliling Medan Sekitar">
     <meta name="twitter:description" content="Cari kopi keliling Medan sekitar? Temukan gerobak kopi keliling Tether Brew terdekat via peta realtime! Harga mulai 8rb.">
     <meta name="twitter:image" content="{{ asset('favicon.webp') }}">
 
@@ -107,7 +107,8 @@
     <meta name="apple-mobile-web-app-title" content="Tether Brew">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -173,7 +174,7 @@
             <a href="#contact" @click="mobileOpen = false">Kontak</a>
             @auth
                 @if(auth()->user()->isCustomer())
-                <a href="#" onclick="showAccountModal(event); mobileOpen = false;">Akun</a>
+                    <a href="{{ route('customer.dashboard') }}" @click="mobileOpen = false">Dashboard App</a>
                 @endif
             @endauth
             <button @click="window.switchTheme($event, () => darkMode = !darkMode)" class="theme-toggle-btn-landing">
@@ -189,7 +190,7 @@
                 </template>
             </button>
         </div>
-        <button class="mobile-toggle" @click="mobileOpen = !mobileOpen" >☰</button>
+        <button class="mobile-toggle" @click="mobileOpen = !mobileOpen">â˜°</button>
     </nav>
 
     {{-- ===== MOBILE THEME TOGGLE ===== --}}
@@ -216,7 +217,7 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                Tether Brew · Kopi Keliling Medan
+                Tether Brew Â· Kopi Keliling Medan
             </div>
             <h1>Kopi Premium, Segar & Murah di<br><span class="highlight">Medan</span> dari Tether Brew</h1>
             <p>Mencari kopi keliling Medan sekitar? Temukan gerobak kopi keliling premium kami yang tersebar di kota. Segar, berkualitas, dan terjangkau mulai Rp 8.000.</p>
@@ -313,7 +314,7 @@
 
         <div class="menu-tabs">
             <button class="menu-tab" :class="{ active: activeTab === 'semua' }" @click="activeTab = 'semua'">Semua</button>
-            <button class="menu-tab" :class="{ active: activeTab === 'kopi' }" @click="activeTab = 'kopi'">☕ Coffee</button>
+            <button class="menu-tab" :class="{ active: activeTab === 'kopi' }" @click="activeTab = 'kopi'">â˜• Coffee</button>
             <button class="menu-tab" :class="{ active: activeTab === 'non-kopi' }" @click="activeTab = 'non-kopi'"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em; margin-right:4px;"><path d="M6 9l1.5 11.5A2 2 0 0 0 9.5 22h5a2 2 0 0 0 2-1.5L18 9" /><line x1="4" y1="9" x2="20" y2="9" /><path d="M5 9 A 7 5 0 0 1 19 9" /><line x1="12" y1="4" x2="14" y2="0" /></svg> Non-Coffee</button>
         </div>
 
@@ -477,12 +478,14 @@
             </a>
             @auth
                 @if(auth()->user()->isCustomer())
-                <a href="#" onclick="showAccountModal(event)" class="bottom-nav-item">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <span>Akun</span>
-                </a>
+                    <a href="{{ route('customer.dashboard') }}" class="bottom-nav-item">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
                 @else
                 <a href="#contact" class="bottom-nav-item" data-section="contact">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -514,7 +517,7 @@
                     <p id="order-rider-name" class="order-rider">Rider: -</p>
                     <div id="order-distance" class="order-distance"></div>
                 </div>
-                <button id="order-close-btn" class="order-close-btn">✕</button>
+                <button id="order-close-btn" class="order-close-btn">âœ•</button>
             </div>
             <div class="order-panel-body" id="order-menu-list">
                 {{-- Menu items rendered by JS --}}
@@ -572,156 +575,10 @@
                     </div>
                     </div>
                     
-    {{-- ===== AUTH MODAL (for customer login/register) ===== --}}
-    <div id="auth-modal" class="chat-auth-modal" style="display:none;">
-        <div class="chat-auth-backdrop" onclick="closeAuthModal()"></div>
-        <div class="chat-auth-content">
-            <button class="chat-auth-close" onclick="closeAuthModal()">✕</button>
-            <div class="chat-auth-brand">
-                <h3>Chat dengan Rider</h3>
-                <p>Masuk atau daftar untuk mulai chat langsung dengan rider gerobak kopi.</p>
-            </div>
-            <div class="chat-auth-buttons">
-                <a href="{{ route('customer.login') }}" class="chat-auth-btn chat-auth-btn-primary">Masuk</a>
-                <a href="{{ route('customer.register') }}" class="chat-auth-btn chat-auth-btn-secondary">Daftar Baru</a>
-            </div>
-        </div>
-    </div>
-
-    {{-- ===== CHAT DRAWER (customer side) ===== --}}
-    <div id="chat-drawer" class="chat-drawer" style="display:none;">
-        <div class="chat-drawer-header">
-            <div class="chat-drawer-header-info">
-                <div class="chat-drawer-avatar" id="chat-rider-avatar">R</div>
-                <div>
-                    <span class="chat-drawer-rider-name" id="chat-rider-name">Rider</span>
-                    <span class="chat-drawer-status">Online</span>
-                </div>
-            </div>
-            <button class="chat-drawer-close" onclick="closeChat()">✕</button>
-        </div>
-        <div id="chat-messages" class="chat-messages"></div>
-        <div class="chat-input-wrapper">
-            <input type="file" id="chat-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf" style="display:none;" onchange="sendChatAttachment()">
-            <button class="chat-attach-btn" onclick="document.getElementById('chat-file-input').click()" title="Lampirkan file">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path></svg>
-            </button>
-            <input id="chat-input" type="text" placeholder="Ketik pesan..." maxlength="1000" autocomplete="off">
-            <button id="chat-send-btn" onclick="sendChatMessage()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            </button>
-        </div>
-    </div>
-
-    {{-- ===== CUSTOMER LOGOUT ===== --}}
-    @auth
-        @if(auth()->user()->isCustomer())
-            <form method="POST" action="{{ route('customer.logout') }}" style="display:inline;">
-                @csrf
-                <button type="submit" class="floating-logout-btn" title="Keluar">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                    <span>Keluar</span>
-                </button>
-            </form>
-        @endif
-    @endauth
-
-    {{-- ===== ACCOUNT MODAL ===== --}}
-    @auth
-        @if(auth()->user()->isCustomer())
-        <div id="account-modal" class="chat-auth-modal" style="display:none;" x-data="{ activeTab: 'profil' }">
-            <div class="chat-auth-backdrop" onclick="closeAccountModal()"></div>
-            <div class="chat-auth-content account-modal-content" style="max-width: 500px; padding: 1.5rem; text-align: left;">
-                <button class="chat-auth-close" onclick="closeAccountModal()">✕</button>
-                <div class="chat-auth-brand" style="margin-bottom: 1rem;">
-                    <h3>Akun Saya</h3>
-                </div>
-
-                <!-- Tabs -->
-                <div class="account-tabs">
-                    <button class="account-tab" :class="{ 'active': activeTab === 'profil' }" @click="activeTab = 'profil'">Profil</button>
-                    <button class="account-tab" :class="{ 'active': activeTab === 'orders' }" @click="activeTab = 'orders'">Pemesanan</button>
-                    <button class="account-tab" :class="{ 'active': activeTab === 'chats' }" @click="activeTab = 'chats'">Chat</button>
-                </div>
-
-                <!-- Tab Content: Profil -->
-                <div x-show="activeTab === 'profil'" class="account-tab-content">
-                    <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-surface, #f8fafc); border-radius: 12px; text-align: left; border: 1px solid var(--border-color, #e2e8f0);">
-                        <p style="margin: 0; color: var(--text-secondary, #475569); font-size: 0.85rem;">Nama Lengkap</p>
-                        <p style="margin: 0 0 1rem 0; font-weight: 600; color: var(--text-primary, #1e293b);">{{ auth()->user()->name }}</p>
-                        <p style="margin: 0; color: var(--text-secondary, #475569); font-size: 0.85rem;">Nomor HP</p>
-                        <p style="margin: 0; font-weight: 600; color: var(--text-primary, #1e293b);">{{ auth()->user()->phone }}</p>
-                    </div>
-                    <div class="chat-auth-buttons" style="margin-top: 1.5rem;">
-                        <form method="POST" action="{{ route('customer.logout') }}" style="width: 100%;">
-                            @csrf
-                            <button type="submit" class="chat-auth-btn chat-auth-btn-secondary" style="width: 100%; border-color: #ef4444; color: #ef4444;">Keluar dari Akun</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Tab Content: Orders -->
-                <div x-show="activeTab === 'orders'" class="account-tab-content" style="display: none;">
-                    <div class="history-list">
-                        @forelse($myTransactions ?? [] as $transaction)
-                            <div class="history-card">
-                                <div class="history-header">
-                                    <span class="history-title">{{ $transaction->cart->name ?? 'Gerobak' }}</span>
-                                    <span class="history-date">{{ $transaction->created_at->format('d M Y, H:i') }}</span>
-                                </div>
-                                <div class="history-body">
-                                    <span class="history-price">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
-                                    <span class="history-status status-completed">Selesai</span>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="history-empty">Belum ada riwayat pemesanan.</div>
-                        @endforelse
-                    </div>
-                </div>
-
-                <!-- Tab Content: Chats -->
-                <div x-show="activeTab === 'chats'" class="account-tab-content" style="display: none;">
-                    <div class="history-list">
-                        @forelse($myConversations ?? [] as $conversation)
-                            <div class="history-card chat-history-card" onclick="openChatFromHistory({{ $conversation->cart_id }}, {{ $conversation->rider_id }}, '{{ addslashes($conversation->cart->name ?? 'Gerobak') }}')">
-                                <div class="history-header">
-                                    <span class="history-title">{{ $conversation->cart->name ?? 'Gerobak' }} (Rider: {{ $conversation->rider->name ?? '-' }})</span>
-                                    <span class="history-date">{{ $conversation->last_message_at ? $conversation->last_message_at->diffForHumans() : '' }}</span>
-                                </div>
-                                <div class="history-body">
-                                    <span class="history-subtitle">Ketuk untuk melanjutkan chat</span>
-                                    @if($conversation->unread_count > 0)
-                                        <span class="chat-unread-badge">{{ $conversation->unread_count }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                        @empty
-                            <div class="history-empty">Belum ada riwayat chat.</div>
-                        @endforelse
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-            function showAccountModal(e) {
-                if (e) e.preventDefault();
-                document.getElementById('account-modal').style.display = 'flex';
-            }
-            function closeAccountModal() {
-                document.getElementById('account-modal').style.display = 'none';
-            }
-        </script>
-        @endif
-    @endauth
 
     {{-- ===== FOOTER ===== --}}
     <footer class="footer">
-        <p>© {{ date('Y') }} Tether Brew.</p>
+        <p>Â© {{ date('Y') }} Tether Brew.</p>
     </footer>
 
 <script>

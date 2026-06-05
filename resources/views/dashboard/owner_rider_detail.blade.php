@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ],
         chart: {
             height: 350,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'Poppins, sans-serif',
             background: 'transparent',
             toolbar: { show: false },
             stacked: false
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chart: {
             type: 'donut',
             height: 350,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'Poppins, sans-serif',
             background: 'transparent',
         },
         theme: { mode: isLight ? 'light' : 'dark' },

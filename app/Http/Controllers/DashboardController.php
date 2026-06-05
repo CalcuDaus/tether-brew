@@ -19,8 +19,16 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
+        if ($user->isCustomer()) {
+            return redirect()->route('customer.dashboard');
+        }
+
         if ($user->isOwner()) {
             return $this->ownerDashboard();
+        }
+
+        if ($user->isBar()) {
+            return redirect()->route('admin.productions.index');
         }
 
         if ($user->isAdmin()) {
@@ -32,7 +40,8 @@ class DashboardController extends Controller
 
     private function ownerDashboard()
     {
-        $riders = User::where('role', 'rider')->get();
+        $branchId = activeBranchId();
+        $riders = User::where('role', 'rider')->forBranch($branchId)->get();
 
         // --- Stat Cards ---
         $totalRiders = $riders->count();
@@ -41,14 +50,14 @@ class DashboardController extends Controller
         $monthStart = now()->startOfMonth();
         $monthEnd = now()->endOfMonth();
 
-        $monthSales = RiderDailySale::whereBetween('date', [$monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d')])->get();
+        $monthSales = RiderDailySale::forBranch($branchId)->whereBetween('date', [$monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d')])->get();
         $monthRevenue = $monthSales->sum('total_gross_income');
 
-        $monthCups = RiderDailySaleItem::whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
-            $q->whereBetween('date', [$monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d')]);
+        $monthCups = RiderDailySaleItem::whereHas('sale', function ($q) use ($monthStart, $monthEnd, $branchId) {
+            $q->forBranch($branchId)->whereBetween('date', [$monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d')]);
         })->sum('stock_sold');
 
-        $todaySales = RiderDailySale::whereDate('date', today())->get();
+        $todaySales = RiderDailySale::forBranch($branchId)->whereDate('date', today())->get();
         $todayRevenue = $todaySales->sum('total_gross_income');
 
         // --- Chart 1: Rider Performance Bar (30 days) ---
@@ -58,6 +67,7 @@ class DashboardController extends Controller
         $riderPerformance = [];
         foreach ($riders as $rider) {
             $sales = RiderDailySale::where('rider_id', $rider->id)
+                ->forBranch($branchId)
                 ->whereBetween('date', [$thirtyDaysAgo, $today])
                 ->get();
 
@@ -83,6 +93,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(total_gross_income) as revenue'),
                 DB::raw('COUNT(*) as count')
             )
+            ->forBranch($branchId)
             ->where('date', '>=', now()->subDays(14)->format('Y-m-d'))
             ->groupBy('date')
             ->orderBy('date')
@@ -94,8 +105,8 @@ class DashboardController extends Controller
 
         // --- Chart 4: Top Products (30 days) ---
         $topProducts = RiderDailySaleItem::select('product_id', DB::raw('SUM(stock_sold) as total_sold'))
-            ->whereHas('sale', function ($q) use ($thirtyDaysAgo, $today) {
-                $q->whereBetween('date', [$thirtyDaysAgo, $today]);
+            ->whereHas('sale', function ($q) use ($thirtyDaysAgo, $today, $branchId) {
+                $q->forBranch($branchId)->whereBetween('date', [$thirtyDaysAgo, $today]);
             })
             ->groupBy('product_id')
             ->orderByDesc('total_sold')
@@ -105,11 +116,13 @@ class DashboardController extends Controller
 
         // --- Journal Summary ---
         $journalDebit = Journal::where('type', 'debit')
+            ->forBranch($branchId)
             ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
             ->sum('amount');
 
         $journalCredit = Journal::where('type', 'credit')
+            ->forBranch($branchId)
             ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
             ->sum('amount');
@@ -128,19 +141,23 @@ class DashboardController extends Controller
 
     private function adminDashboard()
     {
-        $totalCarts = Cart::count();
-        $activeCarts = Cart::where('status', 'active')->count();
-        $totalProducts = Product::count();
+        $branchId = activeBranchId();
+        $totalCarts = Cart::forBranch($branchId)->count();
+        $activeCarts = Cart::forBranch($branchId)->where('status', 'active')->count();
+        $totalProducts = Product::count(); // Products are global
 
-        $todayRevenue = Transaction::whereDate('created_at', today())->sum('total_price');
-        $weekRevenue = Transaction::where('created_at', '>=', now()->startOfWeek())->sum('total_price');
-        $monthRevenue = Transaction::where('created_at', '>=', now()->startOfMonth())->sum('total_price');
+        $branchCartIds = Cart::forBranch($branchId)->pluck('id');
 
-        $todayTransactions = Transaction::whereDate('created_at', today())->count();
+        $todayRevenue = Transaction::whereIn('cart_id', $branchCartIds)->whereDate('created_at', today())->sum('total_price');
+        $weekRevenue = Transaction::whereIn('cart_id', $branchCartIds)->where('created_at', '>=', now()->startOfWeek())->sum('total_price');
+        $monthRevenue = Transaction::whereIn('cart_id', $branchCartIds)->where('created_at', '>=', now()->startOfMonth())->sum('total_price');
+
+        $todayTransactions = Transaction::whereIn('cart_id', $branchCartIds)->whereDate('created_at', today())->count();
 
         // Top selling products
         $topProducts = TransactionItem::select('product_id', DB::raw('SUM(qty) as total_sold'), DB::raw('SUM(subtotal) as total_revenue'))
             ->with('product')
+            ->whereHas('transaction', fn($q) => $q->whereIn('cart_id', $branchCartIds))
             ->where('created_at', '>=', now()->subDays(30))
             ->groupBy('product_id')
             ->orderByDesc('total_sold')
@@ -153,6 +170,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(total_price) as revenue'),
                 DB::raw('COUNT(*) as count')
             )
+            ->whereIn('cart_id', $branchCartIds)
             ->where('created_at', '>=', now()->subDays(7))
             ->groupBy(DB::raw('DATE(created_at)'))
             ->orderBy('date')
@@ -160,6 +178,7 @@ class DashboardController extends Controller
 
         // Recent transactions
         $recentTransactions = Transaction::with(['cart', 'user', 'items.product'])
+            ->whereIn('cart_id', $branchCartIds)
             ->latest()
             ->limit(10)
             ->get();

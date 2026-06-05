@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $artikel->title }} – Tether Brew</title>
+    <title>{{ $artikel->title }} â€“ Tether Brew</title>
     <meta name="description" content="{{ $artikel->excerpt }}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/artikel/' . $artikel->slug) }}">
 
     {{-- Open Graph --}}
     <meta property="og:type" content="article">
-    <meta property="og:title" content="{{ $artikel->title }} – Tether Brew">
+    <meta property="og:title" content="{{ $artikel->title }} â€“ Tether Brew">
     <meta property="og:description" content="{{ $artikel->excerpt }}">
     <meta property="og:url" content="{{ url('/artikel/' . $artikel->slug) }}">
     <meta property="og:image" content="{{ $artikel->cover_image ? asset('storage/' . $artikel->cover_image) : asset('favicon.webp') }}">
@@ -18,7 +18,7 @@
     <link rel="icon" type="image/webp" href="{{ asset('tether-icon-head.webp') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/landing.css'])
     <script>
@@ -102,7 +102,7 @@
                 <div class="artikel-detail-meta">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <span>{{ $artikel->published_at ? $artikel->published_at->translatedFormat('d F Y') : $artikel->created_at->translatedFormat('d F Y') }}</span>
-                    <span class="artikel-detail-meta-dot">·</span>
+                    <span class="artikel-detail-meta-dot">Â·</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     <span>{{ $artikel->read_time }} menit baca</span>
                 </div>
@@ -131,7 +131,7 @@
 
     {{-- ===== FOOTER ===== --}}
     <footer class="footer">
-        <p>© {{ date('Y') }} Tether Brew.</p>
+        <p>Â© {{ date('Y') }} Tether Brew.</p>
     </footer>
 
 </body>

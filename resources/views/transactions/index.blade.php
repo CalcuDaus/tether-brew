@@ -33,7 +33,7 @@
                                 </td>
                                 <td class="text-gold-bold">Rp {{ number_format($tx->total_price, 0, ',', '.') }}</td>
                                 <td><span class="badge badge-{{ $tx->payment_method }}">{{ strtoupper($tx->payment_method) }}</span></td>
-                                <td class="text-md-muted">{{ $tx->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="text-md-muted">{{ $tx->created_at->format('d/m/Y H:i') }} WIB</td>
                             </tr>
                         @endforeach
                     </tbody>

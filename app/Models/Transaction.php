@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Transaction extends Model
 {
-    protected $fillable = ['cart_id', 'user_id', 'total_price', 'payment_method', 'notes'];
+    use BelongsToBranch;
+
+    protected $fillable = ['cart_id', 'user_id', 'total_price', 'payment_method', 'notes', 'branch_id'];
 
     protected function casts(): array
     {

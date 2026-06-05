@@ -80,6 +80,7 @@ class TransactionController extends Controller
                 'total_price' => $totalPrice,
                 'payment_method' => $validated['payment_method'],
                 'notes' => $validated['notes'] ?? null,
+                'branch_id' => activeBranchId(),
             ]);
 
             foreach ($itemsData as $itemData) {
@@ -112,7 +113,7 @@ class TransactionController extends Controller
     // Admin: all transactions
     public function index(Request $request)
     {
-        $query = Transaction::with(['cart', 'user', 'items.product'])->latest();
+        $query = Transaction::forBranch(activeBranchId())->with(['cart', 'user', 'items.product'])->latest();
 
         if ($search = $request->get('search')) {
             $query->where(function($q) use ($search) {

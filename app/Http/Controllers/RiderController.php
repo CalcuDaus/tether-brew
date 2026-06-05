@@ -12,7 +12,7 @@ class RiderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::where('role', 'rider')->with('carts')->latest();
+        $query = User::where('role', 'rider')->forBranch(activeBranchId())->with('carts')->latest();
 
         if ($search = $request->get('search')) {
             $query->where(function($q) use ($search) {
@@ -23,8 +23,10 @@ class RiderController extends Controller
         }
 
         $riders = $query->paginate(10)->withQueryString();
+        
+        $allCarts = Cart::forBranch(activeBranchId())->get();
 
-        return view('riders.index', compact('riders'));
+        return view('riders.index', compact('riders', 'allCarts'));
     }
 
     public function create()
@@ -47,6 +49,7 @@ class RiderController extends Controller
             'whatsapp' => $validated['whatsapp'] ?? null,
             'password' => Hash::make($validated['password']),
             'role' => 'rider',
+            'branch_id' => activeBranchId(),
         ]);
 
         return redirect()->route('riders.index')->with('success', 'Rider berhasil ditambahkan!');

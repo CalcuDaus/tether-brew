@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inventory extends Model
 {
-    protected $fillable = ['cart_id', 'product_id', 'stock'];
+    use BelongsToBranch;
+
+    protected $fillable = ['cart_id', 'product_id', 'stock', 'branch_id'];
 
     public function cart(): BelongsTo
     {

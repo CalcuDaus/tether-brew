@@ -11,9 +11,9 @@ class InventoryController extends Controller
 {
     public function index(Request $request)
     {
-        $carts = Cart::with(['inventories.product', 'user'])->get();
+        $carts = Cart::forBranch(activeBranchId())->with(['inventories.product', 'user'])->get();
         $products = Product::where('is_active', true)->get();
-        $selectedCart = $request->get('cart_id') ? Cart::with('inventories.product')->find($request->get('cart_id')) : null;
+        $selectedCart = $request->get('cart_id') ? Cart::forBranch(activeBranchId())->with('inventories.product')->find($request->get('cart_id')) : null;
 
         return view('inventories.index', compact('carts', 'products', 'selectedCart'));
     }

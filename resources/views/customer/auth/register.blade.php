@@ -7,7 +7,7 @@
     <link rel="icon" type="image/webp" href="{{ asset('tether-icon-head.webp') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/landing.css'])
     <style>
         :root {
@@ -19,7 +19,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: var(--auth-bg);
             color: #334155;
             padding: 1.5rem;

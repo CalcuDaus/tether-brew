@@ -313,7 +313,7 @@
                 if (msg.attachment_type === 'image') {
                     contentHtml += `<img src="/storage/${msg.attachment_path}" alt="attachment" style="max-width:100%; border-radius:8px; margin-bottom:0.3rem; cursor:pointer;" onclick="window.open('/storage/${msg.attachment_path}', '_blank')">`;
                 } else if (msg.attachment_type === 'pdf') {
-                    contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" style="color: ${isSent ? 'white' : 'var(--accent-green, #22c55e)'}; text-decoration: underline;">📄 Lihat PDF</a>`;
+                    contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" style="color: ${isSent ? 'white' : 'var(--accent-green, #22c55e)'}; text-decoration: underline;">ðŸ“„ Lihat PDF</a>`;
                 }
             }
             if (msg.body) {

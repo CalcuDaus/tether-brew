@@ -152,11 +152,11 @@
             <h3>{{ $conversation->customer->name ?? 'Customer' }}</h3>
             <p>{{ $conversation->customer->phone ?? '' }}</p>
         </div>
-        <div style="font-size: 0.8rem; opacity: 0.5;">↔</div>
+        <div style="font-size: 0.8rem; opacity: 0.5;">â†”</div>
         <div class="admin-chat-avatar rider">{{ strtoupper(substr($conversation->rider->name ?? '?', 0, 1)) }}</div>
         <div class="admin-chat-info">
             <h3>{{ $conversation->rider->name ?? 'Rider' }}</h3>
-            <p>Rider{{ $conversation->cart ? ' · ' . $conversation->cart->name : '' }}</p>
+            <p>Rider{{ $conversation->cart ? ' Â· ' . $conversation->cart->name : '' }}</p>
         </div>
     </div>
 
@@ -166,7 +166,7 @@
 
     <div class="admin-chat-readonly-bar">
         <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.15em; margin-right: 0.3rem;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Mode baca saja — Admin tidak dapat mengirim pesan.
+        Mode baca saja â€” Admin tidak dapat mengirim pesan.
     </div>
 </div>
 @endsection
@@ -209,7 +209,7 @@
                 if (msg.attachment_type === 'image') {
                     contentHtml += `<img src="/storage/${msg.attachment_path}" alt="attachment" style="max-width:100%; border-radius:8px; margin-bottom:0.3rem; cursor:pointer;" onclick="window.open('/storage/${msg.attachment_path}', '_blank')">`;
                 } else if (msg.attachment_type === 'pdf') {
-                    contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" style="color: ${isRider ? 'white' : 'var(--accent)'}; text-decoration: underline;">📄 Lihat PDF</a>`;
+                    contentHtml += `<a href="/storage/${msg.attachment_path}" target="_blank" style="color: ${isRider ? 'white' : 'var(--accent)'}; text-decoration: underline;">ðŸ“„ Lihat PDF</a>`;
                 }
             }
             if (msg.body) {

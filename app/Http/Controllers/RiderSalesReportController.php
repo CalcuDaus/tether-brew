@@ -12,7 +12,7 @@ class RiderSalesReportController extends Controller
 {
     public function index(Request $request)
     {
-        $riders = User::where('role', 'rider')->get();
+        $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
         $products = Product::orderBy('id', 'asc')->get();
         $selectedRiderId = $request->rider_id;
 
@@ -42,7 +42,7 @@ class RiderSalesReportController extends Controller
             }
 
             // Fetch daily sales with items for the rider in the date range
-            $sales = RiderDailySale::with(['items.product'])
+            $sales = RiderDailySale::forBranch(activeBranchId())->with(['items.product'])
                 ->where('rider_id', $selectedRiderId)
                 ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
                 ->orderBy('date', 'asc')

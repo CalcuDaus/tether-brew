@@ -169,7 +169,7 @@
                             {{-- Print Title for Report --}}
                             <div class="print-title" style="display: none;">
                                 <h2>Laporan Performa Rider</h2>
-                                <p>Dicetak pada: {{ now()->format('d/m/Y H:i') }}</p>
+                                <p>Dicetak pada: {{ now()->format('d/m/Y H:i') }} WIB</p>
                             </div>
 
                             @if(count($riderPerformance) > 0)
@@ -272,7 +272,7 @@
                         chart: {
                             type: 'bar',
                             height: 350,
-                            fontFamily: 'Inter, sans-serif',
+                            fontFamily: 'Poppins, sans-serif',
                             background: 'transparent',
                             toolbar: { show: false }
                         },
@@ -315,7 +315,7 @@
                             theme: 'dark',
                             y: {
                                 formatter: function (val, { dataPointIndex }) {
-                                    return val + ' cup — Rp ' + riderData[dataPointIndex].revenue.toLocaleString('id-ID');
+                                    return val + ' cup â€” Rp ' + riderData[dataPointIndex].revenue.toLocaleString('id-ID');
                                 }
                             }
                         },
@@ -332,7 +332,7 @@
                         chart: {
                             type: 'donut',
                             height: 70,
-                            fontFamily: 'Inter, sans-serif',
+                            fontFamily: 'Poppins, sans-serif',
                             background: 'transparent',
                             sparkline: { enabled: true }
                         },
@@ -373,7 +373,7 @@
                             chart: {
                                 type: 'area',
                                 height: 320,
-                                fontFamily: 'Inter, sans-serif',
+                                fontFamily: 'Poppins, sans-serif',
                                 background: 'transparent',
                                 toolbar: { show: false },
                                 sparkline: { enabled: false }
@@ -441,7 +441,7 @@
                             chart: {
                                 type: 'bar',
                                 height: Math.max(250, productData.length * 50),
-                                fontFamily: 'Inter, sans-serif',
+                                fontFamily: 'Poppins, sans-serif',
                                 background: 'transparent',
                                 toolbar: { show: false }
                             },

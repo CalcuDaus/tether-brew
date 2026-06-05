@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artikel – Tether Brew | Cerita & Tips Kopi Keliling Medan</title>
+    <title>Artikel â€“ Tether Brew | Cerita & Tips Kopi Keliling Medan</title>
     <meta name="description" content="Baca artikel terbaru dari Tether Brew tentang dunia kopi, tips menyeduh, dan cerita di balik kopi keliling Medan.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/artikel') }}">
     <link rel="icon" type="image/webp" href="{{ asset('tether-icon-head.webp') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/landing.css'])
     <script>
@@ -126,7 +126,7 @@
 
     {{-- ===== FOOTER ===== --}}
     <footer class="footer">
-        <p>© {{ date('Y') }} Tether Brew.</p>
+        <p>Â© {{ date('Y') }} Tether Brew.</p>
     </footer>
 
 </body>

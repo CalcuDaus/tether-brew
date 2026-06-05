@@ -13,7 +13,7 @@
                     </svg> Menu - {{ $cart->name }}
                 </h3>
                 <div class="form-group m-0-w-200">
-                    <input type="text" class="form-input p-2-3-text-md" placeholder="🔍 Cari menu..." x-model="search">
+                    <input type="text" class="form-input p-2-3-text-md" placeholder="ðŸ” Cari menu..." x-model="search">
                 </div>
             </div>
             <div class="card-body p-3-custom">
@@ -76,10 +76,10 @@
                             <div x-text="formatRupiah(item.price)" class="text-sm-muted text-gold-semi"></div>
                         </div>
                         <div class="flex-start-gap">
-                            <button @click="decreaseQty(index)" class="btn-qty">−</button>
+                            <button @click="decreaseQty(index)" class="btn-qty">âˆ’</button>
                             <span x-text="item.qty" class="qty-val"></span>
                             <button @click="increaseQty(index)" class="btn-qty">+</button>
-                            <button @click="removeItem(index)" class="btn-qty-delete">✕</button>
+                            <button @click="removeItem(index)" class="btn-qty-delete">âœ•</button>
                         </div>
                         <div x-text="formatRupiah(item.price * item.qty)" class="qty-total"></div>
                     </div>

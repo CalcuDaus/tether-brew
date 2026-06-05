@@ -27,6 +27,42 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* SweetAlert Custom UI to match Tether Brew theme */
+        .swal2-popup { border-radius: 12px !important; font-family: 'Inter', sans-serif !important; }
+        .light-theme .swal2-popup { background: var(--bg-card) !important; color: var(--text-primary) !important; }
+        .swal2-title { font-size: 1.25rem !important; }
+        .swal2-styled.swal2-confirm { background-color: var(--accent) !important; border-radius: 8px !important; }
+        .swal2-styled.swal2-cancel { background-color: rgba(239, 68, 68, 0.1) !important; color: #ef4444 !important; border-radius: 8px !important; }
+    </style>
+    <script>
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (form.hasAttribute('data-confirm')) {
+                e.preventDefault();
+                const message = form.getAttribute('data-confirm');
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Lanjutkan',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-danger'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.removeAttribute('data-confirm');
+                        form.submit();
+                    }
+                });
+            }
+        });
+    </script>
     @stack('styles')
     <script>
         (function() {
@@ -173,12 +209,32 @@
                             <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg></span>
                             Laporan Minus
                         </a>
-                        <a href="{{ route('admin.payroll.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.payroll.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.index', 'admin.payroll.show') ? 'active' : '' }}">
                             <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></span>
                             Slip Gaji Rider
                         </a>
+                        <a href="{{ route('admin.payroll.history') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.history') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+                            Riwayat Slip Gaji
+                        </a>
                     </div>
                 </div>
+
+                <a href="{{ route('branches.index') }}" class="nav-link {{ request()->routeIs('branches.*') ? 'active' : '' }}">
+                    <span class="nav-link-icon">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m2 7 4.38-2.92a2 2 0 0 1 2.22 0L13 7"/><path d="M2 7v14"/><path d="M22 7v14"/><path d="M22 21H2"/><path d="M13 7v14"/><path d="M7 21v-5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5"/>
+                        </svg>
+                    </span> Cabang
+                </a>
+
+                <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                    <span class="nav-link-icon">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span> Pengaturan
+                </a>
 
                 <a href="{{ route('accounts.index') }}" class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
                     <span class="nav-link-icon">
@@ -188,11 +244,52 @@
                     </span> Kelola Akun
                 </a>
 
-            @elseif(auth()->user()->isAdmin())
-                {{-- ====== ADMIN SIDEBAR (unchanged) ====== --}}
+            @elseif(auth()->user()->isBar())
+                {{-- ====== BAR SIDEBAR (Limited Menu) ====== --}}
                 @php
-                    $isOperasionalActive = request()->routeIs(['dashboard', 'admin.rider_sales.*', 'admin.journals.*', 'admin.rider_finances.*', 'admin.rider_minus.*', 'admin.payroll.*', 'admin.rider_sales_report.*', 'admin.chats.*']);
-                    $isManajemenActive = request()->routeIs(['carts.*', 'riders.*', 'products.*', 'inventories.*', 'transactions.*', 'admin.artikel.*', 'admin.journal_categories.*']);
+                    $isBarOperasionalActive = request()->routeIs(['admin.rider_sales.*', 'admin.productions.*', 'admin.spoiled_products.*']);
+                @endphp
+
+                <div class="nav-section" x-data="{ open: true }">
+                    <div class="nav-link dropdown-toggle" @click="open = !open" :class="{ 'active': {{ $isBarOperasionalActive ? 'true' : 'false' }} }">
+                        <span class="nav-link-icon">
+                            <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                        </span>
+                        <span>Operasional</span>
+                        <svg class="dropdown-arrow" :class="{ 'rotated': open }" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    
+                    <div x-show="open" x-collapse x-transition.opacity.duration.300ms class="nav-submenu">
+                        <a href="{{ route('admin.productions.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.productions.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </span>
+                            Stok Produksi
+                        </a>
+                        <a href="{{ route('admin.spoiled_products.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.spoiled_products.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            </span>
+                            Produk Basi
+                        </a>
+                        <a href="{{ route('admin.rider_sales.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </span>
+                            Input Penjualan
+                        </a>
+                    </div>
+                </div>
+
+            @elseif(auth()->user()->isAdmin())
+                {{-- ====== ADMIN SIDEBAR ====== --}}
+                @php
+                    $isOperasionalActive = request()->routeIs(['dashboard', 'admin.rider_sales.*', 'admin.productions.*', 'admin.spoiled_products.*', 'admin.journals.*', 'admin.rider_finances.*', 'admin.office_kasbon.*', 'admin.rider_minus.*', 'admin.payroll.*', 'admin.rider_sales_report.*', 'admin.chats.*', 'admin.settings.*']);
+                    $isManajemenActive = request()->routeIs(['carts.*', 'riders.*', 'bars.*', 'products.*', 'inventories.*', 'transactions.*', 'admin.artikel.*', 'admin.journal_categories.*']);
                 @endphp
 
                 <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -217,6 +314,18 @@
                     </div>
                     
                     <div x-show="open" x-collapse x-transition.opacity.duration.300ms class="nav-submenu">
+                        <a href="{{ route('admin.productions.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.productions.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </span>
+                            Stok Produksi
+                        </a>
+                        <a href="{{ route('admin.spoiled_products.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.spoiled_products.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            </span>
+                            Produk Basi
+                        </a>
                         <a href="{{ route('admin.rider_sales.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -229,11 +338,23 @@
                             </span>
                             Jurnal Umum
                         </a>
-                        <a href="{{ route('admin.rider_finances.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_finances.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.rider_finances.kasbon') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_finances.kasbon') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            </span>
+                            Kasbon Rider
+                        </a>
+                        <a href="{{ route('admin.office_kasbon.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.office_kasbon.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </span>
+                            Kasbon Office
+                        </a>
+                        <a href="{{ route('admin.rider_finances.uang_makan') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_finances.uang_makan') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                             </span>
-                            Kasbon & Uang Makan
+                            Uang Makan Rider
                         </a>
                         <a href="{{ route('admin.rider_minus.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_minus.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
@@ -241,11 +362,17 @@
                             </span>
                             Laporan Minus
                         </a>
-                        <a href="{{ route('admin.payroll.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.payroll.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.index', 'admin.payroll.show') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><line x1="7" x2="7" y1="15" y2="15"/><line x1="12" x2="12" y1="15" y2="15"/></svg>
                             </span>
                             Slip Gaji Rider
+                        </a>
+                        <a href="{{ route('admin.payroll.history') }}" class="nav-submenu-item {{ request()->routeIs('admin.payroll.history') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            </span>
+                            Riwayat Slip Gaji
                         </a>
                         <a href="{{ route('admin.rider_sales_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales_report.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
@@ -258,6 +385,14 @@
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                             </span>
                             Monitoring Chat
+                        </a>
+                        <a href="{{ route('admin.settings.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </span>
+                            Pengaturan
                         </a>
                     </div>
                 </div>
@@ -287,6 +422,12 @@
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             </span>
                             Rider
+                        </a>
+                        <a href="{{ route('bars.index') }}" class="nav-submenu-item {{ request()->routeIs('bars.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" x2="20" y1="8" y2="14"/><line x1="23" x2="17" y1="11" y2="11"/></svg>
+                            </span>
+                            Bar
                         </a>
                         <a href="{{ route('products.index') }}" class="nav-submenu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
@@ -349,6 +490,7 @@
                 </div>
             @endif
 
+            @if(!auth()->user()->isBar())
             <div class="nav-section">
                 <div class="nav-section-title">Lainnya</div>
                 <a href="{{ route('landing') }}" class="nav-link">
@@ -359,6 +501,7 @@
                     </span> Landing Page
                 </a>
             </div>
+            @endif
         </nav>
 
         <div class="sidebar-footer">
@@ -388,6 +531,28 @@
                 <h1 class="topbar-title">@yield('title', 'Dashboard')</h1>
             </div>
             <div class="topbar-actions">
+                @if(auth()->check() && auth()->user()->isOwner())
+                    <div x-data="{ open: false }" style="position: relative;">
+                        <button @click="open = !open" @click.away="open = false" class="btn btn-secondary btn-sm flex-center" style="gap: 5px; height: 40px; padding: 0 15px; border-radius: 8px; font-weight: 600;">
+                            <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.38-2.92a2 2 0 0 1 2.22 0L13 7"/><path d="M2 7v14"/><path d="M22 7v14"/><path d="M22 21H2"/><path d="M13 7v14"/><path d="M7 21v-5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5"/></svg>
+                            {{ \App\Models\Branch::find(activeBranchId())?->name ?? 'Pilih Cabang' }}
+                            <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div x-show="open" style="position: absolute; right: 0; top: calc(100% + 8px); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; min-width: 200px; z-index: 50; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: none;" :style="{ display: open ? 'block' : 'none' }">
+                            @foreach(\App\Models\Branch::where('is_active', true)->get() as $b)
+                                <form action="{{ route('branches.switch', $b->id) }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    <button type="submit" style="width: 100%; border: none; background: transparent; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; color: var(--text-primary); text-decoration: none; border-bottom: 1px solid var(--border-color); font-size: 14px; cursor: pointer; text-align: left; {{ activeBranchId() == $b->id ? 'background: rgba(59, 130, 246, 0.1); font-weight: 600;' : '' }}">
+                                        {{ $b->name }}
+                                        @if(activeBranchId() == $b->id)
+                                            <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        @endif
+                                    </button>
+                                </form>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
                 @if(auth()->check() && auth()->user()->isRider())
                     <button id="pwa-install-btn-rider" style="display:flex;" onclick="installRiderPWA()"
                         class="btn btn-secondary btn-sm flex-center" style="width: 40px; height: 40px; padding: 0; border-radius: 50%;"
@@ -416,14 +581,41 @@
         </header>
 
         <div class="page-content">
-            @if(session('success'))
-                <div class="alert alert-success"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.25em;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> {{ session('success') }}</div>
-            @endif
+            @if(session('success') || session('error') || $errors->any())
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
 
-            @if($errors->any())
-                <div class="alert alert-error">
-                    ❌ {{ $errors->first() }}
-                </div>
+                        @if(session('success'))
+                            Toast.fire({
+                                icon: 'success',
+                                title: {!! json_encode(session('success')) !!}
+                            });
+                        @endif
+
+                        @if(session('error'))
+                            Toast.fire({
+                                icon: 'error',
+                                title: {!! json_encode(session('error')) !!}
+                            });
+                        @elseif($errors->any())
+                            Toast.fire({
+                                icon: 'error',
+                                title: {!! json_encode($errors->first()) !!}
+                            });
+                        @endif
+                    });
+                </script>
             @endif
 
             @yield('content')
@@ -437,6 +629,7 @@
             tableContainers.forEach(container => {
                 const table = container.querySelector('table');
                 if (!table) return;
+                if (container.classList.contains('no-search')) return;
 
                 // Membungkus input search dengan form untuk pencarian server-side
                 const searchForm = document.createElement('form');
@@ -460,6 +653,10 @@
                     searchForm.appendChild(hiddenInput);
                 });
 
+                // Membuat wrapper untuk input + button search
+                const searchWrapper = document.createElement('div');
+                searchWrapper.style.cssText = 'position: relative; display: flex; align-items: center; max-width: 320px; width: 100%;';
+
                 // Membuat element input
                 const searchInput = document.createElement('input');
                 searchInput.setAttribute('type', 'text');
@@ -471,11 +668,20 @@
                     searchInput.value = currentSearch;
                 }
 
-                searchInput.setAttribute('placeholder', 'Ketik & Tekan Enter untuk mencari...');
-                searchInput.className = 'form-input'; 
-                searchInput.style.maxWidth = '300px';
+                searchInput.setAttribute('placeholder', 'Ketik & tekan Enter...');
+                searchInput.className = 'form-input search-input-global'; 
+                searchInput.style.cssText = 'width: 100%; padding-right: 3rem; border-radius: 12px; margin: 0;';
 
-                searchForm.appendChild(searchInput);
+                // Membuat tombol search icon yang bisa diklik
+                const searchBtn = document.createElement('button');
+                searchBtn.type = 'submit';
+                searchBtn.className = 'search-btn-icon';
+                searchBtn.setAttribute('title', 'Cari');
+                searchBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+
+                searchWrapper.appendChild(searchInput);
+                searchWrapper.appendChild(searchBtn);
+                searchForm.appendChild(searchWrapper);
                 
                 // Menyisipkan form sebelum elemen container tabel
                 container.parentNode.insertBefore(searchForm, container);

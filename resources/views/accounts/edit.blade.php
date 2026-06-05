@@ -47,6 +47,18 @@
                 @error('role') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
+            <div class="form-group" id="branch_group">
+                <label class="form-label" for="branch_id">Pilih Cabang (Khusus Admin & Rider)</label>
+                <select id="branch_id" name="branch_id" class="form-input">
+                    <option value="">— Pilih Cabang —</option>
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ old('branch_id', $account->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+                <div class="text-xs-muted mt-1" style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">Catatan: Owner tidak di-scope, Admin & Rider akan di-scope ke cabang yang dipilih.</div>
+                @error('branch_id') <div class="form-error">{{ $message }}</div> @enderror
+            </div>
+
             <div class="form-group">
                 <div class="flex-gap-2" style="justify-content:space-between;">
                     <label class="form-label" for="password">Ganti Password</label>

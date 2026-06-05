@@ -13,6 +13,11 @@ class AccountController extends Controller
     {
         $query = User::latest();
         
+        // Scope accounts if the user is Admin (Riders can't access this anyway)
+        if (auth()->user()->isAdmin()) {
+            $query->forBranch(activeBranchId());
+        }
+
         if ($search = $request->get('search')) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -22,12 +27,14 @@ class AccountController extends Controller
         }
 
         $accounts = $query->paginate(10)->withQueryString();
-        return view('accounts.index', compact('accounts'));
+        $branches = \App\Models\Branch::active()->get();
+        return view('accounts.index', compact('accounts', 'branches'));
     }
 
     public function create()
     {
-        return view('accounts.create');
+        $branches = \App\Models\Branch::active()->get();
+        return view('accounts.create', compact('branches'));
     }
 
     public function store(Request $request)
@@ -37,6 +44,7 @@ class AccountController extends Controller
             'email' => 'required|email|unique:users,email',
             'whatsapp' => 'nullable|string|max:20',
             'role' => ['required', Rule::in(['owner', 'admin', 'rider'])],
+            'branch_id' => 'nullable|exists:branches,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -45,6 +53,7 @@ class AccountController extends Controller
             'email' => $validated['email'],
             'whatsapp' => $validated['whatsapp'] ?? null,
             'role' => $validated['role'],
+            'branch_id' => $validated['role'] === 'owner' ? null : ($validated['branch_id'] ?? null),
             'password' => Hash::make($validated['password']),
         ]);
 
@@ -53,7 +62,8 @@ class AccountController extends Controller
 
     public function edit(User $account)
     {
-        return view('accounts.edit', compact('account'));
+        $branches = \App\Models\Branch::active()->get();
+        return view('accounts.edit', compact('account', 'branches'));
     }
 
     public function update(Request $request, User $account)
@@ -63,6 +73,7 @@ class AccountController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($account->id)],
             'whatsapp' => 'nullable|string|max:20',
             'role' => ['required', Rule::in(['owner', 'admin', 'rider'])],
+            'branch_id' => 'nullable|exists:branches,id',
             'password' => 'nullable|string|min:6|confirmed',
         ]);
 
@@ -78,6 +89,7 @@ class AccountController extends Controller
             'email' => $validated['email'],
             'whatsapp' => $validated['whatsapp'] ?? null,
             'role' => $validated['role'],
+            'branch_id' => $validated['role'] === 'owner' ? null : ($validated['branch_id'] ?? null),
         ]);
 
         if (!empty($validated['password'])) {

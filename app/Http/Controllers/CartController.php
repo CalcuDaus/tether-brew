@@ -11,7 +11,7 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cart::with(['user', 'location'])->latest();
+        $query = Cart::forBranch(activeBranchId())->with(['user', 'location'])->latest();
         
         if ($search = $request->get('search')) {
             $query->where(function($q) use ($search) {
@@ -24,12 +24,13 @@ class CartController extends Controller
         }
         
         $carts = $query->paginate(10)->withQueryString();
-        return view('carts.index', compact('carts'));
+        $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
+        return view('carts.index', compact('carts', 'riders'));
     }
 
     public function create()
     {
-        $riders = User::where('role', 'rider')->get();
+        $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
         return view('carts.create', compact('riders'));
     }
 
@@ -49,6 +50,7 @@ class CartController extends Controller
             'description' => $validated['description'] ?? null,
             'user_id' => $validated['user_id'] ?? null,
             'status' => $validated['status'],
+            'branch_id' => activeBranchId(),
         ]);
 
         if (!empty($validated['latitude']) && !empty($validated['longitude'])) {
@@ -65,7 +67,7 @@ class CartController extends Controller
     public function edit(Cart $cart)
     {
         $cart->load('location');
-        $riders = User::where('role', 'rider')->get();
+        $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
         return view('carts.edit', compact('cart', 'riders'));
     }
 
@@ -140,7 +142,7 @@ class CartController extends Controller
     // Admin/Owner: Get all carts with locations for tracking map
     public function mapData()
     {
-        $carts = Cart::with(['location', 'user'])
+        $carts = Cart::forBranch(activeBranchId())->with(['location', 'user'])
             ->where('status', 'active')
             ->get()
             ->filter(fn($cart) => $cart->location !== null)

@@ -69,8 +69,15 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        $product->delete();
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
+        try {
+            $product->delete();
+            return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return redirect()->route('products.index')->with('error', 'Produk tidak dapat dihapus karena sudah memiliki riwayat transaksi/penjualan. Nonaktifkan status produk jika sudah tidak dijual.');
+            }
+            throw $e;
+        }
     }
 }
 

@@ -10,7 +10,7 @@ class JournalController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Journal::with(['creator', 'category']);
+        $query = Journal::forBranch(activeBranchId())->with(['creator', 'category']);
 
         if ($request->filled('category_id')) {
             $query->where('journal_category_id', $request->category_id);
@@ -24,9 +24,8 @@ class JournalController extends Controller
             $query->whereDate('date', '<=', $request->end_date);
         }
 
-        $journals = $query->orderBy('date', 'desc')->get();
+        $journals = $query->orderBy('id', 'desc')->get();
         $categories = \App\Models\JournalCategory::orderBy('name', 'asc')->get();
-        
         $totalDebit = $journals->where('type', 'debit')->sum('amount');
         $totalCredit = $journals->where('type', 'credit')->sum('amount');
         $balance = $totalDebit - $totalCredit;
@@ -57,6 +56,7 @@ class JournalController extends Controller
             'amount' => $request->amount,
             'journal_category_id' => $request->journal_category_id,
             'created_by' => auth()->id(),
+            'branch_id' => activeBranchId(),
         ]);
 
         return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil ditambahkan.');
