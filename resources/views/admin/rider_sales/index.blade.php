@@ -273,6 +273,9 @@
                                                         {!! $icon !!}
                                                         {{ $btnText }}
                                                     </a>
+                                                    <button type="button" onclick="confirmDeleteSale({{ $sale->id }})" class="btn btn-outline-danger btn-sm flex-center action-btn-anim" title="Hapus">
+                                                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                                    </button>
                                                 @endif
                                             </div>
                                         </td>
@@ -393,6 +396,80 @@
         });
     </script>
     @endif
+
+    <script>
+        function confirmDeleteSale(saleId) {
+            Swal.fire({
+                title: 'Hapus Input Penjualan?',
+                text: "Yakin ingin menghapus penjualan ini? Stok yang berkurang akan dikembalikan dan data penjualan akan hilang permanen.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Mohon tunggu',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    fetch(`/rider-sales/${saleId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json().then(data => ({status: response.status, body: data})))
+                    .then(res => {
+                        if (res.status === 200 && res.body.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Terhapus!',
+                                text: res.body.message,
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            // Show detailed error
+                            Swal.fire({
+                                icon: 'error',
+                                title: res.body.message || 'Gagal Menghapus',
+                                html: res.body.detail ? `<div style="color: #991b1b; font-size: 0.95em; text-align: left; background: #fee2e2; padding: 12px; border-radius: 8px; border: 1px solid #f87171; margin-top: 10px;">${res.body.detail}</div>` : 'Terjadi kesalahan validasi sistem.',
+                                customClass: {
+                                    confirmButton: 'btn btn-danger'
+                                }
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Terjadi kesalahan sistem saat menghubungi server.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    });
+                }
+            })
+        }
+    </script>
 @endpush
 
 @push('styles')

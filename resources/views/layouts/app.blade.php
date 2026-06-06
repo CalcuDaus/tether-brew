@@ -160,7 +160,7 @@
     </style>
     @stack('styles')
 </head>
-<body x-data="{ sidebarOpen: false, darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }" class="{{ auth()->check() && auth()->user()->isRider() ? 'is-rider' : '' }}">
+<body x-data="{ sidebarOpen: false, desktopSidebarCollapsed: (localStorage.getItem('desktopSidebarCollapsed') === 'true'), darkMode: (localStorage.getItem('theme') || 'light') !== 'light' }" class="{{ auth()->check() && auth()->user()->isRider() ? 'is-rider' : '' }}" :class="{ 'sidebar-collapsed': desktopSidebarCollapsed }">
 
     {{-- Sidebar --}}
     <aside class="sidebar" :class="{ 'open': sidebarOpen }" @click.away="sidebarOpen = false">
@@ -528,6 +528,11 @@
         <header class="topbar">
             <div class="flex-gap-3">
                 <button class="mobile-menu-btn" @click.stop="sidebarOpen = !sidebarOpen">☰</button>
+                @if(auth()->check() && !auth()->user()->isRider())
+                <button class="desktop-menu-btn" @click="desktopSidebarCollapsed = !desktopSidebarCollapsed; localStorage.setItem('desktopSidebarCollapsed', desktopSidebarCollapsed)" title="Toggle Sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                @endif
                 <h1 class="topbar-title">@yield('title', 'Dashboard')</h1>
             </div>
             <div class="topbar-actions">

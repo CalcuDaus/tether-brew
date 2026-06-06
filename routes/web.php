@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/rider-sales', [RiderDailySaleController::class, 'store'])->name('admin.rider_sales.store');
         Route::get('/rider-sales/{riderSale}/edit', [RiderDailySaleController::class, 'edit'])->name('admin.rider_sales.edit');
         Route::put('/rider-sales/{riderSale}', [RiderDailySaleController::class, 'update'])->name('admin.rider_sales.update');
+        Route::delete('/rider-sales/{riderSale}', [RiderDailySaleController::class, 'destroy'])->name('admin.rider_sales.destroy');
         Route::post('/rider-sales/confirm-journal', [RiderDailySaleController::class, 'confirmJournal'])->name('admin.rider_sales.confirmJournal');
     });
 

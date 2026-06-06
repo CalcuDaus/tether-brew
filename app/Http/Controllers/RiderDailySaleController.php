@@ -392,4 +392,61 @@ class RiderDailySaleController extends Controller
 
         return redirect()->route('admin.rider_sales.index')->with('success', 'Data penjualan harian berhasil diupdate.');
     }
+
+    public function destroy(RiderDailySale $riderSale)
+    {
+        // 1. Cek batas waktu maksimal 2 hari
+        if (now()->diffInDays($riderSale->created_at) > 2) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data ditolak.',
+                'detail' => 'Penjualan yang sudah lebih dari 2 hari sejak diinput tidak dapat dihapus.'
+            ], 403);
+        }
+
+        // 2. Cek apakah Jurnal Umum hari tersebut sudah terkonfirmasi
+        $journalConfirmed = \App\Models\RiderSalesJournalConfirmation::where('branch_id', $riderSale->branch_id)
+            ->whereDate('date', $riderSale->date)
+            ->exists();
+            
+        if ($journalConfirmed) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Penghapusan ditolak karena data ini sudah terekap ke Jurnal Umum.',
+                'detail' => 'Silakan minta Admin untuk membatalkan (rollback) konfirmasi Jurnal Umum di tanggal tersebut terlebih dahulu.'
+            ], 403);
+        }
+
+        // 3. Cek apakah minus sudah terbayar
+        if ($riderSale->minus_paid > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Penghapusan ditolak karena sisa minus sudah terpotong di Slip Gaji.',
+                'detail' => 'Silakan minta Admin membatalkan Slip Gaji terkait terlebih dahulu sebelum menghapus penjualan ini.'
+            ], 403);
+        }
+
+        // 4. Role validation untuk Bar
+        if (auth()->user()->role === 'bar') {
+            $isVerifiedByAdmin = $riderSale->admin && in_array($riderSale->admin->role, ['admin', 'owner']);
+            if ($isVerifiedByAdmin) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki akses.',
+                    'detail' => 'Data penjualan ini sudah diverifikasi oleh Admin. Hanya Admin yang dapat memanipulasi data yang sudah diverifikasi.'
+                ], 403);
+            }
+        }
+
+        // Lolos validasi, hapus data
+        \Illuminate\Support\Facades\DB::transaction(function () use ($riderSale) {
+            $riderSale->items()->delete();
+            $riderSale->delete();
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data penjualan berhasil dihapus.'
+        ]);
+    }
 }
