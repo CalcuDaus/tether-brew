@@ -48,6 +48,7 @@ class RiderDailySaleController extends Controller
 
             $summary = [
                 'total_cash' => $summaryQuery->sum('cash_amount'),
+                'total_actual_setor' => $summaryQuery->sum('actual_setor'),
                 'total_qris' => $summaryQuery->sum('qris_amount'),
                 'total_minus' => $summaryQuery->sum('minus_amount'),
                 'total_omset' => $summaryQuery->sum('total_gross_income'),

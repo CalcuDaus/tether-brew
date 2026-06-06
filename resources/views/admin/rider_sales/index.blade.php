@@ -97,8 +97,8 @@
                             <div class="stat-icon-bg" style="position: absolute; top: -25px; left: -20px; width: 130px; height: 130px; opacity: 0.15; color: #22c55e; z-index: -1;">
                                 <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
                             </div>
-                            <div class="stat-value" style="position: relative; z-index: 2; color: #22c55e;">Rp {{ number_format($summary['total_cash'], 0, ',', '.') }}</div>
-                            <div class="stat-label" style="position: relative; z-index: 2;">Total Cash</div>
+                            <div class="stat-value" style="position: relative; z-index: 2; color: #22c55e;">Rp {{ number_format($summary['total_actual_setor'], 0, ',', '.') }}</div>
+                            <div class="stat-label" style="position: relative; z-index: 2;">Setoran Cash (Fisik)</div>
                         </div>
 
                         {{-- Total QRIS --}}
@@ -207,7 +207,8 @@
                                     <th>Tanggal</th>
                                     <th>Rider</th>
                                     @if(auth()->user()->role === 'admin')
-                                    <th style="text-align: right;">CASH</th>
+                                    <th style="text-align: right;">CASH (Target)</th>
+                                    <th style="text-align: right;">CASH (Setor Fisik)</th>
                                     <th style="text-align: right;">QRIS</th>
                                     <th style="text-align: right;">Total Setoran</th>
                                     <th style="text-align: right;">TOTAL</th>
@@ -223,7 +224,8 @@
                                         <td>{{ $sale->date->format('d M Y') }}</td>
                                         <td style="font-weight: 600;">{{ $sale->rider->name }}</td>
                                         @if(auth()->user()->role === 'admin')
-                                        <td style="text-align: right;">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+                                        <td style="text-align: right; color: var(--text-muted);">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+                                        <td style="text-align: right; font-weight: 600; color: #22c55e;">Rp {{ number_format($sale->actual_setor, 0, ',', '.') }}</td>
                                         <td style="text-align: right;">Rp {{ number_format($sale->qris_amount, 0, ',', '.') }}</td>
                                         <td style="text-align: right; font-weight: 600; color: #3b82f6;">Rp
                                             {{ number_format($sale->total_setoran, 0, ',', '.') }}
@@ -322,8 +324,8 @@
                                 </p>
                                 <div style="background: rgba(0, 0, 0, 0.05); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
                                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;">
-                                        <span style="color: var(--text-muted); font-weight: 500;">Total Cash:</span>
-                                        <span style="color: #4ade80; font-weight: 700;">Rp {{ number_format($summary['total_cash'], 0, ',', '.') }}</span>
+                                        <span style="color: var(--text-muted); font-weight: 500;">Setoran Cash (Masuk Jurnal):</span>
+                                        <span style="color: #4ade80; font-weight: 700;">Rp {{ number_format($summary['total_actual_setor'], 0, ',', '.') }}</span>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;">
                                         <span style="color: var(--text-muted); font-weight: 500;">Total QRIS:</span>
