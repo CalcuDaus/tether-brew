@@ -2,8 +2,28 @@
 
 @section('title', 'Laporan Minus Penjualan')
 
+@section('actions')
+    <div class="print-hide" style="display: flex; gap: 8px;">
+        <button onclick="window.print()" class="btn btn-secondary btn-sm flex-center" style="gap: 0.4rem;">
+            <svg width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg> Print
+        </button>
+    </div>
+@endsection
+
 @section('content')
-<div class="stats-grid print-hide mb-4">
+<div id="print-area">
+    <div class="print-title print-only" style="display: none;">
+        <img src="{{ asset('tether-icon-head.webp') }}" alt="Logo Tether Brew" style="height: 60px; width: auto; display: block; margin: 0 auto 10px auto;">
+        <h2 style="color: #22c55e; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Tether Brew</h2>
+        <h4 style="color: #333; margin-top: 5px;">Laporan Minus Penjualan</h4>
+    </div>
+
+<div class="stats-grid mb-4">
     {{-- Card Total Minus --}}
     <div class="stat-card stat-card-animated" style="position: relative; overflow: hidden; z-index: 1; padding-top: 40px;">
         <div class="stat-icon-bg" style="position: absolute; top: -25px; left: -20px; width: 130px; height: 130px; opacity: 0.15; color: #ef4444; z-index: -1;">
@@ -86,7 +106,7 @@
                         <th style="text-align: right; color: #10b981;">TERBAYAR</th>
                         <th style="text-align: right; color: #f59e0b;">SISA MINUS</th>
                         <th>Admin Pemeriksa</th>
-                        <th style="text-align: center;">Aksi</th>
+                        <th style="text-align: center;" class="print-hide">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,7 +129,7 @@
                                 @endif
                             </td>
                             <td>{{ $sale->admin_pemeriksa ?? $sale->admin->name }}</td>
-                            <td style="text-align: center;">
+                            <td style="text-align: center;" class="print-hide">
                                 <a href="{{ route('admin.rider_sales.edit', $sale->id) }}" class="btn btn-sm btn-outline-primary" style="padding: 4px 8px; font-size: 0.85rem;">
                                     <svg class="icon-two-tone" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -128,4 +148,91 @@
         </div>
     </div>
 </div>
+</div>
 @endsection
+
+@push('styles')
+    <style>
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            .print-hide,
+            .print-hide * {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            .main-content {
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .topbar {
+                display: none;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .stats-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 16px !important;
+                margin-bottom: 20px !important;
+            }
+            .stats-grid > .stat-card {
+                break-inside: avoid;
+            }
+            .print-title {
+                display: block !important;
+                text-align: center;
+                padding-top: 30px;
+                padding-bottom: 20px;
+                border-bottom: 2px dashed #cbd5e1;
+                margin-bottom: 30px !important;
+            }
+
+            .card {
+                background: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
+                color: #000000 !important;
+                border-radius: 12px !important;
+            }
+            /* Hide the stat icons in print to prevent clutter */
+            .stat-icon-bg {
+                display: none !important;
+            }
+            .stat-card {
+                padding: 16px !important;
+            }
+        }
+    </style>
+@endpush
