@@ -174,6 +174,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/payroll/history', [PayrollController::class, 'history'])->name('admin.payroll.history');
         Route::get('/payroll/{payrollRecord}', [PayrollController::class, 'show'])->name('admin.payroll.show');
         Route::post('/payroll/{payrollRecord}/confirm', [PayrollController::class, 'confirm'])->name('admin.payroll.confirm');
+        Route::post('/payroll/{payrollRecord}/rollback', [PayrollController::class, 'rollback'])->name('admin.payroll.rollback');
 
         // Rider Sales Report (Printout Penjualan)
         Route::get('/rider-sales-report', [RiderSalesReportController::class, 'index'])->name('admin.rider_sales_report.index');

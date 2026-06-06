@@ -31,6 +31,15 @@
                     </button>
                 </form>
             @endif
+            @if($payrollRecord->status === 'confirmed')
+                <form method="POST" action="{{ route('admin.payroll.rollback', $payrollRecord->id) }}" data-confirm="Batalkan konfirmasi slip gaji ini? Saldo minus/kasbon serta Jurnal Umum yang berhubungan akan dibatalkan/di-revert.">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary flex-center" style="gap: 0.5rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                        <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+                        Batalkan Konfirmasi
+                    </button>
+                </form>
+            @endif
             <button onclick="window.print()" class="btn btn-secondary flex-center" style="gap: 0.5rem;">
                 <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>

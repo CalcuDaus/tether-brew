@@ -489,4 +489,72 @@ class PayrollController extends Controller
 
         return view('admin.payroll.history', compact('records', 'riders'));
     }
+    /**
+     * Rollback (Batal Konfirmasi) a confirmed payroll.
+     */
+    public function rollback(PayrollRecord $payrollRecord)
+    {
+        if ($payrollRecord->status !== 'confirmed') {
+            return redirect()->back()->with('error', 'Hanya slip gaji yang sudah dikonfirmasi yang dapat dibatalkan.');
+        }
+
+        // Limit to 2 days
+        if (now()->diffInDays($payrollRecord->confirmed_at) > 2) {
+            return redirect()->back()->with('error', 'Slip gaji yang sudah dikonfirmasi lebih dari 2 hari tidak dapat dibatalkan.');
+        }
+
+        $branchId = activeBranchId();
+        $riderName = $payrollRecord->rider->name;
+        $periodeLabel = $payrollRecord->period_start->format('d/m/Y') . ' - ' . $payrollRecord->period_end->format('d/m/Y');
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($payrollRecord, $branchId, $riderName, $periodeLabel) {
+            // 1. Delete Journals
+            $descriptions = [
+                "Gaji rider {$riderName} periode {$periodeLabel}",
+                "Pembayaran kasbon rider {$riderName} periode {$periodeLabel}",
+                "Pembayaran minus rider {$riderName} periode {$periodeLabel}",
+                "Uang makan rider {$riderName} periode {$periodeLabel}",
+                "Kelebihan uang makan rider {$riderName} periode {$periodeLabel}"
+            ];
+
+            \App\Models\Journal::forBranch($branchId)
+                ->whereIn('description', $descriptions)
+                ->whereDate('date', $payrollRecord->confirmed_at->format('Y-m-d'))
+                ->delete();
+
+            // 2. Revert Minus Distribution in RiderDailySale
+            $revertDeducted = $payrollRecord->minus_deducted;
+            if ($revertDeducted > 0) {
+                $paidSales = RiderDailySale::where('rider_id', $payrollRecord->rider_id)
+                    ->where('minus_paid', '>', 0)
+                    ->orderBy('date', 'desc')
+                    ->get();
+                    
+                foreach ($paidSales as $sale) {
+                    if ($revertDeducted <= 0) break;
+
+                    if ($sale->minus_paid <= $revertDeducted) {
+                        $revertDeducted -= $sale->minus_paid;
+                        $sale->minus_paid = 0;
+                        $sale->minus_status = 'unpaid';
+                    } else {
+                        $sale->minus_paid -= $revertDeducted;
+                        $sale->minus_status = 'partial';
+                        $revertDeducted = 0;
+                    }
+                    $sale->save();
+                }
+            }
+
+            // 3. Revert PayrollRecord Status
+            $payrollRecord->update([
+                'status' => 'draft',
+                'confirmed_at' => null,
+                'confirmed_by' => null,
+            ]);
+        });
+
+        return redirect()->route('admin.payroll.show', $payrollRecord->id)
+            ->with('success', 'Konfirmasi slip gaji berhasil dibatalkan. Jurnal dan potongan minus telah dikembalikan.');
+    }
 }
