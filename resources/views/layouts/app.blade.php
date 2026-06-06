@@ -247,7 +247,7 @@
             @elseif(auth()->user()->isBar())
                 {{-- ====== BAR SIDEBAR (Limited Menu) ====== --}}
                 @php
-                    $isBarOperasionalActive = request()->routeIs(['admin.rider_sales.*', 'admin.productions.*', 'admin.spoiled_products.*']);
+                    $isBarOperasionalActive = request()->routeIs(['admin.rider_sales.*', 'admin.productions.*', 'admin.spoiled_products.*', 'admin.available_stocks.*']);
                 @endphp
 
                 <div class="nav-section" x-data="{ open: true }">
@@ -268,7 +268,13 @@
                             <span class="nav-submenu-icon">
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                             </span>
-                            Stok Produksi
+                            Riwayat Produksi
+                        </a>
+                        <a href="{{ route('admin.available_stocks.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.available_stocks.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </span>
+                            Sisa Stok Tersedia
                         </a>
                         <a href="{{ route('admin.spoiled_products.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.spoiled_products.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">
@@ -318,7 +324,13 @@
                             <span class="nav-submenu-icon">
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                             </span>
-                            Stok Produksi
+                            Riwayat Produksi
+                        </a>
+                        <a href="{{ route('admin.available_stocks.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.available_stocks.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </span>
+                            Sisa Stok Tersedia
                         </a>
                         <a href="{{ route('admin.spoiled_products.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.spoiled_products.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">

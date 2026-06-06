@@ -135,4 +135,42 @@ class DailyProductionController extends Controller
         $production->delete();
         return redirect()->route('admin.productions.index')->with('success', 'Data stok produksi berhasil dihapus.');
     }
+
+    public function addStock(DailyProduction $production)
+    {
+        $branchId = activeBranchId();
+        if ($production->branch_id !== $branchId) abort(403);
+
+        $products = \App\Models\Product::orderBy('name')->get();
+        return view('admin.productions.add', compact('production', 'products'));
+    }
+
+    public function storeAdditionalStock(Request $request, DailyProduction $production)
+    {
+        $request->validate([
+            'items' => 'required|array',
+        ]);
+
+        $branchId = activeBranchId();
+        if ($production->branch_id !== $branchId) abort(403);
+
+        DB::transaction(function () use ($request, $production) {
+            foreach ($request->items as $productId => $data) {
+                $additionalQty = (int) ($data['quantity_produced'] ?? 0);
+                if ($additionalQty > 0) {
+                    $item = $production->items()->where('product_id', $productId)->first();
+                    if ($item) {
+                        $item->increment('quantity_produced', $additionalQty);
+                    } else {
+                        $production->items()->create([
+                            'product_id' => $productId,
+                            'quantity_produced' => $additionalQty,
+                        ]);
+                    }
+                }
+            }
+        });
+
+        return redirect()->route('admin.productions.index')->with('success', 'Tambahan stok produksi berhasil disimpan.');
+    }
 }

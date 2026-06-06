@@ -23,6 +23,7 @@ use App\Http\Controllers\AdminChatController;
 use App\Http\Controllers\OwnerRiderDetailController;
 use App\Http\Controllers\BarController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\AvailableStockController;
 use App\Http\Controllers\DailyProductionController;
 use App\Http\Controllers\SpoiledProductController;
 use App\Http\Controllers\OfficeKasbonController;
@@ -84,8 +85,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:owner,admin,bar')->group(function () {
         // Daily Productions (Stok Produksi)
         Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('productions/{production}/add', [DailyProductionController::class, 'addStock'])->name('productions.add');
+            Route::post('productions/{production}/add', [DailyProductionController::class, 'storeAdditionalStock'])->name('productions.store_additional');
             Route::resource('productions', DailyProductionController::class);
             Route::resource('spoiled-products', SpoiledProductController::class)->names('spoiled_products');
+            Route::get('available-stocks', [AvailableStockController::class, 'index'])->name('available_stocks.index');
         });
 
         // Rider Daily Sales Input
