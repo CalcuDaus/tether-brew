@@ -29,6 +29,7 @@ use App\Http\Controllers\SpoiledProductController;
 use App\Http\Controllers\OfficeKasbonController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\CustomerAppController;
+use App\Http\Controllers\ProductionPlanController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -90,6 +91,10 @@ Route::middleware('auth')->group(function () {
             Route::resource('productions', DailyProductionController::class);
             Route::resource('spoiled-products', SpoiledProductController::class)->names('spoiled_products');
             Route::get('available-stocks', [AvailableStockController::class, 'index'])->name('available_stocks.index');
+            
+            // Production Plan
+            Route::get('production-plan', [ProductionPlanController::class, 'index'])->name('production_plan.index');
+            Route::get('production-plan/data', [ProductionPlanController::class, 'data'])->name('production_plan.data');
         });
 
         // Rider Daily Sales Input

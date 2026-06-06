@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 338 notes | Score threshold: >40
+> 347 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,9 +18,10 @@
 
 **Stack:** JavaScript/Python · Tailwind
 
-## Active: `resources/views/admin/productions`
+## Project Standards
 
-- **🟢 Edited resources/views/admin/productions/index.blade.php (7 changes, 19min)**
+- 🟢 Edited resources/views/admin/journals/index.blade.php (17 changes, 24min) — confirmed 3x
+- Git Commit: feat: implement rider sales index view and controller for ma — confirmed 4x
 
 ## Known Fixes
 
