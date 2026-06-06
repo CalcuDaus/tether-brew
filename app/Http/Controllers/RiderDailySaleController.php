@@ -202,9 +202,10 @@ class RiderDailySaleController extends Controller
         $totalQris = $sales->sum('qris_amount');
         $totalMinus = $sales->sum('minus_amount');
         $totalOmset = $sales->sum('total_gross_income');
+        $totalActualSetor = $sales->sum('actual_setor');
         $riderCount = $sales->unique('rider_id')->count();
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($date, $branchId, $totalCash, $totalQris, $totalMinus, $totalOmset, $riderCount) {
+        \Illuminate\Support\Facades\DB::transaction(function () use ($date, $branchId, $totalCash, $totalQris, $totalMinus, $totalOmset, $totalActualSetor, $riderCount) {
             \App\Models\RiderSalesJournalConfirmation::create([
                 'date' => $date,
                 'branch_id' => $branchId,
@@ -220,13 +221,13 @@ class RiderDailySaleController extends Controller
                 ['name' => 'Penjualan Cabang']
             );
 
-            if ($totalCash > 0) {
+            if ($totalActualSetor > 0) {
                 \App\Models\Journal::create([
                     'branch_id' => $branchId,
                     'journal_category_id' => $category->id,
                     'date' => $date,
                     'type' => 'debit',
-                    'amount' => $totalCash,
+                    'amount' => $totalActualSetor,
                     'description' => "Penjualan Rider (CASH) - " . \Carbon\Carbon::parse($date)->format('d/m/Y'),
                     'created_by' => auth()->id()
                 ]);
