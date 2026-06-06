@@ -105,7 +105,7 @@
                         <th style="text-align: right; color: #ef4444;">MINUS</th>
                         <th style="text-align: right; color: #10b981;">TERBAYAR</th>
                         <th style="text-align: right; color: #f59e0b;">SISA MINUS</th>
-                        <th>Admin Pemeriksa</th>
+                        <th class="print-hide">Admin Pemeriksa</th>
                         <th style="text-align: center;" class="print-hide">Aksi</th>
                     </tr>
                 </thead>
@@ -128,7 +128,7 @@
                                     <span class="badge badge-qris" style="font-size: 0.7rem; padding: 2px 6px;">BELUM LUNAS</span>
                                 @endif
                             </td>
-                            <td>{{ $sale->admin_pemeriksa ?? $sale->admin->name }}</td>
+                            <td class="print-hide">{{ $sale->admin_pemeriksa ?? $sale->admin->name }}</td>
                             <td style="text-align: center;" class="print-hide">
                                 <a href="{{ route('admin.rider_sales.edit', $sale->id) }}" class="btn btn-sm btn-outline-primary" style="padding: 4px 8px; font-size: 0.85rem;">
                                     <svg class="icon-two-tone" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
