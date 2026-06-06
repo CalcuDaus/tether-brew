@@ -98,7 +98,7 @@ class RiderDailySaleController extends Controller
         }
 
         foreach ($products as $product) {
-            $produced = \App\Models\DailyProductionItem::whereHas('production', function($q) use ($branchId, $date) {
+            $produced = \App\Models\DailyProductionItem::whereHas('dailyProduction', function($q) use ($branchId, $date) {
                 $q->forBranch($branchId)->whereDate('date', '<=', $date);
             })->where('product_id', $product->id)->sum('quantity_produced');
 
