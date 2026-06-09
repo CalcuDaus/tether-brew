@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 347 notes | Score threshold: >40
+> 350 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,8 +20,14 @@
 
 ## Project Standards
 
+- convention in .gitignore
 - 🟢 Edited resources/views/admin/journals/index.blade.php (17 changes, 24min) — confirmed 3x
-- Git Commit: feat: implement rider sales index view and controller for ma — confirmed 4x
+- Enable strict mode in tsconfig.json
+- Prefer Array methods (map, filter, reduce) over manual loops
+- Use template literals for string interpolation, not concatenation
+- Use optional chaining (?.) and nullish coalescing (??) for safe access
+- Use const by default, let when reassignment needed, never var
+- Version your API from day 1 (/api/v1/)
 
 ## Known Fixes
 

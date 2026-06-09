@@ -371,7 +371,7 @@
     }
 
     function openPaymentModal(id, name, sisa) {
-        document.getElementById('paymentForm').action = '/office-kasbon/' + id + '/payment';
+        document.getElementById('paymentForm').action = '/admin/office-kasbon/' + id + '/payment';
         document.getElementById('payment_name').value = name;
         document.getElementById('payment_amount').max = sisa;
         document.getElementById('payment_amount').value = sisa; // Default isi semua sisa
