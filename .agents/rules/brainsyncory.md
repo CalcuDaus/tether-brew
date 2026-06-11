@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 350 notes | Score threshold: >40
+> 352 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -22,12 +22,7 @@
 
 - convention in .gitignore
 - 🟢 Edited resources/views/admin/journals/index.blade.php (17 changes, 24min) — confirmed 3x
-- Enable strict mode in tsconfig.json
-- Prefer Array methods (map, filter, reduce) over manual loops
-- Use template literals for string interpolation, not concatenation
-- Use optional chaining (?.) and nullish coalescing (??) for safe access
-- Use const by default, let when reassignment needed, never var
-- Version your API from day 1 (/api/v1/)
+- Git Commit: feat: implement office kasbon management module with print r — confirmed 3x
 
 ## Known Fixes
 

@@ -196,7 +196,15 @@
                 </div>
                 <div class="auth-field">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" placeholder="Masukkan password" required style="padding-right: 2.5rem;">
+                        <button type="button" onclick="togglePassword('password', 'eye-icon-password')" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #64748b; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <svg id="eye-icon-password" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 
                 <button type="submit" class="relative inline-flex active:translate-y-0.5 items-center justify-center overflow-hidden text-white bg-orange-900 rounded-full group transition-all duration-1000" style="width: 100%; padding: 0.75rem 1.1rem; border: none; cursor: pointer; font-family: inherit; margin-top: 0.5rem;">
@@ -222,6 +230,19 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle>';
+            }
+        }
+    </script>
     <script>
         particlesJS("particles-js", {
             "particles": {
