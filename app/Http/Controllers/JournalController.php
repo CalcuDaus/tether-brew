@@ -82,20 +82,35 @@ class JournalController extends Controller
         }
 
         try {
-            $file = fopen($request->file('file')->getRealPath(), 'r');
+            $filePath = $request->file('file')->getRealPath();
+            $file = fopen($filePath, 'r');
             if (!$file) {
                 return redirect()->route('admin.journals.index')->with('error', 'Gagal membaca file.');
             }
 
-            // Read header row
-            $header = fgetcsv($file);
+            // Auto-detect delimiter: read first line to check if semicolon or comma
+            $firstLine = fgets($file);
+            rewind($file); // Reset pointer to beginning
+
+            $delimiter = ',';
+            if ($firstLine) {
+                $semicolonCount = substr_count($firstLine, ';');
+                $commaCount = substr_count($firstLine, ',');
+                if ($semicolonCount > $commaCount) {
+                    $delimiter = ';';
+                }
+            }
+
+            // Read header row with detected delimiter
+            $header = fgetcsv($file, 0, $delimiter);
             if (!$header) {
                 fclose($file);
                 return redirect()->route('admin.journals.index')->with('error', 'File kosong atau format header tidak valid.');
             }
 
-            // Normalize headers (lowercase, trim)
+            // Normalize headers (lowercase, trim, remove BOM)
             $header = array_map(function ($h) {
+                $h = preg_replace('/\x{FEFF}/u', '', $h); // Remove UTF-8 BOM
                 return strtolower(trim($h));
             }, $header);
 
@@ -114,7 +129,7 @@ class JournalController extends Controller
             $imported = 0;
             $skipped = 0;
 
-            while (($row = fgetcsv($file)) !== false) {
+            while (($row = fgetcsv($file, 0, $delimiter)) !== false) {
                 // Map row to header keys
                 $data = [];
                 foreach ($header as $i => $key) {
@@ -137,9 +152,9 @@ class JournalController extends Controller
                     }
                 }
 
-                // Parse Debit/Kredit
-                $debit = !empty($data['debit']) ? floatval(preg_replace('/[^0-9.]/', '', $data['debit'])) : 0;
-                $kredit = !empty($data['kredit']) ? floatval(preg_replace('/[^0-9.]/', '', $data['kredit'])) : 0;
+                // Parse Debit/Kredit (handle Indonesian number format: 2.250.000 -> 2250000)
+                $debit = $this->parseIndonesianNumber($data['debit'] ?? '');
+                $kredit = $this->parseIndonesianNumber($data['kredit'] ?? '');
 
                 if ($debit > 0) {
                     $type = 'debit';
@@ -161,7 +176,8 @@ class JournalController extends Controller
                     }
                 }
 
-                $description = $data['keterangan'] ?? '-';
+                $description = trim($data['keterangan'] ?? '-');
+                if (empty($description)) $description = '-';
 
                 Journal::create([
                     'date' => $date,
@@ -185,6 +201,21 @@ class JournalController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('admin.journals.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Parse Indonesian-format number (e.g. "2.250.000" or " 2.250.000 ") into integer.
+     * Dots are used as thousand separators, not decimals.
+     */
+    private function parseIndonesianNumber($value): float
+    {
+        if (empty($value)) return 0;
+        $value = trim($value);
+        // Remove dots (thousand separators) and spaces
+        $value = str_replace(['.', ' '], '', $value);
+        // Remove any remaining non-numeric chars except minus
+        $value = preg_replace('/[^0-9\-]/', '', $value);
+        return (float) $value;
     }
 
     public function downloadTemplate()
