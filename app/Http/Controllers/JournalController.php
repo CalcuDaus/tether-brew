@@ -73,8 +73,13 @@ class JournalController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv|max:10240', // max 10MB
+            'file' => 'required|file|max:10240',
         ]);
+
+        $extension = strtolower($request->file('file')->getClientOriginalExtension());
+        if (!in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return redirect()->route('admin.journals.index')->with('error', 'Format file tidak didukung. Gunakan file .xlsx, .xls, atau .csv');
+        }
 
         try {
             \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\JournalsImport, $request->file('file'));
