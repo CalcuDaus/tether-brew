@@ -26,7 +26,7 @@ class SpoiledProductController extends Controller
 
     public function create()
     {
-        $products = \App\Models\Product::orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         return view('admin.spoiled_products.create', compact('products'));
     }
 
@@ -73,7 +73,7 @@ class SpoiledProductController extends Controller
 
     public function edit(SpoiledProduct $spoiledProduct)
     {
-        $products = \App\Models\Product::orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         return view('admin.spoiled_products.edit', compact('spoiledProduct', 'products'));
     }
 

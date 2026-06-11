@@ -24,7 +24,7 @@ class ProductionPlanController extends Controller
         
         $branchId = activeBranchId();
         
-        $products = Product::orderBy('id', 'asc')->get();
+        $products = Product::where('is_active', true)->orderBy('sort_order')->get();
         $planData = [];
 
         foreach ($products as $product) {

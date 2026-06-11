@@ -85,7 +85,7 @@ class RiderDailySaleController extends Controller
         }
         $branchId = activeBranchId();
         
-        $products = \App\Models\Product::orderBy('id', 'asc')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         $stockData = [];
 
         // Get existing sale for this rider today to prefill
@@ -168,7 +168,7 @@ class RiderDailySaleController extends Controller
     public function create()
     {
         $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
-        $products = \App\Models\Product::orderBy('id', 'asc')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         return view('admin.rider_sales.create', compact('riders', 'products'));
     }
 
@@ -340,7 +340,7 @@ class RiderDailySaleController extends Controller
     public function edit(RiderDailySale $riderSale)
     {
         $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
-        $products = \App\Models\Product::orderBy('id', 'asc')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         $riderSale->load('items');
         return view('admin.rider_sales.edit', compact('riderSale', 'riders', 'products'));
     }

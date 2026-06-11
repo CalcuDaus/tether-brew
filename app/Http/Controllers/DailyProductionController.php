@@ -26,7 +26,7 @@ class DailyProductionController extends Controller
 
     public function create()
     {
-        $products = \App\Models\Product::orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         return view('admin.productions.create', compact('products'));
     }
 
@@ -82,7 +82,7 @@ class DailyProductionController extends Controller
 
     public function edit(DailyProduction $production)
     {
-        $products = \App\Models\Product::orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         return view('admin.productions.edit', compact('production', 'products'));
     }
 
@@ -141,7 +141,7 @@ class DailyProductionController extends Controller
         $branchId = activeBranchId();
         if ($production->branch_id !== $branchId) abort(403);
 
-        $products = \App\Models\Product::orderBy('name')->get();
+        $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
         return view('admin.productions.add', compact('production', 'products'));
     }
 

@@ -13,7 +13,7 @@ class RiderSalesReportController extends Controller
     public function index(Request $request)
     {
         $riders = User::where('role', 'rider')->forBranch(activeBranchId())->get();
-        $products = Product::orderBy('id', 'asc')->get();
+        $products = Product::where('is_active', true)->orderBy('sort_order')->get();
         $selectedRiderId = $request->rider_id;
 
         $filterType = $request->filter_type ?? 'monthly';
