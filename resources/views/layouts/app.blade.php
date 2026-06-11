@@ -911,6 +911,7 @@
     @endif
 
     @stack('scripts')
+    <script src="{{ asset('js/excel-nav.js') }}"></script>
 </body>
 </html>
 
