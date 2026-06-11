@@ -12,9 +12,10 @@
 
 @section('content')
     <div id="print-area">
-        <div class="print-title" style="display: none;">
-            <h2>Laporan Jurnal Umum</h2>
-            <p>Tether Brew — Dicetak: {{ now()->translatedFormat('d F Y') }}</p>
+        <div class="print-title print-only" style="display: none;">
+            <img src="{{ asset('tether-icon-head.webp') }}" alt="Logo Tether Brew" style="height: 60px; width: auto; display: block; margin: 0 auto 10px auto;">
+            <h2 style="color: #22c55e; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Tether Brew</h2>
+            <p style="margin: 5px 0 0; color: #64748b; font-size: 10pt;">Laporan Jurnal Umum — Dicetak: {{ now()->translatedFormat('d F Y') }}</p>
         </div>
 
         {{-- Print Only Summary --}}
@@ -140,6 +141,16 @@
                                 <button type="submit" class="btn btn-primary" style="height: 42px;">Filter</button>
                     <a href="{{ route('admin.journals.index') }}" class="btn btn-secondary"
                         style="height: 42px; display: flex; align-items: center;">Reset</a>
+                    
+                    <button type="button" onclick="openImportModal()" class="btn btn-secondary flex-center"
+                        style="height: 42px; gap:0.5rem; white-space: nowrap; background: #10b981; color: white; border-color: #10b981;">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg> Import Excel
+                    </button>
+
                     <button type="button" onclick="openJournalModal()" class="btn btn-primary flex-center"
                         style="height: 42px; gap:0.5rem; white-space: nowrap;">
                         <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15"
@@ -188,10 +199,22 @@
 
                 window.addEventListener('click', function (event) {
                     const modal = document.getElementById('journalModal');
+                    const importModal = document.getElementById('importModal');
                     if (event.target == modal) {
                         closeJournalModal();
                     }
+                    if (event.target == importModal) {
+                        closeImportModal();
+                    }
                 });
+                
+                function openImportModal() {
+                    document.getElementById('importModal').style.display = 'flex';
+                }
+
+                function closeImportModal() {
+                    document.getElementById('importModal').style.display = 'none';
+                }
                 
                 @if($errors->any())
                     openJournalModal();
@@ -336,6 +359,45 @@
                     </div>
                     </div>
                     </div>
+
+    <!-- Modal Import Excel -->
+    <div id="importModal" class="modal-overlay-animate"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div class="card modal-content-animate"
+            style="width: 100%; max-width: 500px; margin: 20px; box-shadow: var(--shadow-lg);">
+            <div class="card-header">
+                <h3 class="card-title">Import Data Jurnal via Excel</h3>
+            </div>
+            <div class="card-body">
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 0.9rem; color: #475569; margin-bottom: 10px;">
+                        Gunakan file template Excel berikut agar format data sesuai dengan sistem.
+                    </p>
+                    <a href="{{ route('admin.journals.downloadTemplate') }}" class="btn btn-secondary" style="font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
+                        <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg> Download Template (.csv)
+                    </a>
+                </div>
+
+                <form action="{{ route('admin.journals.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Upload File (Excel/CSV)</label>
+                        <input type="file" name="file" class="form-input" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                        <small style="color: #64748b; font-size: 0.8rem; margin-top: 5px; display: block;">Maksimal ukuran file: 10MB.</small>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" onclick="closeImportModal()" class="btn btn-secondary">Batal</button>
+                        <button type="submit" class="btn btn-primary" style="background: #10b981; border-color: #10b981;">Proses Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('styles')
@@ -370,14 +432,15 @@
             .print-title {
                 display: block !important;
                 text-align: center;
+                padding-top: 20px;
                 padding-bottom: 15px;
-                border-bottom: 2px solid #cbd5e1;
+                border-bottom: 2px dashed #cbd5e1;
                 margin-bottom: 20px !important;
             }
 
             .print-title h2 {
                 margin: 0;
-                color: #8b5c2a;
+                color: #22c55e;
                 font-size: 16pt;
             }
 

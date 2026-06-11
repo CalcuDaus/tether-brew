@@ -146,6 +146,8 @@ Route::middleware('auth')->group(function () {
         });
 
         // General Journal
+        Route::post('journals/import', [JournalController::class, 'import'])->name('admin.journals.import');
+        Route::get('journals/download-template', [JournalController::class, 'downloadTemplate'])->name('admin.journals.downloadTemplate');
         Route::resource('journals', JournalController::class)->except(['show', 'edit', 'update'])->names([
             'index' => 'admin.journals.index',
             'create' => 'admin.journals.create',

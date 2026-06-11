@@ -185,7 +185,7 @@
                     </span> Dashboard
                 </a>
 
-                @php $isLaporanActive = request()->routeIs(['admin.journals.*', 'admin.rider_sales_report.*', 'admin.rider_minus.*', 'admin.payroll.*']); @endphp
+                @php $isLaporanActive = request()->routeIs(['admin.journals.*', 'admin.rider_sales_report.*', 'admin.rider_minus.*', 'admin.payroll.*', 'admin.rider_finances.kasbon', 'admin.office_kasbon.*']); @endphp
                 <div class="nav-section" x-data="{ open: {{ $isLaporanActive ? 'true' : 'false' }} }">
                     <div class="nav-link dropdown-toggle" @click="open = !open" :class="{ 'active': {{ $isLaporanActive ? 'true' : 'false' }} }">
                         <span class="nav-link-icon">
@@ -200,6 +200,18 @@
                         <a href="{{ route('admin.journals.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.journals.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/></svg></span>
                             Jurnal Umum
+                        </a>
+                        <a href="{{ route('admin.rider_finances.kasbon') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_finances.kasbon') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            </span>
+                            Kasbon Rider
+                        </a>
+                        <a href="{{ route('admin.office_kasbon.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.office_kasbon.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </span>
+                            Kasbon Office
                         </a>
                         <a href="{{ route('admin.rider_sales_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales_report.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></span>

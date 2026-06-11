@@ -20,7 +20,7 @@
     <div class="print-title print-only" style="display: none;">
         <img src="{{ asset('tether-icon-head.webp') }}" alt="Logo Tether Brew" style="height: 60px; width: auto; display: block; margin: 0 auto 10px auto;">
         <h2 style="color: #22c55e; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Tether Brew</h2>
-        <h4 style="color: #333; margin-top: 5px;">Laporan Minus Penjualan</h4>
+        <p style="margin: 5px 0 0; color: #64748b; font-size: 10pt;">Laporan Minus Penjualan — Dicetak: {{ now()->translatedFormat('d F Y') }}</p>
     </div>
 
 <div class="stats-grid mb-4">

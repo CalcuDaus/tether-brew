@@ -55,9 +55,10 @@
 <div class="card" style="margin-top: 10px;" id="payslip-card">
     <div class="card-body">
         <div class="payslip-container" style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: 'Poppins', sans-serif;">
-            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 20px;">
-                <h2 style="margin: 0; color: #1e293b; font-size: 24px;">TETHER BREW</h2>
-                <p style="margin: 5px 0 0; color: #64748b; font-size: 14px;">
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px;">
+                <img src="{{ asset('tether-icon-head.webp') }}" alt="Logo Tether Brew" style="height: 60px; width: auto; display: block; margin: 0 auto 10px auto;">
+                <h2 style="color: #22c55e; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">TETHER BREW</h2>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 10pt;">
                     @if($payrollRecord->type === 'weekly')
                         Slip Gaji Mingguan (Senin - Minggu)
                     @elseif($payrollRecord->type === 'custom')

@@ -12,9 +12,10 @@
 
 @section('content')
 <div id="print-area">
-    <div class="print-title" style="display: none;">
-        <h2>Laporan Uang Makan Rider</h2>
-        <p>Tether Brew â€” Dicetak: {{ now()->translatedFormat('d F Y') }}</p>
+    <div class="print-title print-only" style="display: none;">
+        <img src="{{ asset('tether-icon-head.webp') }}" alt="Logo Tether Brew" style="height: 60px; width: auto; display: block; margin: 0 auto 10px auto;">
+        <h2 style="color: #22c55e; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Tether Brew</h2>
+        <p style="margin: 5px 0 0; color: #64748b; font-size: 10pt;">Laporan Uang Makan Rider — Dicetak: {{ now()->translatedFormat('d F Y') }}</p>
     </div>
 
     {{-- Print Only Summary --}}
@@ -306,8 +307,8 @@
         #print-area, #print-area * { visibility: visible; }
         #print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
 
-        .print-title { display: block !important; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #cbd5e1; margin-bottom: 20px !important; }
-        .print-title h2 { margin: 0; color: #8b5c2a; font-size: 16pt; }
+        .print-title { display: block !important; text-align: center; padding-top: 20px; padding-bottom: 15px; border-bottom: 2px dashed #cbd5e1; margin-bottom: 20px !important; }
+        .print-title h2 { margin: 0; color: #22c55e; font-size: 16pt; }
         .print-title p { margin: 5px 0 0 0; color: #64748b; font-size: 10pt; }
 
         .print-summary-row { display: flex !important; gap: 15px !important; }

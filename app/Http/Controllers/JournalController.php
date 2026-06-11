@@ -69,4 +69,39 @@ class JournalController extends Controller
         $journal->delete();
         return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil dihapus.');
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:10240', // max 10MB
+        ]);
+
+        try {
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\JournalsImport, $request->file('file'));
+            return redirect()->route('admin.journals.index')->with('success', 'Data jurnal berhasil diimport!');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.journals.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="template_import_jurnal.csv"',
+        ];
+
+        $columns = ['Tanggal', 'No Dokumen', 'Referensi', 'Debit', 'Kredit', 'Keterangan'];
+        
+        $callback = function() use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            // Example row
+            fputcsv($file, [now()->format('Y-m-d'), 'CASH', 'Lain-lain', '100000', '', 'Pembelian ATK']);
+            fputcsv($file, [now()->format('Y-m-d'), 'CASH', 'Lain-lain', '', '50000', 'Bayar Listrik']);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }
