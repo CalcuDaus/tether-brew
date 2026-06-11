@@ -82,8 +82,106 @@ class JournalController extends Controller
         }
 
         try {
-            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\JournalsImport, $request->file('file'));
-            return redirect()->route('admin.journals.index')->with('success', 'Data jurnal berhasil diimport!');
+            $file = fopen($request->file('file')->getRealPath(), 'r');
+            if (!$file) {
+                return redirect()->route('admin.journals.index')->with('error', 'Gagal membaca file.');
+            }
+
+            // Read header row
+            $header = fgetcsv($file);
+            if (!$header) {
+                fclose($file);
+                return redirect()->route('admin.journals.index')->with('error', 'File kosong atau format header tidak valid.');
+            }
+
+            // Normalize headers (lowercase, trim)
+            $header = array_map(function ($h) {
+                return strtolower(trim($h));
+            }, $header);
+
+            // Load categories for matching
+            $categories = \App\Models\JournalCategory::all()->pluck('id', 'name')->mapWithKeys(function ($item, $key) {
+                return [strtolower(trim($key)) => $item];
+            });
+
+            // Fallback "Lain-lain" category
+            $lainLainCat = \App\Models\JournalCategory::where('name', 'like', '%lain%')->first();
+            if (!$lainLainCat) {
+                $lainLainCat = \App\Models\JournalCategory::create(['name' => 'Lain-lain']);
+            }
+            $lainLainCategoryId = $lainLainCat->id;
+
+            $imported = 0;
+            $skipped = 0;
+
+            while (($row = fgetcsv($file)) !== false) {
+                // Map row to header keys
+                $data = [];
+                foreach ($header as $i => $key) {
+                    $data[$key] = $row[$i] ?? null;
+                }
+
+                // Skip empty rows
+                if (empty($data['tanggal']) && empty($data['keterangan'])) {
+                    $skipped++;
+                    continue;
+                }
+
+                // Parse Date
+                $date = now()->format('Y-m-d');
+                if (!empty($data['tanggal'])) {
+                    try {
+                        $date = \Carbon\Carbon::parse($data['tanggal'])->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        $date = now()->format('Y-m-d');
+                    }
+                }
+
+                // Parse Debit/Kredit
+                $debit = !empty($data['debit']) ? floatval(preg_replace('/[^0-9.]/', '', $data['debit'])) : 0;
+                $kredit = !empty($data['kredit']) ? floatval(preg_replace('/[^0-9.]/', '', $data['kredit'])) : 0;
+
+                if ($debit > 0) {
+                    $type = 'debit';
+                    $amount = $debit;
+                } elseif ($kredit > 0) {
+                    $type = 'credit';
+                    $amount = $kredit;
+                } else {
+                    $skipped++;
+                    continue;
+                }
+
+                // Category matching (Referensi)
+                $categoryId = $lainLainCategoryId;
+                if (!empty($data['referensi'])) {
+                    $refName = strtolower(trim($data['referensi']));
+                    if (isset($categories[$refName])) {
+                        $categoryId = $categories[$refName];
+                    }
+                }
+
+                $description = $data['keterangan'] ?? '-';
+
+                Journal::create([
+                    'date' => $date,
+                    'description' => $description,
+                    'type' => $type,
+                    'amount' => $amount,
+                    'journal_category_id' => $categoryId,
+                    'branch_id' => activeBranchId(),
+                    'created_by' => auth()->id(),
+                ]);
+                $imported++;
+            }
+
+            fclose($file);
+
+            $msg = "Berhasil mengimport {$imported} data jurnal.";
+            if ($skipped > 0) {
+                $msg .= " ({$skipped} baris dilewati karena data kosong)";
+            }
+            return redirect()->route('admin.journals.index')->with('success', $msg);
         } catch (\Exception $e) {
             return redirect()->route('admin.journals.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
         }
