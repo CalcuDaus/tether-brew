@@ -70,6 +70,18 @@ class JournalController extends Controller
         return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil dihapus.');
     }
 
+    public function destroyAll(Request $request)
+    {
+        if (!auth()->check() || !auth()->user()->isOwner()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        Journal::forBranch(activeBranchId())->delete();
+
+        return redirect()->route('admin.journals.index')->with('success', 'Seluruh data jurnal pada cabang ini berhasil dihapus.');
+    }
+
+
     public function import(Request $request)
     {
         $request->validate([

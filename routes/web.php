@@ -146,6 +146,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // General Journal
+        Route::delete('journals/destroy-all', [JournalController::class, 'destroyAll'])->name('admin.journals.destroyAll');
         Route::post('journals/import', [JournalController::class, 'import'])->name('admin.journals.import');
         Route::get('journals/download-template', [JournalController::class, 'downloadTemplate'])->name('admin.journals.downloadTemplate');
         Route::resource('journals', JournalController::class)->except(['show', 'edit', 'update'])->names([
