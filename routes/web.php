@@ -172,6 +172,8 @@ Route::middleware('auth')->group(function () {
 
         // Office Kasbon
         Route::prefix('admin')->name('admin.')->group(function () {
+            Route::post('/office-kasbon/import', [OfficeKasbonController::class, 'import'])->name('office_kasbon.import');
+            Route::get('/office-kasbon/download-template', [OfficeKasbonController::class, 'downloadTemplate'])->name('office_kasbon.downloadTemplate');
             Route::get('/office-kasbon', [OfficeKasbonController::class, 'index'])->name('office_kasbon.index');
             Route::post('/office-kasbon', [OfficeKasbonController::class, 'store'])->name('office_kasbon.store');
             Route::delete('/office-kasbon/{officeKasbon}', [OfficeKasbonController::class, 'destroy'])->name('office_kasbon.destroy');
