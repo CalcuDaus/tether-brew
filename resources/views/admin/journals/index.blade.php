@@ -3,7 +3,7 @@
 @section('title', 'Jurnal Umum')
 
 @section('actions')
-    <button onclick="window.print()" class="btn btn-secondary btn-sm flex-center" style="gap:0.5rem;">
+    <button type="button" onclick="openPrintWindow()" class="btn btn-secondary btn-sm flex-center" style="gap:0.5rem;">
         <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
         </svg> Print
@@ -256,9 +256,26 @@
                 @if($errors->any())
                     openJournalModal();
                 @endif
-
-
+                
+                function openPrintWindow() {
+                    var url = new URL(window.location.href);
+                    url.searchParams.set('print', '1');
+                    window.open(url.toString(), '_blank');
+                }
             </script>
+            @if(request()->has('print'))
+            <script>
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        window.print();
+                    }, 500);
+                });
+                
+                window.addEventListener('afterprint', function() {
+                    window.close();
+                });
+            </script>
+            @endif
         @endpush
         <div class="card-body">
             <div class="table-container">
@@ -317,7 +334,7 @@
             </div>
 
             {{-- Pagination Controls --}}
-            @if($journals->hasPages())
+            @if($journals instanceof \Illuminate\Pagination\LengthAwarePaginator && $journals->hasPages())
                 <div class="pagination-container print-hide"
                     style="margin-top: 20px; padding: 15px 20px; border-top: 1px solid #e2e8f0;">
                     {{ $journals->links() }}

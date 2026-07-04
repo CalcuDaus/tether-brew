@@ -30,7 +30,11 @@ class JournalController extends Controller
         $totalCredit = (clone $query)->where('type', 'credit')->sum('amount');
         $balance = $totalDebit - $totalCredit;
 
-        $journals = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        if ($request->has('print')) {
+            $journals = $query->orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+        } else {
+            $journals = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        }
 
         return view('admin.journals.index', compact('journals', 'totalDebit', 'totalCredit', 'balance', 'categories'));
     }
