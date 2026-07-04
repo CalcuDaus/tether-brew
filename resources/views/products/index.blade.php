@@ -47,7 +47,7 @@
                                 </td>
                                 <td>
                                     <div class="flex-gap-2">
-                                        <button type="button" @click="$dispatch('open-modal', { type: 'edit', product: {{ json_encode(['id' => $product->id, 'name' => $product->name, 'description' => $product->description, 'category' => $product->category, 'price' => $product->price, 'is_active' => $product->is_active]) }} })" class="btn btn-secondary btn-sm"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
+                                        <button type="button" @click="$dispatch('open-modal', { type: 'edit', product: {{ json_encode(['id' => $product->id, 'name' => $product->name, 'description' => $product->description, 'category' => $product->category, 'price' => $product->price, 'is_active' => $product->is_active, 'requires_stock' => $product->requires_stock]) }} })" class="btn btn-secondary btn-sm"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
                                         <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Yakin hapus produk ini?')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm"><svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
@@ -138,6 +138,14 @@
                                 </label>
                                 <div class="text-sm-muted" style="margin-top: 4px; margin-left: 1.6rem;">Hapus centang jika produk sedang tidak dijual.</div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="requires_stock" value="1" x-model="product.requires_stock" style="width: 1.1rem; height: 1.1rem; accent-color: var(--primary);">
+                                    <span style="font-weight: 500;">Butuh Stok Fisik?</span>
+                                </label>
+                                <div class="text-sm-muted" style="margin-top: 4px; margin-left: 1.6rem;">Hapus centang untuk produk yang diproduksi on-demand oleh rider (misal: Kopi Pasir) sehingga tidak mengecek stok dari Bar.</div>
+                            </div>
 
                             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                                 <button type="button" @click="closeModal()" class="btn btn-secondary">Batal</button>
@@ -165,16 +173,18 @@
                 description: '',
                 category: '',
                 price: '',
-                is_active: true
+                is_active: true,
+                requires_stock: true
             },
             openModal(detail) {
                 this.type = detail.type;
                 if (this.type === 'edit') {
                     this.product = detail.product;
                     this.product.is_active = detail.product.is_active == 1;
+                    this.product.requires_stock = detail.product.requires_stock == 1;
                     this.formAction = `/products/${this.product.id}`;
                 } else {
-                    this.product = { id: '', name: '', description: '', category: '', price: '', is_active: true };
+                    this.product = { id: '', name: '', description: '', category: '', price: '', is_active: true, requires_stock: true };
                     this.formAction = '{{ route('products.store') }}';
                 }
                 this.isOpen = true;
