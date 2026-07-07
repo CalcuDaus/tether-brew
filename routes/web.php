@@ -30,6 +30,7 @@ use App\Http\Controllers\OfficeKasbonController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\CustomerAppController;
 use App\Http\Controllers\ProductionPlanController;
+use App\Http\Controllers\RevenueReportController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -193,6 +194,11 @@ Route::middleware('auth')->group(function () {
 
         // Rider Sales Report (Printout Penjualan)
         Route::get('/rider-sales-report', [RiderSalesReportController::class, 'index'])->name('admin.rider_sales_report.index');
+
+        // Laporan Omset (Revenue Report)
+        Route::get('/revenue-report', [RevenueReportController::class, 'index'])->name('admin.revenue_report.index');
+        Route::get('/revenue-report/export-pdf', [RevenueReportController::class, 'exportPdf'])->name('admin.revenue_report.export_pdf');
+        Route::get('/revenue-report/export-excel', [RevenueReportController::class, 'exportExcel'])->name('admin.revenue_report.export_excel');
 
         // Admin Chat Monitoring
         Route::get('/admin/chats', [AdminChatController::class, 'index'])->name('admin.chats.index');
