@@ -143,4 +143,157 @@ class OfficeKasbonController extends Controller
 
         return redirect()->back()->with('success', 'Pembayaran berhasil disimpan dan dicatat ke Jurnal.');
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240',
+        ]);
+
+        $extension = strtolower($request->file('file')->getClientOriginalExtension());
+        if (!in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return redirect()->route('admin.office_kasbon.index')->with('error', 'Format file tidak didukung. Gunakan file .xlsx, .xls, atau .csv');
+        }
+
+        try {
+            $filePath = $request->file('file')->getRealPath();
+            $file = fopen($filePath, 'r');
+            if (!$file) {
+                return redirect()->route('admin.office_kasbon.index')->with('error', 'Gagal membaca file.');
+            }
+
+            // Auto-detect delimiter
+            $firstLine = fgets($file);
+            rewind($file);
+
+            $delimiter = ',';
+            if ($firstLine) {
+                $semicolonCount = substr_count($firstLine, ';');
+                $commaCount = substr_count($firstLine, ',');
+                if ($semicolonCount > $commaCount) {
+                    $delimiter = ';';
+                }
+            }
+
+            $header = fgetcsv($file, 0, $delimiter);
+            if (!$header) {
+                fclose($file);
+                return redirect()->route('admin.office_kasbon.index')->with('error', 'File kosong atau format header tidak valid.');
+            }
+
+            // Normalize headers
+            $header = array_map(function ($h) {
+                $h = preg_replace('/\x{FEFF}/u', '', $h); 
+                return strtolower(trim($h));
+            }, $header);
+
+            $imported = 0;
+            $skipped = 0;
+            $lastYear = date('Y');
+
+            $category = JournalCategory::firstOrCreate(['name' => 'Kasbon Office (Keluaran)']);
+
+            while (($row = fgetcsv($file, 0, $delimiter)) !== false) {
+                $data = [];
+                foreach ($header as $i => $key) {
+                    $data[$key] = $row[$i] ?? null;
+                }
+
+                // Check for minimal required fields
+                if (empty($data['nama']) && empty($data['jumlah kasbon'])) {
+                    $skipped++;
+                    continue;
+                }
+
+                $name = trim($data['nama'] ?? '-');
+                if (empty($name)) $name = '-';
+
+                $dateStr = trim($data['tgl'] ?? '');
+                $date = now()->format('Y-m-d');
+                if (!empty($dateStr)) {
+                    // Check if it's missing year (e.g. 13-Jun)
+                    if (strlen($dateStr) <= 6 && preg_match('/^\d{1,2}-[a-zA-Z]{3}$/', $dateStr)) {
+                        $dateStr .= '-' . $lastYear;
+                    }
+                    try {
+                        $parsedDate = \Carbon\Carbon::parse($dateStr);
+                        $date = $parsedDate->format('Y-m-d');
+                        $lastYear = $parsedDate->format('Y');
+                    } catch (\Exception $e) {
+                        // fallback to today if parsing fails
+                        $date = now()->format('Y-m-d');
+                    }
+                }
+
+                $amount = $this->parseIndonesianNumber($data['jumlah kasbon'] ?? '');
+                
+                if ($amount <= 0) {
+                    $skipped++;
+                    continue;
+                }
+
+                OfficeKasbon::create([
+                    'branch_id' => activeBranchId(),
+                    'admin_id' => auth()->id(),
+                    'name' => $name,
+                    'date' => $date,
+                    'amount' => $amount,
+                    'status' => 'unpaid',
+                    'notes' => 'Import Excel'
+                ]);
+
+                // Create Journal Entry
+                Journal::create([
+                    'branch_id' => activeBranchId(),
+                    'created_by' => auth()->id(),
+                    'journal_category_id' => $category->id,
+                    'date' => $date,
+                    'type' => 'credit',
+                    'amount' => $amount,
+                    'description' => "Kasbon Office: {$name}",
+                ]);
+
+                $imported++;
+            }
+
+            fclose($file);
+
+            $msg = "Berhasil mengimport {$imported} data kasbon office.";
+            if ($skipped > 0) {
+                $msg .= " ({$skipped} baris dilewati karena data tidak valid/kosong)";
+            }
+            return redirect()->route('admin.office_kasbon.index')->with('success', $msg);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.office_kasbon.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
+        }
+    }
+
+    private function parseIndonesianNumber($value): float
+    {
+        if (empty($value)) return 0;
+        $value = trim($value);
+        $value = str_replace(['.', ' '], '', $value);
+        $value = preg_replace('/[^0-9\-]/', '', $value);
+        return (float) $value;
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="template_import_kasbon_office.csv"',
+        ];
+
+        $columns = ['NO', 'NAMA', 'TGL', 'JUMLAH KASBON'];
+        
+        $callback = function() use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            fputcsv($file, ['1', 'ANWAR', '03-Jun-26', '40.000']);
+            fputcsv($file, ['2', 'JHON', '13-Jun', '1.000.000']);
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

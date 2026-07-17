@@ -94,6 +94,16 @@
             <div class="form-group" style="display: flex; gap: 8px; margin-bottom: 0;">
                 <button type="submit" class="btn btn-primary" style="height: 42px;">Filter</button>
                 <a href="{{ route('admin.office_kasbon.index') }}" class="btn btn-secondary" style="height: 42px; display: flex; align-items: center;">Reset</a>
+                
+                <button type="button" onclick="openImportModal()" class="btn btn-secondary flex-center"
+                    style="height: 42px; gap:0.5rem; white-space: nowrap; background: #10b981; color: white; border-color: #10b981;">
+                    <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg> Import Excel
+                </button>
+
                 <button type="button" onclick="openFinanceModal()" class="btn btn-primary flex-center" style="height: 42px; gap:0.5rem; white-space: nowrap;">
                     <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
@@ -291,6 +301,43 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Import Excel -->
+<div id="importModal" class="modal-overlay-animate" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="card modal-content-animate" style="width: 100%; max-width: 500px; margin: 20px; box-shadow: var(--shadow-lg);">
+        <div class="card-header">
+            <h3 class="card-title">Import Kasbon Office via Excel</h3>
+        </div>
+        <div class="card-body">
+            <div style="margin-bottom: 20px;">
+                <p style="font-size: 0.9rem; color: #475569; margin-bottom: 10px;">
+                    Gunakan file template Excel berikut agar format data sesuai dengan sistem (Kolom NO, NAMA, TGL, JUMLAH KASBON).
+                </p>
+                <a href="{{ route('admin.office_kasbon.downloadTemplate') }}" class="btn btn-secondary" style="font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
+                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg> Download Template (.csv)
+                </a>
+            </div>
+
+            <form action="{{ route('admin.office_kasbon.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Upload File (Excel/CSV)</label>
+                    <input type="file" name="file" class="form-input" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                    <small style="color: #64748b; font-size: 0.8rem; margin-top: 5px; display: block;">Maksimal ukuran file: 10MB.</small>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeImportModal()" class="btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="background: #10b981; border-color: #10b981;">Proses Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('styles')
@@ -383,6 +430,30 @@
     function closePaymentModal() {
         document.getElementById('paymentModal').style.display = 'none';
     }
+
+    function openImportModal() {
+        document.getElementById('importModal').style.display = 'flex';
+    }
+
+    function closeImportModal() {
+        document.getElementById('importModal').style.display = 'none';
+    }
+
+    window.addEventListener('click', function(event) {
+        const financeModal = document.getElementById('financeModal');
+        const paymentModal = document.getElementById('paymentModal');
+        const importModal = document.getElementById('importModal');
+        
+        if (event.target == financeModal) {
+            closeFinanceModal();
+        }
+        if (event.target == paymentModal) {
+            closePaymentModal();
+        }
+        if (event.target == importModal) {
+            closeImportModal();
+        }
+    });
 
     // Initialize flatpickr when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {

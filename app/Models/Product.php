@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    protected $fillable = ['name', 'description', 'price', 'image', 'category', 'is_active'];
+    protected $fillable = ['name', 'description', 'price', 'image', 'category', 'is_active', 'requires_stock'];
 
     protected function casts(): array
     {
         return [
             'price' => 'decimal:2',
             'is_active' => 'boolean',
+            'requires_stock' => 'boolean',
         ];
     }
 

@@ -185,7 +185,7 @@
                     </span> Dashboard
                 </a>
 
-                @php $isLaporanActive = request()->routeIs(['admin.journals.*', 'admin.rider_sales_report.*', 'admin.rider_minus.*', 'admin.payroll.*', 'admin.rider_finances.kasbon', 'admin.office_kasbon.*']); @endphp
+                @php $isLaporanActive = request()->routeIs(['admin.journals.*', 'admin.rider_sales_report.*', 'admin.revenue_report.*', 'admin.rider_minus.*', 'admin.payroll.*', 'admin.rider_finances.kasbon', 'admin.office_kasbon.*']); @endphp
                 <div class="nav-section" x-data="{ open: {{ $isLaporanActive ? 'true' : 'false' }} }">
                     <div class="nav-link dropdown-toggle" @click="open = !open" :class="{ 'active': {{ $isLaporanActive ? 'true' : 'false' }} }">
                         <span class="nav-link-icon">
@@ -216,6 +216,10 @@
                         <a href="{{ route('admin.rider_sales_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_sales_report.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></span>
                             Laporan Penjualan
+                        </a>
+                        <a href="{{ route('admin.revenue_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.revenue_report.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                            Laporan Omset
                         </a>
                         <a href="{{ route('admin.rider_minus.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.rider_minus.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg></span>
@@ -410,6 +414,12 @@
                                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
                             </span>
                             Laporan Penjualan
+                        </a>
+                        <a href="{{ route('admin.revenue_report.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.revenue_report.*') ? 'active' : '' }}">
+                            <span class="nav-submenu-icon">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </span>
+                            Laporan Omset
                         </a>
                         <a href="{{ route('admin.chats.index') }}" class="nav-submenu-item {{ request()->routeIs('admin.chats.*') ? 'active' : '' }}">
                             <span class="nav-submenu-icon">

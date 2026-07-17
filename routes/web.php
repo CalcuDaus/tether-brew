@@ -30,6 +30,7 @@ use App\Http\Controllers\OfficeKasbonController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\CustomerAppController;
 use App\Http\Controllers\ProductionPlanController;
+use App\Http\Controllers\RevenueReportController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -146,6 +147,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // General Journal
+        Route::delete('journals/destroy-all', [JournalController::class, 'destroyAll'])->name('admin.journals.destroyAll');
         Route::post('journals/import', [JournalController::class, 'import'])->name('admin.journals.import');
         Route::get('journals/download-template', [JournalController::class, 'downloadTemplate'])->name('admin.journals.downloadTemplate');
         Route::resource('journals', JournalController::class)->except(['show', 'edit', 'update'])->names([
@@ -171,6 +173,8 @@ Route::middleware('auth')->group(function () {
 
         // Office Kasbon
         Route::prefix('admin')->name('admin.')->group(function () {
+            Route::post('/office-kasbon/import', [OfficeKasbonController::class, 'import'])->name('office_kasbon.import');
+            Route::get('/office-kasbon/download-template', [OfficeKasbonController::class, 'downloadTemplate'])->name('office_kasbon.downloadTemplate');
             Route::get('/office-kasbon', [OfficeKasbonController::class, 'index'])->name('office_kasbon.index');
             Route::post('/office-kasbon', [OfficeKasbonController::class, 'store'])->name('office_kasbon.store');
             Route::delete('/office-kasbon/{officeKasbon}', [OfficeKasbonController::class, 'destroy'])->name('office_kasbon.destroy');
@@ -190,6 +194,11 @@ Route::middleware('auth')->group(function () {
 
         // Rider Sales Report (Printout Penjualan)
         Route::get('/rider-sales-report', [RiderSalesReportController::class, 'index'])->name('admin.rider_sales_report.index');
+
+        // Laporan Omset (Revenue Report)
+        Route::get('/revenue-report', [RevenueReportController::class, 'index'])->name('admin.revenue_report.index');
+        Route::get('/revenue-report/export-pdf', [RevenueReportController::class, 'exportPdf'])->name('admin.revenue_report.export_pdf');
+        Route::get('/revenue-report/export-excel', [RevenueReportController::class, 'exportExcel'])->name('admin.revenue_report.export_excel');
 
         // Admin Chat Monitoring
         Route::get('/admin/chats', [AdminChatController::class, 'index'])->name('admin.chats.index');

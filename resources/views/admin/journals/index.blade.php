@@ -3,7 +3,7 @@
 @section('title', 'Jurnal Umum')
 
 @section('actions')
-    <button onclick="window.print()" class="btn btn-secondary btn-sm flex-center" style="gap:0.5rem;">
+    <button type="button" onclick="openPrintWindow()" class="btn btn-secondary btn-sm flex-center" style="gap:0.5rem;">
         <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
         </svg> Print
@@ -141,6 +141,15 @@
                                 <button type="submit" class="btn btn-primary" style="height: 42px;">Filter</button>
                     <a href="{{ route('admin.journals.index') }}" class="btn btn-secondary"
                         style="height: 42px; display: flex; align-items: center;">Reset</a>
+
+                    @if(auth()->check() && auth()->user()->isOwner())
+                    <button type="button" onclick="openDeleteAllModal()" class="btn btn-secondary flex-center"
+                        style="height: 42px; gap:0.5rem; white-space: nowrap; background: #ef4444; color: white; border-color: #ef4444;">
+                        <svg class="icon-two-tone" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg> Hapus Semua Data
+                    </button>
+                    @endif
                     
                     <button type="button" onclick="openImportModal()" class="btn btn-secondary flex-center"
                         style="height: 42px; gap:0.5rem; white-space: nowrap; background: #10b981; color: white; border-color: #10b981;">
@@ -200,11 +209,15 @@
                 window.addEventListener('click', function (event) {
                     const modal = document.getElementById('journalModal');
                     const importModal = document.getElementById('importModal');
+                    const deleteAllModal = document.getElementById('deleteAllModal');
                     if (event.target == modal) {
                         closeJournalModal();
                     }
                     if (event.target == importModal) {
                         closeImportModal();
+                    }
+                    if (deleteAllModal && event.target == deleteAllModal) {
+                        closeDeleteAllModal();
                     }
                 });
                 
@@ -216,12 +229,53 @@
                     document.getElementById('importModal').style.display = 'none';
                 }
                 
+                function openDeleteAllModal() {
+                    const modal = document.getElementById('deleteAllModal');
+                    if(modal) {
+                        modal.style.display = 'flex';
+                        document.getElementById('deleteAllInput').value = '';
+                        document.getElementById('deleteAllSubmitBtn').disabled = true;
+                    }
+                }
+
+                function closeDeleteAllModal() {
+                    const modal = document.getElementById('deleteAllModal');
+                    if(modal) modal.style.display = 'none';
+                }
+
+                function checkDeleteAllInput() {
+                    const input = document.getElementById('deleteAllInput').value;
+                    const btn = document.getElementById('deleteAllSubmitBtn');
+                    if (input === 'HAPUS SEMUA JURNAL') {
+                        btn.disabled = false;
+                    } else {
+                        btn.disabled = true;
+                    }
+                }
+
                 @if($errors->any())
                     openJournalModal();
                 @endif
-
-
+                
+                function openPrintWindow() {
+                    var url = new URL(window.location.href);
+                    url.searchParams.set('print', '1');
+                    window.open(url.toString(), '_blank');
+                }
             </script>
+            @if(request()->has('print'))
+            <script>
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        window.print();
+                    }, 500);
+                });
+                
+                window.addEventListener('afterprint', function() {
+                    window.close();
+                });
+            </script>
+            @endif
         @endpush
         <div class="card-body">
             <div class="table-container">
@@ -280,7 +334,7 @@
             </div>
 
             {{-- Pagination Controls --}}
-            @if($journals->hasPages())
+            @if($journals instanceof \Illuminate\Pagination\LengthAwarePaginator && $journals->hasPages())
                 <div class="pagination-container print-hide"
                     style="margin-top: 20px; padding: 15px 20px; border-top: 1px solid #e2e8f0;">
                     {{ $journals->links() }}
@@ -398,6 +452,43 @@
             </div>
         </div>
     </div>
+
+    @if(auth()->check() && auth()->user()->isOwner())
+    <!-- Modal Delete All -->
+    <div id="deleteAllModal" class="modal-overlay-animate"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div class="card modal-content-animate"
+            style="width: 100%; max-width: 500px; margin: 20px; box-shadow: var(--shadow-lg);">
+            <div class="card-header">
+                <h3 class="card-title" style="color: #ef4444;">⚠️ Hapus Seluruh Data Jurnal</h3>
+            </div>
+            <div class="card-body">
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 0.95rem; color: #475569; margin-bottom: 10px;">
+                        Anda akan menghapus <strong>seluruh data jurnal</strong> pada cabang ini. Tindakan ini sangat destruktif dan tidak dapat dibatalkan.
+                    </p>
+                    <p style="font-size: 0.95rem; color: #475569; margin-bottom: 15px;">
+                        Untuk melanjutkan, silakan ketik kalimat berikut ke dalam kotak di bawah ini:<br>
+                        <strong style="color: #ef4444; user-select: all; padding: 2px 4px; background: #fee2e2; border-radius: 4px;">HAPUS SEMUA JURNAL</strong>
+                    </p>
+                </div>
+
+                <form action="{{ route('admin.journals.destroyAll') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <input type="text" id="deleteAllInput" class="form-input" placeholder="Ketik HAPUS SEMUA JURNAL disini..." autocomplete="off" onkeyup="checkDeleteAllInput()">
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" onclick="closeDeleteAllModal()" class="btn btn-secondary">Batal</button>
+                        <button type="submit" id="deleteAllSubmitBtn" class="btn btn-primary" style="background: #ef4444; border-color: #ef4444;" disabled>Hapus Permanen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
 
 @push('styles')

@@ -144,6 +144,7 @@ class RiderDailySaleController extends Controller
             $stockData[] = [
                 'product_id' => $product->id,
                 'product_name' => $product->name,
+                'requires_stock' => $product->requires_stock,
                 'available' => $available,
                 'produced' => $produced,
                 'used' => $used,
@@ -319,6 +320,9 @@ class RiderDailySaleController extends Controller
         );
 
         foreach ($request->items as $productId => $itemData) {
+            $product = \App\Models\Product::find($productId);
+            $requiresStock = $product ? $product->requires_stock : true;
+
             \App\Models\RiderDailySaleItem::updateOrCreate(
                 [
                     'rider_daily_sale_id' => $sale->id,
@@ -326,9 +330,9 @@ class RiderDailySaleController extends Controller
                 ],
                 [
                     'branch_id' => activeBranchId(),
-                    'stock_out' => $itemData['stock_out'] ?? 0,
-                    'stock_added' => $itemData['stock_added'] ?? 0,
-                    'stock_return' => $itemData['stock_return'] ?? 0,
+                    'stock_out' => $requiresStock ? ($itemData['stock_out'] ?? 0) : 0,
+                    'stock_added' => $requiresStock ? ($itemData['stock_added'] ?? 0) : 0,
+                    'stock_return' => $requiresStock ? ($itemData['stock_return'] ?? 0) : 0,
                     'stock_sold' => $itemData['stock_sold'] ?? 0,
                 ]
             );
@@ -375,6 +379,9 @@ class RiderDailySaleController extends Controller
         ]);
 
         foreach ($request->items as $productId => $itemData) {
+            $product = \App\Models\Product::find($productId);
+            $requiresStock = $product ? $product->requires_stock : true;
+
             \App\Models\RiderDailySaleItem::updateOrCreate(
                 [
                     'rider_daily_sale_id' => $riderSale->id,
@@ -382,9 +389,9 @@ class RiderDailySaleController extends Controller
                 ],
                 [
                     'branch_id' => activeBranchId(),
-                    'stock_out' => $itemData['stock_out'] ?? 0,
-                    'stock_added' => $itemData['stock_added'] ?? 0,
-                    'stock_return' => $itemData['stock_return'] ?? 0,
+                    'stock_out' => $requiresStock ? ($itemData['stock_out'] ?? 0) : 0,
+                    'stock_added' => $requiresStock ? ($itemData['stock_added'] ?? 0) : 0,
+                    'stock_return' => $requiresStock ? ($itemData['stock_return'] ?? 0) : 0,
                     'stock_sold' => $itemData['stock_sold'] ?? 0,
                 ]
             );

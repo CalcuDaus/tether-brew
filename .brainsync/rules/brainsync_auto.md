@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 359 notes | Score threshold: >40
+> 365 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -21,7 +21,13 @@
 ## Project Standards
 
 - convention in .gitignore
-- convention in .gitignore
+- Git Commit: feat: implement rider daily sales tracking and product manag — confirmed 3x
+- Version your API from day 1 (/api/v1/)
+- Use consistent response format across all endpoints
+- Implement soft delete for important data — don't hard delete without confirmation
+- Handle timezone correctly — store UTC, display in user's timezone
+- Make layouts responsive from the start — mobile-first approach
+- Disable submit button during form submission — prevent double-submit
 
 ## Known Fixes
 

@@ -30,7 +30,11 @@ class JournalController extends Controller
         $totalCredit = (clone $query)->where('type', 'credit')->sum('amount');
         $balance = $totalDebit - $totalCredit;
 
-        $journals = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        if ($request->has('print')) {
+            $journals = $query->orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+        } else {
+            $journals = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        }
 
         return view('admin.journals.index', compact('journals', 'totalDebit', 'totalCredit', 'balance', 'categories'));
     }
@@ -69,6 +73,18 @@ class JournalController extends Controller
         $journal->delete();
         return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil dihapus.');
     }
+
+    public function destroyAll(Request $request)
+    {
+        if (!auth()->check() || !auth()->user()->isOwner()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        Journal::forBranch(activeBranchId())->delete();
+
+        return redirect()->route('admin.journals.index')->with('success', 'Seluruh data jurnal pada cabang ini berhasil dihapus.');
+    }
+
 
     public function import(Request $request)
     {

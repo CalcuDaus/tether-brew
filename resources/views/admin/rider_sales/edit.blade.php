@@ -77,13 +77,21 @@
                                             $val = $itemData ? $itemData->$key : 0;
 
                                             $isReadonly = false;
-                                            if ($key === 'stock_sold') $isReadonly = true;
-                                            if (($key === 'stock_out' || $key === 'stock_added') && $isAdmin) $isReadonly = true;
-                                            if ($key === 'stock_return' && $isBar) $isReadonly = true;
+                                            
+                                            if (!$product->requires_stock) {
+                                                if ($key !== 'stock_sold') {
+                                                    $isReadonly = true;
+                                                }
+                                            } else {
+                                                if ($key === 'stock_sold') $isReadonly = true;
+                                                if (($key === 'stock_out' || $key === 'stock_added') && $isAdmin) $isReadonly = true;
+                                                if ($key === 'stock_return' && $isBar) $isReadonly = true;
+                                            }
                                             
                                             $style = 'width: 80px; text-align: center; margin: 0 auto; padding: 6px; font-size: 0.95rem;';
                                             if ($key === 'stock_sold') {
-                                                $style .= ' background: rgba(34,197,94,0.08); font-weight: 700; cursor: not-allowed;';
+                                                $style .= ' background: rgba(34,197,94,0.08); font-weight: 700;';
+                                                if ($isReadonly) $style .= ' cursor: not-allowed;';
                                             } elseif ($isReadonly) {
                                                 $style .= ' background: rgba(0,0,0,0.05); cursor: not-allowed; color: var(--text-muted);';
                                             }
@@ -93,6 +101,7 @@
                                                class="form-input item-input {{ $key }}"
                                                data-product-id="{{ $product->id }}"
                                                data-price="{{ $product->price }}"
+                                               data-requires-stock="{{ $product->requires_stock ? '1' : '0' }}"
                                                min="0" 
                                                value="{{ $val }}"
                                                {{ $isReadonly ? 'readonly tabindex="-1"' : '' }}
@@ -255,18 +264,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     transition: all 0.2s ease;
                 `;
                 
-                card.innerHTML = `
-                    <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">${item.product_name}</div>
-                    <div style="font-size: 1.6rem; font-weight: 800; color: ${text}; margin: 4px 0; display: flex; align-items: baseline; gap: 4px;">
-                        ${item.available}
-                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">Pcs</span>
-                    </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 5px; margin-top: 5px; display: flex; justify-content: space-between;">
-                        <span>Prod: <strong>${item.produced}</strong></span>
-                        <span>Out: <strong>${item.used}</strong></span>
-                        <span>Basi: <strong>${item.spoiled}</strong></span>
-                    </div>
-                `;
+                if (item.requires_stock === false || item.requires_stock === 0) {
+                    card.innerHTML = `
+                        <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">${item.product_name}</div>
+                        <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin: 4px 0; display: flex; align-items: baseline; gap: 4px;">
+                            On Demand
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 5px; margin-top: 5px;">
+                            Diproduksi langsung oleh rider
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">${item.product_name}</div>
+                        <div style="font-size: 1.6rem; font-weight: 800; color: ${text}; margin: 4px 0; display: flex; align-items: baseline; gap: 4px;">
+                            ${item.available}
+                            <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">Pcs</span>
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 5px; margin-top: 5px; display: flex; justify-content: space-between;">
+                            <span>Prod: <strong>${item.produced}</strong></span>
+                            <span>Out: <strong>${item.used}</strong></span>
+                            <span>Basi: <strong>${item.spoiled}</strong></span>
+                        </div>
+                    `;
+                }
                 stockContainer.appendChild(card);
             });
         } catch (error) {
@@ -318,15 +339,23 @@ document.addEventListener('DOMContentLoaded', () => {
      * Recalculate everything for one product column.
      */
     function recalcProduct(productId) {
-        const stockOut = getVal(productId, 'stock_out');
-        const stockAdded = getVal(productId, 'stock_added');
-        const stockReturn = getVal(productId, 'stock_return');
-
-        // 1. Auto-fill Produk Laku = (Keluar + Tambahan) - Retur
         const soldInput = form.querySelector(`.item-input.stock_sold[data-product-id="${productId}"]`);
-        const stockSold = Math.max(0, stockOut + stockAdded - stockReturn);
-        if (soldInput) {
-            soldInput.value = stockSold;
+        const requiresStock = soldInput ? soldInput.dataset.requiresStock !== '0' : true;
+
+        let stockSold = 0;
+        
+        if (requiresStock) {
+            const stockOut = getVal(productId, 'stock_out');
+            const stockAdded = getVal(productId, 'stock_added');
+            const stockReturn = getVal(productId, 'stock_return');
+
+            // 1. Auto-fill Produk Laku = (Keluar + Tambahan) - Retur
+            stockSold = Math.max(0, stockOut + stockAdded - stockReturn);
+            if (soldInput) {
+                soldInput.value = stockSold;
+            }
+        } else {
+            stockSold = getVal(productId, 'stock_sold');
         }
 
         // 2. Update Total Uang cell = harga × produk_laku
@@ -368,9 +397,11 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     form.querySelectorAll('.item-input.stock_out, .item-input.stock_added, .item-input.stock_return').forEach(input => {
         input.addEventListener('input', () => {
+            const requiresStock = input.dataset.requiresStock !== '0';
+            
             // Realtime Validation for Bar Role (check against stock availability)
             @if(auth()->user()->isBar())
-                if (input.classList.contains('stock_out') || input.classList.contains('stock_added')) {
+                if (requiresStock && (input.classList.contains('stock_out') || input.classList.contains('stock_added'))) {
                     const productId = input.dataset.productId;
                     const stockOut = getVal(productId, 'stock_out');
                     const stockAdded = getVal(productId, 'stock_added');
@@ -403,6 +434,15 @@ document.addEventListener('DOMContentLoaded', () => {
             recalcProduct(input.dataset.productId);
             recalcGrandTotal();
         });
+    });
+
+    form.querySelectorAll('.item-input.stock_sold').forEach(input => {
+        if (input.dataset.requiresStock === '0') {
+            input.addEventListener('input', () => {
+                recalcProduct(input.dataset.productId);
+                recalcGrandTotal();
+            });
+        }
     });
 
     // Minus Calculation

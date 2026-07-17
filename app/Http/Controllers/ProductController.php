@@ -36,9 +36,11 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|max:100',
             'is_active' => 'boolean',
+            'requires_stock' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['requires_stock'] = $request->has('requires_stock');
 
         Product::create($validated);
 
@@ -58,9 +60,11 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|max:100',
             'is_active' => 'boolean',
+            'requires_stock' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['requires_stock'] = $request->has('requires_stock');
 
         $product->update($validated);
 
