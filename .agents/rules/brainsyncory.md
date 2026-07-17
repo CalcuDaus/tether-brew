@@ -1,7 +1,7 @@
 
 
 # Project Memory — tether-brew
-> 352 notes | Score threshold: >40
+> 359 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -21,8 +21,7 @@
 ## Project Standards
 
 - convention in .gitignore
-- 🟢 Edited resources/views/admin/journals/index.blade.php (17 changes, 24min) — confirmed 3x
-- Git Commit: feat: implement office kasbon management module with print r — confirmed 3x
+- convention in .gitignore
 
 ## Known Fixes
 
